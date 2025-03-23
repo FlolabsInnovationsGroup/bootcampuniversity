@@ -1,7 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Badge } from '@/components/shared/Badge';
+import {
+  Badge,
+  Button,
+  Card,
+  CardHeader,
+  CardContent,
+  CardFooter,
+  Input,
+  Select,
+  Textarea,
+} from '@/components/shared';
+import { CheckCircle, ChevronRight, ChevronLeft, Users2, Sparkles } from 'lucide-react';
 
 export default function ApplyPage() {
   const [formState, setFormState] = useState({
@@ -38,12 +49,12 @@ export default function ApplyPage() {
 
   const nextStep = () => {
     setFormStep(formStep + 1);
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const prevStep = () => {
     setFormStep(formStep - 1);
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -51,15 +62,22 @@ export default function ApplyPage() {
     // In a real implementation, you would send the form data to your server
     console.log(formState);
     setFormSubmitted(true);
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <div className="bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50/50 dark:from-gray-950 dark:to-gray-900/50">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-blue-600 to-teal-500 py-16">
-        <div className="absolute inset-0 overflow-hidden">
-          <svg className="absolute bottom-0 right-0 transform translate-x-1/4 translate-y-1/4 opacity-20" width="404" height="404" fill="none" viewBox="0 0 404 404">
+      <div className="relative overflow-hidden bg-gradient-to-r from-primary-600 to-primary-400 py-20">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-600/90 to-primary-400/90" />
+          <svg
+            className="absolute bottom-0 right-0 transform translate-x-1/4 translate-y-1/4 opacity-20"
+            width="404"
+            height="404"
+            fill="none"
+            viewBox="0 0 404 404"
+          >
             <defs>
               <pattern id="pattern-squares" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
                 <rect x="0" y="0" width="4" height="4" fill="white" />
@@ -68,166 +86,227 @@ export default function ApplyPage() {
             <rect width="404" height="404" fill="url(#pattern-squares)" />
           </svg>
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
-            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">
-              Apply Now
+            <Badge variant="secondary" className="mb-6 border-2 border-white/20">
+              <Users2 className="mr-1.5 h-3.5 w-3.5" />
+              Application Form
+            </Badge>
+            <h1 className="bg-gradient-to-r from-white to-white/90 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl md:text-6xl">
+              Begin Your Journey
             </h1>
-            <p className="mt-6 max-w-2xl mx-auto text-xl text-white/90">
-              Begin your journey with Innovation Bootcamp University and take the first step toward a rewarding tech career.
+            <p className="mx-auto mt-6 max-w-2xl text-xl text-white/90">
+              Take the first step toward a rewarding tech career with Innovation Bootcamp University.
             </p>
           </div>
         </div>
       </div>
 
       {/* Main content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16">
         {formSubmitted ? (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-8 text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-green-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Application Submitted!</h2>
-            <p className="text-lg text-gray-600 mb-8">
-              Thank you for applying to Innovation Bootcamp University. We've received your application and will be in touch soon.
-            </p>
-            <p className="text-gray-600 mb-6">
-              Next Steps:
-            </p>
-            <ol className="list-decimal list-inside text-gray-600 space-y-2 mb-8 text-left max-w-md mx-auto">
-              <li>Our admissions team will review your application (typically within 2-3 business days)</li>
-              <li>You'll receive an email invitation for a virtual interview</li>
-              <li>After the interview, we'll share our decision and next steps</li>
-            </ol>
-            <p className="text-gray-600">
-              If you have any questions, please contact us at <a href="mailto:admissions@innovationbootcamp.edu" className="text-blue-600 hover:text-blue-800">admissions@innovationbootcamp.edu</a>
-            </p>
-          </div>
+          <Card variant="gradient" className="overflow-hidden">
+            <CardContent className="flex flex-col items-center p-8 text-center">
+              <div className="mb-6 rounded-full bg-primary-100 p-3 dark:bg-primary-900/20">
+                <CheckCircle className="h-8 w-8 text-primary-600 dark:text-primary-400" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-50 mb-4">
+                Application Submitted!
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
+                Thank you for applying to Innovation Bootcamp University. We've received your application and will be in touch soon.
+              </p>
+              <div className="w-full max-w-md rounded-lg bg-white/50 dark:bg-gray-900/50 p-6 backdrop-blur-sm">
+                <h3 className="font-semibold text-gray-900 dark:text-gray-50 mb-4">
+                  Next Steps:
+                </h3>
+                <ol className="list-decimal list-inside text-gray-600 dark:text-gray-300 space-y-2 text-left">
+                  <li>Our admissions team will review your application (typically within 2-3 business days)</li>
+                  <li>You'll receive an email invitation for a virtual interview</li>
+                  <li>After the interview, we'll share our decision and next steps</li>
+                </ol>
+              </div>
+              <p className="mt-8 text-gray-600 dark:text-gray-300">
+                Questions? Contact us at{' '}
+                <a 
+                  href="mailto:admissions@innovationbootcamp.edu" 
+                  className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
+                >
+                  admissions@innovationbootcamp.edu
+                </a>
+              </p>
+            </CardContent>
+          </Card>
         ) : (
           <>
-            {/* Progress Bar */}
+            {/* Progress Steps */}
             <div className="mb-10">
               <div className="relative">
-                <div className="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
-                  <div
-                    style={{ width: `${(formStep / 3) * 100}%` }}
-                    className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-600"
-                  ></div>
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full h-0.5 bg-gray-200 dark:bg-gray-800"></div>
                 </div>
-                <div className="flex justify-between text-xs mt-2">
-                  <div className={`${formStep >= 1 ? 'text-blue-600 font-medium' : 'text-gray-400'}`}>Personal Information</div>
-                  <div className={`${formStep >= 2 ? 'text-blue-600 font-medium' : 'text-gray-400'}`}>Background & Experience</div>
-                  <div className={`${formStep >= 3 ? 'text-blue-600 font-medium' : 'text-gray-400'}`}>Review & Submit</div>
+                <div className="relative flex justify-between">
+                  {[1, 2, 3].map((step) => (
+                    <div
+                      key={step}
+                      className={`flex h-12 w-12 items-center justify-center rounded-full border-2 ${
+                        formStep >= step
+                          ? 'border-primary-500 bg-primary-50 dark:border-primary-400 dark:bg-primary-900/20'
+                          : 'border-gray-300 bg-white dark:border-gray-700 dark:bg-gray-900'
+                      }`}
+                    >
+                      <span
+                        className={`text-sm font-semibold ${
+                          formStep >= step
+                            ? 'text-primary-600 dark:text-primary-400'
+                            : 'text-gray-500 dark:text-gray-400'
+                        }`}
+                      >
+                        {step}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-2 flex justify-between text-sm font-medium">
+                  <span className={formStep >= 1 ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}>
+                    Personal Info
+                  </span>
+                  <span className={formStep >= 2 ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}>
+                    Background
+                  </span>
+                  <span className={formStep >= 3 ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}>
+                    Review
+                  </span>
                 </div>
               </div>
             </div>
 
             <form onSubmit={handleSubmit}>
               {formStep === 1 && (
-                <div className="bg-white shadow-md rounded-lg p-8">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Personal Information</h2>
+                <Card>
+                  <CardHeader>
+                    <Badge variant="default" className="w-fit">
+                      <Users2 className="mr-1.5 h-3.5 w-3.5" />
+                      Step 1 of 3
+                    </Badge>
+                    <h2 className="mt-4 text-2xl font-bold text-gray-900 dark:text-gray-50">
+                      Personal Information
+                    </h2>
+                    <p className="mt-2 text-gray-600 dark:text-gray-400">
+                      Tell us about yourself so we can personalize your learning experience.
+                    </p>
+                  </CardHeader>
                   
-                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                    <div>
-                      <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-                        First Name*
+                  <CardContent className="space-y-6">
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                      <div className="space-y-1">
+                        <label htmlFor="firstName" className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                          First Name*
+                        </label>
+                        <Input
+                          type="text"
+                          id="firstName"
+                          name="firstName"
+                          required
+                          value={formState.firstName}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label htmlFor="lastName" className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                          Last Name*
+                        </label>
+                        <Input
+                          type="text"
+                          id="lastName"
+                          name="lastName"
+                          required
+                          value={formState.lastName}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label htmlFor="email" className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                          Email Address*
+                        </label>
+                        <Input
+                          type="email"
+                          id="email"
+                          name="email"
+                          required
+                          value={formState.email}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label htmlFor="phone" className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                          Phone Number
+                        </label>
+                        <Input
+                          type="tel"
+                          id="phone"
+                          name="phone"
+                          value={formState.phone}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-1">
+                      <label htmlFor="track" className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Preferred Learning Track*
                       </label>
-                      <input
-                        type="text"
-                        name="firstName"
-                        id="firstName"
+                      <Select
+                        id="track"
+                        name="track"
                         required
-                        value={formState.firstName}
+                        value={formState.track}
                         onChange={handleInputChange}
-                        className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                      />
+                      >
+                        <option value="">Select a track</option>
+                        <option value="ai-ml">AI & Machine Learning</option>
+                        <option value="robotics">Robotics & Automation</option>
+                        <option value="web-dev">Web Development</option>
+                        <option value="mobile-dev">Mobile App Development</option>
+                        <option value="data-science">Data Science & Analytics</option>
+                      </Select>
                     </div>
-                    <div>
-                      <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-                        Last Name*
-                      </label>
-                      <input
-                        type="text"
-                        name="lastName"
-                        id="lastName"
-                        required
-                        value={formState.lastName}
-                        onChange={handleInputChange}
-                        className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                        Email Address*
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        id="email"
-                        required
-                        value={formState.email}
-                        onChange={handleInputChange}
-                        className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                        Phone Number
-                      </label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        id="phone"
-                        value={formState.phone}
-                        onChange={handleInputChange}
-                        className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="mt-6">
-                    <label htmlFor="track" className="block text-sm font-medium text-gray-700 mb-1">
-                      Preferred Learning Track*
-                    </label>
-                    <select
-                      id="track"
-                      name="track"
-                      required
-                      value={formState.track}
-                      onChange={handleInputChange}
-                      className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                    >
-                      <option value="">Select a track</option>
-                      <option value="ai-ml">AI & Machine Learning</option>
-                      <option value="robotics">Robotics & Automation</option>
-                      <option value="web-dev">Web Development</option>
-                      <option value="mobile-dev">Mobile App Development</option>
-                      <option value="data-science">Data Science & Analytics</option>
-                    </select>
-                  </div>
+                  </CardContent>
 
-                  <div className="mt-8 text-right">
-                    <button
+                  <CardFooter className="flex justify-end">
+                    <Button
                       type="button"
                       onClick={nextStep}
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      size="lg"
                     >
                       Continue
-                    </button>
-                  </div>
-                </div>
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </CardFooter>
+                </Card>
               )}
 
               {formStep === 2 && (
-                <div className="bg-white shadow-md rounded-lg p-8">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Background & Experience</h2>
+                <Card>
+                  <CardHeader>
+                    <Badge variant="default" className="w-fit">
+                      <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+                      Step 2 of 3
+                    </Badge>
+                    <h2 className="mt-4 text-2xl font-bold text-gray-900 dark:text-gray-50">
+                      Background & Experience
+                    </h2>
+                    <p className="mt-2 text-gray-600 dark:text-gray-400">
+                      Help us understand your background and career goals.
+                    </p>
+                  </CardHeader>
                   
-                  <div className="space-y-6">
-                    <div>
-                      <label htmlFor="background" className="block text-sm font-medium text-gray-700 mb-1">
+                  <CardContent className="space-y-6">
+                    <div className="space-y-1">
+                      <label htmlFor="background" className="text-sm font-medium text-gray-900 dark:text-gray-100">
                         Educational Background*
                       </label>
-                      <textarea
+                      <Textarea
                         id="background"
                         name="background"
                         rows={3}
@@ -235,15 +314,14 @@ export default function ApplyPage() {
                         value={formState.background}
                         onChange={handleInputChange}
                         placeholder="Tell us about your educational background, including degrees, certifications, or self-learning."
-                        className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
                     
-                    <div>
-                      <label htmlFor="experience" className="block text-sm font-medium text-gray-700 mb-1">
+                    <div className="space-y-1">
+                      <label htmlFor="experience" className="text-sm font-medium text-gray-900 dark:text-gray-100">
                         Relevant Experience*
                       </label>
-                      <textarea
+                      <Textarea
                         id="experience"
                         name="experience"
                         rows={4}
@@ -251,15 +329,14 @@ export default function ApplyPage() {
                         value={formState.experience}
                         onChange={handleInputChange}
                         placeholder="Describe any relevant work experience, projects, or skills you have in your chosen track."
-                        className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
                     
-                    <div>
-                      <label htmlFor="goals" className="block text-sm font-medium text-gray-700 mb-1">
+                    <div className="space-y-1">
+                      <label htmlFor="goals" className="text-sm font-medium text-gray-900 dark:text-gray-100">
                         Career Goals*
                       </label>
-                      <textarea
+                      <Textarea
                         id="goals"
                         name="goals"
                         rows={3}
@@ -267,148 +344,177 @@ export default function ApplyPage() {
                         value={formState.goals}
                         onChange={handleInputChange}
                         placeholder="What are your career goals and how do you think Innovation Bootcamp University can help you achieve them?"
-                        className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
                     
-                    <div>
-                      <label htmlFor="referral" className="block text-sm font-medium text-gray-700 mb-1">
+                    <div className="space-y-1">
+                      <label htmlFor="referral" className="text-sm font-medium text-gray-900 dark:text-gray-100">
                         How did you hear about us?
                       </label>
-                      <input
+                      <Input
                         type="text"
-                        name="referral"
                         id="referral"
+                        name="referral"
                         value={formState.referral}
                         onChange={handleInputChange}
-                        className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
-                  </div>
+                  </CardContent>
 
-                  <div className="mt-8 flex justify-between">
-                    <button
+                  <CardFooter className="flex justify-between">
+                    <Button
                       type="button"
+                      variant="outline"
                       onClick={prevStep}
-                      className="inline-flex items-center px-4 py-2 border border-gray-300 text-base font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      size="lg"
                     >
+                      <ChevronLeft className="mr-2 h-4 w-4" />
                       Back
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="button"
                       onClick={nextStep}
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      size="lg"
                     >
                       Review Application
-                    </button>
-                  </div>
-                </div>
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </CardFooter>
+                </Card>
               )}
 
               {formStep === 3 && (
-                <div className="bg-white shadow-md rounded-lg p-8">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Review Your Application</h2>
+                <Card>
+                  <CardHeader>
+                    <Badge variant="default" className="w-fit">
+                      <CheckCircle className="mr-1.5 h-3.5 w-3.5" />
+                      Step 3 of 3
+                    </Badge>
+                    <h2 className="mt-4 text-2xl font-bold text-gray-900 dark:text-gray-50">
+                      Review Your Application
+                    </h2>
+                    <p className="mt-2 text-gray-600 dark:text-gray-400">
+                      Please review your information before submitting.
+                    </p>
+                  </CardHeader>
                   
-                  <div className="space-y-6">
+                  <CardContent className="space-y-8">
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">Personal Information</h3>
-                      <div className="bg-gray-50 rounded-md p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <p className="text-sm text-gray-500">First Name</p>
-                          <p className="font-medium">{formState.firstName}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-gray-500">Last Name</p>
-                          <p className="font-medium">{formState.lastName}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-gray-500">Email Address</p>
-                          <p className="font-medium">{formState.email}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-gray-500">Phone Number</p>
-                          <p className="font-medium">{formState.phone || 'Not provided'}</p>
-                        </div>
-                        <div className="md:col-span-2">
-                          <p className="text-sm text-gray-500">Preferred Learning Track</p>
-                          <div className="mt-1">
-                            <Badge variant="default" className="font-normal">
-                              {formState.track === 'ai-ml' && 'AI & Machine Learning'}
-                              {formState.track === 'ai-ml' && 'AI & Machine Learning'}
-                              {formState.track === 'robotics' && 'Robotics & Automation'}
-                              {formState.track === 'web-dev' && 'Web Development'}
-                              {formState.track === 'mobile-dev' && 'Mobile App Development'}
-                              {formState.track === 'data-science' && 'Data Science & Analytics'}
-                            </Badge>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">
+                        Personal Information
+                      </h3>
+                      <div className="rounded-lg bg-gray-50 dark:bg-gray-900/50 p-4 backdrop-blur-sm">
+                        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                          <div>
+                            <dt className="text-sm text-gray-500 dark:text-gray-400">First Name</dt>
+                            <dd className="mt-1 text-sm font-medium text-gray-900 dark:text-gray-100">{formState.firstName}</dd>
                           </div>
-                        </div>
+                          <div>
+                            <dt className="text-sm text-gray-500 dark:text-gray-400">Last Name</dt>
+                            <dd className="mt-1 text-sm font-medium text-gray-900 dark:text-gray-100">{formState.lastName}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-sm text-gray-500 dark:text-gray-400">Email Address</dt>
+                            <dd className="mt-1 text-sm font-medium text-gray-900 dark:text-gray-100">{formState.email}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-sm text-gray-500 dark:text-gray-400">Phone Number</dt>
+                            <dd className="mt-1 text-sm font-medium text-gray-900 dark:text-gray-100">
+                              {formState.phone || 'Not provided'}
+                            </dd>
+                          </div>
+                          <div className="sm:col-span-2">
+                            <dt className="text-sm text-gray-500 dark:text-gray-400">Preferred Learning Track</dt>
+                            <dd className="mt-1">
+                              <Badge variant="default" className="font-normal">
+                                {formState.track === 'ai-ml' && 'AI & Machine Learning'}
+                                {formState.track === 'robotics' && 'Robotics & Automation'}
+                                {formState.track === 'web-dev' && 'Web Development'}
+                                {formState.track === 'mobile-dev' && 'Mobile App Development'}
+                                {formState.track === 'data-science' && 'Data Science & Analytics'}
+                              </Badge>
+                            </dd>
+                          </div>
+                        </dl>
                       </div>
                     </div>
 
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">Background & Experience</h3>
-                      <div className="bg-gray-50 rounded-md p-4 space-y-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">
+                        Background & Experience
+                      </h3>
+                      <div className="rounded-lg bg-gray-50 dark:bg-gray-900/50 p-4 space-y-4 backdrop-blur-sm">
                         <div>
-                          <p className="text-sm text-gray-500">Educational Background</p>
-                          <p className="mt-1 whitespace-pre-line">{formState.background}</p>
+                          <dt className="text-sm text-gray-500 dark:text-gray-400">Educational Background</dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 whitespace-pre-line">
+                            {formState.background}
+                          </dd>
                         </div>
                         <div>
-                          <p className="text-sm text-gray-500">Relevant Experience</p>
-                          <p className="mt-1 whitespace-pre-line">{formState.experience}</p>
+                          <dt className="text-sm text-gray-500 dark:text-gray-400">Relevant Experience</dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 whitespace-pre-line">
+                            {formState.experience}
+                          </dd>
                         </div>
                         <div>
-                          <p className="text-sm text-gray-500">Career Goals</p>
-                          <p className="mt-1 whitespace-pre-line">{formState.goals}</p>
+                          <dt className="text-sm text-gray-500 dark:text-gray-400">Career Goals</dt>
+                          <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 whitespace-pre-line">
+                            {formState.goals}
+                          </dd>
                         </div>
                         {formState.referral && (
                           <div>
-                            <p className="text-sm text-gray-500">How you heard about us</p>
-                            <p className="mt-1">{formState.referral}</p>
+                            <dt className="text-sm text-gray-500 dark:text-gray-400">How you heard about us</dt>
+                            <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100">{formState.referral}</dd>
                           </div>
                         )}
                       </div>
                     </div>
-                  </div>
 
-                  <div className="mt-6">
-                    <div className="relative flex items-start">
-                      <div className="flex items-center h-5">
-                        <input
-                          id="marketingConsent"
-                          name="marketingConsent"
-                          type="checkbox"
-                          checked={formState.marketingConsent}
-                          onChange={handleCheckboxChange}
-                          className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
-                        />
-                      </div>
-                      <div className="ml-3 text-sm">
-                        <label htmlFor="marketingConsent" className="font-medium text-gray-700">
-                          Marketing Communications
-                        </label>
-                        <p className="text-gray-500">
-                          I agree to receive updates, news, and promotional materials from Innovation Bootcamp University.
-                        </p>
+                    <div className="rounded-lg border border-gray-200 dark:border-gray-800 p-4">
+                      <div className="relative flex items-start">
+                        <div className="flex h-5 items-center">
+                          <input
+                            id="marketingConsent"
+                            name="marketingConsent"
+                            type="checkbox"
+                            checked={formState.marketingConsent}
+                            onChange={handleCheckboxChange}
+                            className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-800"
+                          />
+                        </div>
+                        <div className="ml-3">
+                          <label htmlFor="marketingConsent" className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                            Marketing Communications
+                          </label>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            I agree to receive updates, news, and promotional materials from Innovation Bootcamp University.
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </CardContent>
 
-                  <div className="mt-8 flex justify-between">
-                    <button
+                  <CardFooter className="flex justify-between">
+                    <Button
                       type="button"
+                      variant="outline"
                       onClick={prevStep}
-                      className="inline-flex items-center px-4 py-2 border border-gray-300 text-base font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      size="lg"
                     >
+                      <ChevronLeft className="mr-2 h-4 w-4" />
                       Back
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="submit"
-                      className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      size="lg"
+                      className="min-w-[200px]"
                     >
                       Submit Application
-                    </button>
-                  </div>
-                </div>
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </CardFooter>
+                </Card>
               )}
             </form>
           </>
@@ -416,94 +522,63 @@ export default function ApplyPage() {
 
         {/* Application timeline */}
         <div className="mt-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Application Process</h2>
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-50">
+              Application Process
+            </h2>
+            <p className="mt-2 text-gray-600 dark:text-gray-400">
+              Here's what to expect after submitting your application.
+            </p>
+          </div>
+
           <div className="max-w-3xl mx-auto">
             <div className="relative">
-              {/* Line running through the timeline */}
-              <div className="absolute h-full w-0.5 bg-gray-200 left-5 md:left-1/2 transform -translate-x-1/2"></div>
+              <div className="absolute left-5 md:left-1/2 h-full w-0.5 -translate-x-1/2 bg-gray-200 dark:bg-gray-800"></div>
               
               <div className="space-y-12">
-                {/* Step 1 */}
-                <div className="relative flex flex-col md:flex-row items-center">
-                  <div className="flex items-center justify-center md:absolute md:left-1/2 md:transform md:-translate-x-1/2 z-10 h-10 w-10 rounded-full bg-blue-600 text-white font-bold">
-                    1
+                {[
+                  {
+                    step: 1,
+                    title: "Apply Online",
+                    description: "Complete our online application form with your personal information, educational background, and career goals."
+                  },
+                  {
+                    step: 2,
+                    title: "Admissions Review",
+                    description: "Our admissions team will review your application within 2-3 business days."
+                  },
+                  {
+                    step: 3,
+                    title: "Virtual Interview",
+                    description: "Successful applicants will be invited to a virtual interview to discuss their background, goals, and fit with our program."
+                  },
+                  {
+                    step: 4,
+                    title: "Acceptance & Enrollment",
+                    description: "Upon acceptance, you'll receive enrollment information including program start dates, payment options, and orientation details."
+                  }
+                ].map((item, index) => (
+                  <div key={item.step} className="relative flex flex-col md:flex-row items-center">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-600 dark:bg-primary-500 text-white font-bold z-10">
+                      {item.step}
+                    </div>
+                    <div className={`ml-12 md:ml-0 mt-3 md:mt-0 md:w-1/2 ${
+                      index % 2 === 0 ? 'md:pr-8 md:text-right' : 'md:pl-8'
+                    }`}>
+                      <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50">
+                        {item.title}
+                      </h3>
+                      <p className="mt-2 text-gray-600 dark:text-gray-400">
+                        {item.description}
+                      </p>
+                    </div>
+                    {index % 2 === 0 ? (
+                      <div className="hidden md:block md:w-1/2 md:pl-8" />
+                    ) : (
+                      <div className="hidden md:block md:w-1/2 md:pr-8" />
+                    )}
                   </div>
-                  <div className="ml-12 md:ml-0 mt-3 md:mt-0 md:w-1/2 md:pr-8 md:text-right">
-                    <h3 className="text-lg font-medium text-gray-900">Apply Online</h3>
-                    <p className="mt-1 text-gray-600">
-                      Complete our online application form with your personal information, educational background, and career goals.
-                    </p>
-                  </div>
-                  <div className="hidden md:block md:w-1/2 md:pl-8">
-                    {/* Empty div for layout on desktop */}
-                  </div>
-                </div>
-                
-                {/* Step 2 */}
-                <div className="relative flex flex-col md:flex-row items-center">
-                  <div className="flex items-center justify-center md:absolute md:left-1/2 md:transform md:-translate-x-1/2 z-10 h-10 w-10 rounded-full bg-blue-600 text-white font-bold">
-                    2
-                  </div>
-                  <div className="hidden md:block md:w-1/2 md:pr-8">
-                    {/* Empty div for layout on desktop */}
-                  </div>
-                  <div className="ml-12 md:ml-0 mt-3 md:mt-0 md:w-1/2 md:pl-8">
-                    <h3 className="text-lg font-medium text-gray-900">Admissions Review</h3>
-                    <p className="mt-1 text-gray-600">
-                      Our admissions team will review your application within 2-3 business days.
-                    </p>
-                  </div>
-                </div>
-                
-                {/* Step 3 */}
-                <div className="relative flex flex-col md:flex-row items-center">
-                  <div className="flex items-center justify-center md:absolute md:left-1/2 md:transform md:-translate-x-1/2 z-10 h-10 w-10 rounded-full bg-blue-600 text-white font-bold">
-                    3
-                  </div>
-                  <div className="ml-12 md:ml-0 mt-3 md:mt-0 md:w-1/2 md:pr-8 md:text-right">
-                    <h3 className="text-lg font-medium text-gray-900">Virtual Interview</h3>
-                    <p className="mt-1 text-gray-600">
-                      Successful applicants will be invited to a virtual interview to discuss their background, goals, and fit with our program.
-                    </p>
-                  </div>
-                  <div className="hidden md:block md:w-1/2 md:pl-8">
-                    {/* Empty div for layout on desktop */}
-                  </div>
-                </div>
-                
-                {/* Step 4 */}
-                <div className="relative flex flex-col md:flex-row items-center">
-                  <div className="flex items-center justify-center md:absolute md:left-1/2 md:transform md:-translate-x-1/2 z-10 h-10 w-10 rounded-full bg-blue-600 text-white font-bold">
-                    4
-                  </div>
-                  <div className="hidden md:block md:w-1/2 md:pr-8">
-                    {/* Empty div for layout on desktop */}
-                  </div>
-                  <div className="ml-12 md:ml-0 mt-3 md:mt-0 md:w-1/2 md:pl-8">
-                    <h3 className="text-lg font-medium text-gray-900">Acceptance & Enrollment</h3>
-                    <p className="mt-1 text-gray-600">
-                      Upon acceptance, you'll receive enrollment information including program start dates, payment options, and orientation details.
-                    </p>
-                  </div>
-                </div>
-                
-                {/* Step 5 */}
-                <div className="relative flex flex-col md:flex-row items-center">
-                  <div className="flex items-center justify-center md:absolute md:left-1/2 md:transform md:-translate-x-1/2 z-10 h-10 w-10 rounded-full bg-green-600 text-white font-bold">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <div className="ml-12 md:ml-0 mt-3 md:mt-0 md:w-1/2 md:pr-8 md:text-right">
-                    <h3 className="text-lg font-medium text-gray-900">Begin Your Journey</h3>
-                    <p className="mt-1 text-gray-600">
-                      Start your learning journey with orientation and access to our online learning platform and community.
-                    </p>
-                  </div>
-                  <div className="hidden md:block md:w-1/2 md:pl-8">
-                    {/* Empty div for layout on desktop */}
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>

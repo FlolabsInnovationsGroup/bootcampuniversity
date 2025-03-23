@@ -7,15 +7,20 @@ import { aiMlCurriculum } from '@/lib/data/curriculum';
 import { CourseModule } from '@/components/curriculum/CourseModule';
 import { ExternalResourceCard } from '@/components/curriculum/ExternalResourcecard';
 import { Badge } from '@/components/shared/Badge';
+import { BookOpen } from 'lucide-react';
 
-interface TrackCurriculumPageProps {
-  params: {
-    trackId: string;
-  };
-}
+type PageProps = {
+  params: Promise<{ trackId: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }> | undefined;
+};
 
-export default function TrackCurriculumPage({ params }: TrackCurriculumPageProps) {
-  const track = getTrackBySlug(params.trackId);
+export default async function TrackCurriculumPage({ 
+  params,
+  searchParams,
+}: PageProps) {
+  const resolvedParams = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const track = getTrackBySlug(resolvedParams.trackId);
 
   if (!track) {
     notFound();
@@ -29,24 +34,31 @@ export default function TrackCurriculumPage({ params }: TrackCurriculumPageProps
   const getGradientClass = (color: string) => {
     switch (color) {
       case 'blue':
-        return 'from-blue-600 to-blue-800';
+        return 'from-primary-600 to-primary-400';
       case 'indigo':
-        return 'from-indigo-600 to-indigo-800';
+        return 'from-indigo-600 to-indigo-400';
       case 'purple':
-        return 'from-purple-600 to-purple-800';
+        return 'from-purple-600 to-purple-400';
       case 'green':
-        return 'from-green-600 to-green-800';
+        return 'from-green-600 to-green-400';
       default:
-        return 'from-blue-600 to-blue-800';
+        return 'from-primary-600 to-primary-400';
     }
   };
 
   return (
-    <div className="bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50/50 dark:from-gray-950 dark:to-gray-900/50">
       {/* Hero Section */}
-      <div className={`relative bg-gradient-to-r ${getGradientClass(track.color)} py-16`}>
-        <div className="absolute inset-0 overflow-hidden">
-          <svg className="absolute bottom-0 right-0 transform translate-x-1/4 translate-y-1/4 opacity-20" width="404" height="404" fill="none" viewBox="0 0 404 404">
+      <div className={`relative overflow-hidden bg-gradient-to-r ${getGradientClass(track.color)} py-20`}>
+        <div className="absolute inset-0">
+          <div className={`absolute inset-0 bg-gradient-to-br ${getGradientClass(track.color)}/90`} />
+          <svg
+            className="absolute bottom-0 right-0 transform translate-x-1/4 translate-y-1/4 opacity-20"
+            width="404"
+            height="404"
+            fill="none"
+            viewBox="0 0 404 404"
+          >
             <defs>
               <pattern id="pattern-squares" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
                 <rect x="0" y="0" width="4" height="4" fill="white" />
@@ -55,12 +67,16 @@ export default function TrackCurriculumPage({ params }: TrackCurriculumPageProps
             <rect width="404" height="404" fill="url(#pattern-squares)" />
           </svg>
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
-            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">
+            <Badge variant="secondary" className="mb-6 border-2 border-white/20">
+              <BookOpen className="mr-1.5 h-3.5 w-3.5" />
+              Track Curriculum
+            </Badge>
+            <h1 className="bg-gradient-to-r from-white to-white/90 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl md:text-6xl">
               {track.title} Curriculum
             </h1>
-            <p className="mt-6 max-w-2xl mx-auto text-xl text-white/90">
+            <p className="mx-auto mt-6 max-w-2xl text-xl text-white/90">
               A comprehensive learning journey combining theory, practice, and real-world applications.
             </p>
           </div>

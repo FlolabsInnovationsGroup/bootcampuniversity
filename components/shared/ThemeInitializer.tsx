@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from 'react';
+import { useTheme } from 'next-themes';
 
 // Add this type declaration at the top
 declare global {
@@ -10,15 +11,23 @@ declare global {
 }
 
 export function ThemeInitializer() {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
   React.useEffect(() => {
+    setMounted(true);
+    
     // Force the theme to be applied immediately on client side
     const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const savedTheme = localStorage.getItem('theme');
+    const html = document.documentElement;
     
     function applyTheme() {
-      const html = document.documentElement;
       const prefersDark = darkModeMediaQuery.matches;
       const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+      
+      // Add transition class before theme changes
+      html.classList.add('transitioning-theme');
       
       // Apply the theme class
       if (isDark) {
@@ -26,11 +35,11 @@ export function ThemeInitializer() {
         document.body.classList.add('dark-mode');
         document.body.classList.remove('light-mode');
         
-        // Force direct styles to all critical elements for immediate effect
-        document.body.style.backgroundColor = '#0f172a'; // slate-950
-        document.body.style.color = '#f8fafc'; // slate-50
+        // Force direct styles to critical elements for immediate effect
+        document.body.style.setProperty('--background-color', '#0f172a');
+        document.body.style.setProperty('--text-color', '#f8fafc');
         
-        // Apply dark styles to all sections - covers the whole page
+        // Apply dark styles to all sections
         const sections = document.querySelectorAll('section, div, header, footer, main');
         sections.forEach(section => {
           if (section instanceof HTMLElement) {
@@ -46,9 +55,9 @@ export function ThemeInitializer() {
         document.body.classList.add('light-mode');
         document.body.classList.remove('dark-mode');
         
-        // Reset light mode
-        document.body.style.backgroundColor = '';
-        document.body.style.color = '';
+        // Reset light mode styles
+        document.body.style.removeProperty('--background-color');
+        document.body.style.removeProperty('--text-color');
         
         // Apply light styles to all sections
         const sections = document.querySelectorAll('section, div, header, footer, main');
@@ -61,6 +70,11 @@ export function ThemeInitializer() {
           }
         });
       }
+      
+      // Remove transition class after theme changes
+      setTimeout(() => {
+        html.classList.remove('transitioning-theme');
+      }, 200);
     }
     
     // Apply theme on load
@@ -68,30 +82,76 @@ export function ThemeInitializer() {
     
     // Create a global function that can be called from anywhere
     window.toggleGlobalTheme = () => {
-      const isDark = document.documentElement.classList.contains('dark');
-      localStorage.setItem('theme', isDark ? 'light' : 'dark');
+      const newTheme = theme === 'dark' ? 'light' : 'dark';
+      setTheme(newTheme);
+      localStorage.setItem('theme', newTheme);
       applyTheme();
     };
     
-    // Listen for changes to the prefers-color-scheme media query
-    darkModeMediaQuery.addEventListener('change', applyTheme);
+    // Listen for system theme changes
+    darkModeMediaQuery.addEventListener('change', (e) => {
+      if (!localStorage.getItem('theme')) {
+        setTheme(e.matches ? 'dark' : 'light');
+        applyTheme();
+      }
+    });
     
     // Create a MutationObserver to watch for class changes on <html>
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class') {
+        if (mutation.attributeName === 'class' && !html.classList.contains('transitioning-theme')) {
           applyTheme();
         }
       });
     });
     
-    observer.observe(document.documentElement, { attributes: true });
+    observer.observe(html, { 
+      attributes: true,
+      attributeFilter: ['class']
+    });
+    
+    // Add CSS variables for smooth transitions
+    const style = document.createElement('style');
+    style.textContent = `
+      :root {
+        --theme-transition-duration: 200ms;
+        --theme-transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      .transitioning-theme * {
+        transition: background-color var(--theme-transition-duration) var(--theme-transition-ease),
+                    border-color var(--theme-transition-duration) var(--theme-transition-ease),
+                    color var(--theme-transition-duration) var(--theme-transition-ease),
+                    fill var(--theme-transition-duration) var(--theme-transition-ease),
+                    stroke var(--theme-transition-duration) var(--theme-transition-ease),
+                    opacity var(--theme-transition-duration) var(--theme-transition-ease),
+                    box-shadow var(--theme-transition-duration) var(--theme-transition-ease) !important;
+      }
+      
+      /* Prevent transition on page load */
+      .no-transitions * {
+        transition: none !important;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Add no-transitions class on load and remove it after a delay
+    html.classList.add('no-transitions');
+    setTimeout(() => {
+      html.classList.remove('no-transitions');
+    }, 100);
     
     return () => {
       darkModeMediaQuery.removeEventListener('change', applyTheme);
       observer.disconnect();
+      style.remove();
     };
-  }, []);
-  
+  }, [theme, setTheme]);
+
+  // Prevent hydration mismatch
+  if (!mounted) {
+    return null;
+  }
+
   return null;
 } 

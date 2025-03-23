@@ -1,237 +1,154 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
-import { 
-  Rocket, 
-  BrainCircuit, 
-  Users, 
-  DollarSign, 
-  Building2, 
-  Trophy,
-  Sparkles,
-  ArrowRight,
-  LucideIcon,
-  GraduationCap,
-  Briefcase,
-  Award
-} from 'lucide-react';
-
-type ColorKey = 'primary' | 'secondary' | 'accent' | 'success' | 'warning' | 'error' | 'slate';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Code, Gem, GraduationCap, Users, Wallet, Zap } from 'lucide-react';
 
 interface Feature {
-  icon: LucideIcon;
+  icon: React.ElementType;
   title: string;
   description: string;
-  color: ColorKey;
+  color: string;
+  iconColor: string;
+  delay: number;
 }
 
 const features: Feature[] = [
   {
     icon: GraduationCap,
-    title: 'Learn from Experts',
-    description: 'Get mentored by industry professionals with years of real-world experience.',
-    color: 'primary'
+    title: 'Learn from Industry Experts',
+    description: 'Get mentored by experienced professionals who bring real-world expertise to your learning journey.',
+    color: 'bg-primary-50 dark:bg-primary-950/50',
+    iconColor: 'text-primary-600 dark:text-primary-400',
+    delay: 0.1,
   },
   {
-    icon: DollarSign,
-    title: 'Earn While Learning',
-    description: 'Start earning through our paid apprenticeship program while mastering your skills.',
-    color: 'secondary'
+    icon: Wallet,
+    title: 'Earn While You Learn',
+    description: 'Start earning as you develop your skills through our innovative paid apprenticeship model.',
+    color: 'bg-secondary-50 dark:bg-secondary-950/50',
+    iconColor: 'text-secondary-600 dark:text-secondary-400',
+    delay: 0.2,
   },
   {
-    icon: Briefcase,
-    title: 'Real Projects',
-    description: 'Work on actual projects for real clients to build a professional portfolio.',
-    color: 'accent'
+    icon: Code,
+    title: 'Hands-on Projects',
+    description: 'Build real-world projects that demonstrate your capabilities to potential employers.',
+    color: 'bg-accent-50 dark:bg-accent-950/50',
+    iconColor: 'text-accent-600 dark:text-accent-400',
+    delay: 0.3,
   },
   {
     icon: Users,
-    title: 'Community',
-    description: 'Join a thriving community of learners, mentors, and industry partners.',
-    color: 'primary'
+    title: 'Collaborative Learning',
+    description: 'Join a community of learners and build your professional network from day one.',
+    color: 'bg-primary-50 dark:bg-primary-950/50',
+    iconColor: 'text-primary-600 dark:text-primary-400',
+    delay: 0.4,
   },
   {
-    icon: Award,
-    title: 'Certifications',
-    description: 'Earn industry-recognized certifications as you progress through the program.',
-    color: 'secondary'
+    icon: Gem,
+    title: 'Industry-Recognized Skills',
+    description: 'Gain certifications and skills that are in high demand across the tech industry.',
+    color: 'bg-secondary-50 dark:bg-secondary-950/50',
+    iconColor: 'text-secondary-600 dark:text-secondary-400',
+    delay: 0.5,
   },
   {
-    icon: Rocket,
-    title: 'Career Launch',
-    description: 'Get placed in high-paying tech roles through our industry partnerships.',
-    color: 'accent'
-  }
+    icon: Zap,
+    title: 'Fast-Track Career Growth',
+    description: 'Accelerate your career progression with our structured learning paths and job placement support.',
+    color: 'bg-accent-50 dark:bg-accent-950/50',
+    iconColor: 'text-accent-600 dark:text-accent-400',
+    delay: 0.6,
+  },
 ];
 
-// Function to get color classes based on color key
-const getColorClasses = (color: ColorKey) => {
-  const colorMap: Record<ColorKey, {
-    gradient: string;
-    gradientDark: string;
-    iconLight: string;
-    iconDark: string;
-    bgLight: string;
-    bgDark: string;
-    border: string;
-    buttonText: string;
-    cssVars: {
-      light: string;
-      dark: string;
-    };
-  }> = {
-    primary: {
-      gradient: 'bg-gradient-to-br from-primary-500 to-primary-600',
-      gradientDark: 'dark:from-primary-600 dark:to-primary-700',
-      iconLight: 'text-primary-50',
-      iconDark: 'dark:text-primary-50',
-      bgLight: 'bg-primary-500',
-      bgDark: 'dark:bg-primary-600',
-      border: 'border-primary-200 dark:border-primary-800',
-      buttonText: 'text-primary-600 dark:text-primary-400',
-      cssVars: {
-        light: 'rgba(var(--primary-500), 0.8)',
-        dark: 'rgba(var(--primary-700), 0.8)'
-      }
-    },
-    secondary: {
-      gradient: 'bg-gradient-to-br from-secondary-500 to-secondary-600',
-      gradientDark: 'dark:from-secondary-600 dark:to-secondary-700',
-      iconLight: 'text-secondary-50',
-      iconDark: 'dark:text-secondary-50',
-      bgLight: 'bg-secondary-500',
-      bgDark: 'dark:bg-secondary-600',
-      border: 'border-secondary-200 dark:border-secondary-800',
-      buttonText: 'text-secondary-600 dark:text-secondary-400',
-      cssVars: {
-        light: 'rgba(var(--secondary-500), 0.8)',
-        dark: 'rgba(var(--secondary-700), 0.8)'
-      }
-    },
-    accent: {
-      gradient: 'bg-gradient-to-br from-accent-500 to-accent-600',
-      gradientDark: 'dark:from-accent-600 dark:to-accent-700',
-      iconLight: 'text-accent-50',
-      iconDark: 'dark:text-accent-50',
-      bgLight: 'bg-accent-500',
-      bgDark: 'dark:bg-accent-600',
-      border: 'border-accent-200 dark:border-accent-800',
-      buttonText: 'text-accent-600 dark:text-accent-400',
-      cssVars: {
-        light: 'rgba(var(--accent-500), 0.8)',
-        dark: 'rgba(var(--accent-700), 0.8)'
-      }
-    },
-    success: {
-      gradient: 'from-emerald-500 to-emerald-600',
-      gradientDark: 'dark:from-emerald-600 dark:to-emerald-700',
-      iconLight: 'text-emerald-500',
-      iconDark: 'dark:text-emerald-400',
-      bgLight: 'bg-emerald-50/70',
-      bgDark: 'dark:bg-emerald-900/20',
-      border: 'border-emerald-100 dark:border-emerald-800/30',
-      buttonText: 'text-emerald-600 dark:text-emerald-400',
-      cssVars: {
-        light: 'var(--emerald-500)',
-        dark: 'var(--emerald-600)'
-      }
-    },
-    warning: {
-      gradient: 'from-amber-500 to-amber-600',
-      gradientDark: 'dark:from-amber-600 dark:to-amber-700',
-      iconLight: 'text-amber-500',
-      iconDark: 'dark:text-amber-400',
-      bgLight: 'bg-amber-50/70',
-      bgDark: 'dark:bg-amber-900/20',
-      border: 'border-amber-100 dark:border-amber-800/30',
-      buttonText: 'text-amber-600 dark:text-amber-400',
-      cssVars: {
-        light: 'var(--amber-500)',
-        dark: 'var(--amber-600)'
-      }
-    },
-    error: {
-      gradient: 'from-rose-500 to-rose-600',
-      gradientDark: 'dark:from-rose-600 dark:to-rose-700',
-      iconLight: 'text-rose-500',
-      iconDark: 'dark:text-rose-400',
-      bgLight: 'bg-rose-50/70',
-      bgDark: 'dark:bg-rose-900/20',
-      border: 'border-rose-100 dark:border-rose-800/30',
-      buttonText: 'text-rose-600 dark:text-rose-400',
-      cssVars: {
-        light: 'var(--rose-500)',
-        dark: 'var(--rose-600)'
-      }
-    },
-    slate: {
-      gradient: 'bg-gradient-to-br from-slate-500 to-slate-600',
-      gradientDark: 'dark:from-slate-600 dark:to-slate-700',
-      iconLight: 'text-slate-50',
-      iconDark: 'dark:text-slate-50',
-      bgLight: 'bg-slate-500',
-      bgDark: 'dark:bg-slate-600',
-      border: 'border-slate-200 dark:border-slate-800',
-      buttonText: 'text-slate-600 dark:text-slate-400',
-      cssVars: {
-        light: 'rgba(var(--slate-500), 0.8)',
-        dark: 'rgba(var(--slate-700), 0.8)'
-      }
-    }
-  };
+const FeatureCard = ({ feature }: { feature: Feature }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ["start end", "end start"]
+  });
+  
+  const scale = useTransform(scrollYProgress, [0, 0.5], [0.95, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
 
-  return colorMap[color];
-};
-
-const Features = () => {
   return (
-    <section className="relative py-24 bg-white dark:bg-slate-900">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-slate-50 dark:bg-slate-800/50 skew-y-3 -z-10" />
-      
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-4xl font-urbanist-text font-extrabold tracking-tight mb-6">
-            <span className="text-slate-900 dark:text-white">Why Choose </span>
-            <span className="bg-gradient-to-r from-primary-500 via-secondary-500 to-accent-500 bg-clip-text text-transparent">
-              Innovation Bootcamp
-            </span>
-          </h2>
-          <p className="text-lg text-slate-600 dark:text-slate-300">
-            Our unique approach combines education, real-world experience, and career development
-            to ensure your success in the tech industry.
-          </p>
+    <motion.div
+      ref={cardRef}
+      style={{ scale, opacity }}
+      whileHover={{ scale: 1.02 }}
+      className="group relative overflow-hidden rounded-xl border bg-card p-6 transition-all duration-300 hover:shadow-xl dark:shadow-primary-500/5"
+    >
+      <div 
+        className={`absolute -right-4 -top-4 h-32 w-32 rounded-full ${feature.color} opacity-40 blur-3xl transition-all duration-500 group-hover:scale-150 group-hover:opacity-60`} 
+      />
+      <div className="relative">
+        <div 
+          className={`mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl ${feature.color} transition-transform duration-300 group-hover:scale-110`}
+        >
+          <feature.icon className={`h-7 w-7 ${feature.iconColor} transition-all duration-300 group-hover:scale-110`} />
         </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="group relative bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg hover:shadow-xl border border-slate-100 dark:border-slate-700 transition-all duration-300 hover:-translate-y-1"
-            >
-              {/* Hover effect background */}
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary-500/0 via-secondary-500/0 to-accent-500/0 group-hover:from-primary-500/5 group-hover:via-secondary-500/5 group-hover:to-accent-500/5 transition-colors duration-500" />
-              
-              <div className="relative">
-                <div className={`w-12 h-12 rounded-lg mb-4 flex items-center justify-center bg-${feature.color}-100 dark:bg-${feature.color}-900/30`}>
-                  <feature.icon className={`w-6 h-6 text-${feature.color}-500 dark:text-${feature.color}-400`} />
-                </div>
-                
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
-                  {feature.title}
-                </h3>
-                
-                <p className="text-slate-600 dark:text-slate-300">
-                  {feature.description}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+        <h3 className="mb-3 text-xl font-bold tracking-tight text-foreground">
+          {feature.title}
+        </h3>
+        <p className="text-muted-foreground/90">
+          {feature.description}
+        </p>
       </div>
-    </section>
+    </motion.div>
   );
 };
 
-export default Features; 
+export default function Features() {
+  const containerRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
+  const y = useTransform(scrollYProgress, [0, 0.2], [50, 0]);
+
+  return (
+    <section ref={containerRef} className="relative overflow-hidden py-24 sm:py-32">
+      {/* Background decoration */}
+      <div className="absolute inset-0 bg-grid opacity-[0.02] dark:opacity-[0.03]" />
+      <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-primary-50/20 via-primary-50/10 to-transparent dark:from-primary-950/20 dark:via-primary-950/10" />
+      <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-secondary-50/20 via-secondary-50/10 to-transparent dark:from-secondary-950/20 dark:via-secondary-950/10" />
+
+      <motion.div 
+        style={{ opacity }}
+        className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
+      >
+        {/* Section header */}
+        <div className="max-w-2xl">
+          <motion.h2
+            style={{ y }}
+            className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl"
+          >
+            Why Choose{' '}
+            <span className="text-gradient bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
+              Innovation Bootcamp
+            </span>
+          </motion.h2>
+          <motion.p
+            style={{ y }}
+            transition={{ delay: 0.1 }}
+            className="mt-6 text-lg text-muted-foreground"
+          >
+            Our program is designed to transform beginners into industry-ready professionals through a unique combination of structured learning and practical experience.
+          </motion.p>
+        </div>
+
+        {/* Features grid */}
+        <div className="mt-20 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {features.map((feature, index) => (
+            <FeatureCard key={index} feature={feature} />
+          ))}
+        </div>
+      </motion.div>
+    </section>
+  );
+} 

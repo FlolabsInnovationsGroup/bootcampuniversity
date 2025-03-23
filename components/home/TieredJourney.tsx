@@ -1,150 +1,206 @@
-import React from 'react';
-import { GraduationCap, Code, Brain, Rocket, ArrowRight, CheckCircle } from 'lucide-react';
-import Link from 'next/link';
+'use client';
+
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Code2, Rocket, Trophy, Sparkles, GraduationCap, BrainCircuit } from 'lucide-react';
 
 const tiers = [
   {
-    icon: Code,
-    name: 'Bootcamp',
-    duration: '8-12 weeks',
-    description: 'Master the fundamentals through intensive, hands-on training with industry experts.',
-    features: [
-      'Foundational programming concepts',
-      'Industry-standard tools & practices',
-      'Project-based learning',
-      'Mentorship support'
-    ],
-    color: 'primary'
+    level: 'Tier 1',
+    title: 'Foundation Builder',
+    icon: Code2,
+    color: 'from-blue-500 to-blue-600',
+    darkColor: 'dark:from-blue-600 dark:to-blue-700',
+    iconBg: 'bg-blue-100 dark:bg-blue-900/20',
+    iconColor: 'text-blue-600 dark:text-blue-400',
+    earnings: '$500-1000',
+    duration: '2-3 months',
+    skills: ['HTML/CSS', 'JavaScript', 'Git Basics', 'UI/UX Fundamentals'],
+    description: 'Build a strong foundation in web development fundamentals while earning your first rewards.'
   },
   {
-    icon: Brain,
-    name: 'Apprenticeship',
-    duration: '6-12 months',
-    description: 'Get paid while working on real projects and continuing your technical education.',
-    features: [
-      'Paid work experience',
-      'Real client projects',
-      'Advanced technical training',
-      'Career development'
-    ],
-    color: 'secondary'
-  },
-  {
+    level: 'Tier 2',
+    title: 'Skill Accelerator',
     icon: Rocket,
-    name: 'Career Launch',
-    duration: 'Ongoing',
-    description: 'Launch your tech career with our network of industry partners and continued support.',
-    features: [
-      'Job placement assistance',
-      'Industry networking',
-      'Advanced certifications',
-      'Leadership opportunities'
-    ],
-    color: 'accent'
+    color: 'from-purple-500 to-purple-600',
+    darkColor: 'dark:from-purple-600 dark:to-purple-700',
+    iconBg: 'bg-purple-100 dark:bg-purple-900/20',
+    iconColor: 'text-purple-600 dark:text-purple-400',
+    earnings: '$1000-2500',
+    duration: '3-4 months',
+    skills: ['React/Next.js', 'Node.js', 'Database Design', 'API Development'],
+    description: 'Accelerate your learning with advanced concepts and start building full-stack applications.'
+  },
+  {
+    level: 'Tier 3',
+    title: 'Professional Developer',
+    icon: Trophy,
+    color: 'from-green-500 to-green-600',
+    darkColor: 'dark:from-green-600 dark:to-green-700',
+    iconBg: 'bg-green-100 dark:bg-green-900/20',
+    iconColor: 'text-green-600 dark:text-green-400',
+    earnings: '$2500-5000',
+    duration: '4-6 months',
+    skills: ['System Design', 'Cloud Services', 'DevOps', 'Team Leadership'],
+    description: 'Work on complex projects and prepare for professional software engineering roles.'
   }
 ];
 
-const TieredJourney = () => {
+const TierCard = ({ tier, index }: { tier: typeof tiers[0]; index: number }) => {
+  const Icon = tier.icon;
+  const cardRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ["start end", "end start"]
+  });
+  
+  const scale = useTransform(scrollYProgress, [0, 0.5], [0.95, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
+  
   return (
-    <section className="relative py-24 overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-50 to-white dark:from-slate-800 dark:to-slate-900" />
-      
-      {/* Decorative shapes */}
-      <div className="absolute top-0 left-1/4 w-64 h-64 bg-primary-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob" />
-      <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-secondary-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000" />
-      <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-accent-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000" />
+    <motion.div
+      ref={cardRef}
+      style={{ scale, opacity }}
+      className="relative group"
+    >
+      {/* Connection line */}
+      {index < tiers.length - 1 && (
+        <div className="hidden md:block absolute top-1/2 left-full w-full h-1 bg-gradient-to-r from-slate-200/50 to-transparent dark:from-slate-700/50 transform -translate-y-1/2 z-0" />
+      )}
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 mb-6">
-            <GraduationCap className="w-4 h-4 text-primary-500" />
-            <span className="text-sm font-medium text-slate-900 dark:text-white">Your Learning Journey</span>
+      {/* Card */}
+      <motion.div
+        whileHover={{ scale: 1.02, y: -5 }}
+        transition={{ duration: 0.2 }}
+        className="relative z-10 bg-white dark:bg-slate-800/90 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden backdrop-blur-sm border border-slate-200/10"
+      >
+        {/* Header */}
+        <div className={`p-8 bg-gradient-to-br ${tier.color} ${tier.darkColor}`}>
+          <div className="flex items-center justify-between mb-6">
+            <motion.div 
+              whileHover={{ scale: 1.1, rotate: -5 }}
+              className={`w-14 h-14 rounded-xl ${tier.iconBg} flex items-center justify-center shadow-lg`}
+            >
+              <Icon className={`w-7 h-7 ${tier.iconColor}`} />
+            </motion.div>
+            <motion.span 
+              whileHover={{ scale: 1.05 }}
+              className="px-4 py-1.5 rounded-full bg-white/20 text-white text-sm font-medium backdrop-blur-sm"
+            >
+              {tier.level}
+            </motion.span>
           </div>
-          
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-urbanist-text font-extrabold tracking-tight mb-6">
-            <span className="text-slate-900 dark:text-white">A </span>
-            <span className="bg-gradient-to-r from-primary-500 via-secondary-500 to-accent-500 bg-clip-text text-transparent">
-              Tiered Approach
-            </span>
-            <span className="text-slate-900 dark:text-white"> to Success</span>
-          </h2>
-          
-          <p className="max-w-2xl mx-auto text-lg text-slate-600 dark:text-slate-300">
-            Our unique three-tiered program ensures you build a strong foundation,
-            gain real experience, and launch a successful tech career.
-          </p>
+          <h3 className="text-2xl font-bold text-white mb-3">{tier.title}</h3>
+          <p className="text-white/90 text-base leading-relaxed">{tier.description}</p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {tiers.map((tier, index) => {
-            const Icon = tier.icon;
-            return (
-              <div
-                key={index}
-                className="group relative bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg hover:shadow-xl border border-slate-100 dark:border-slate-700 transition-all duration-300 hover:-translate-y-1"
-              >
-                {/* Hover gradient effect */}
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary-500/0 via-secondary-500/0 to-accent-500/0 group-hover:from-primary-500/5 group-hover:via-secondary-500/5 group-hover:to-accent-500/5 transition-colors duration-500" />
-                
-                <div className="relative">
-                  {/* Header */}
-                  <div className="flex items-start justify-between mb-6">
-                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center bg-${tier.color}-100 dark:bg-${tier.color}-900/30`}>
-                      <Icon className={`w-6 h-6 text-${tier.color}-500 dark:text-${tier.color}-400`} />
-                    </div>
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium bg-${tier.color}-100 dark:bg-${tier.color}-900/30 text-${tier.color}-600 dark:text-${tier.color}-400`}>
-                      {tier.duration}
-                    </span>
-                  </div>
+        {/* Content */}
+        <div className="p-8">
+          {/* Metrics */}
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            <motion.div 
+              whileHover={{ scale: 1.02 }}
+              className="text-center p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/10 backdrop-blur-sm"
+            >
+              <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Potential Earnings</p>
+              <p className="text-xl font-bold bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
+                {tier.earnings}
+              </p>
+            </motion.div>
+            <motion.div 
+              whileHover={{ scale: 1.02 }}
+              className="text-center p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/10 backdrop-blur-sm"
+            >
+              <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Duration</p>
+              <p className="text-xl font-bold bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
+                {tier.duration}
+              </p>
+            </motion.div>
+          </div>
 
-                  {/* Content */}
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
-                    {tier.name}
-                  </h3>
-                  
-                  <p className="text-slate-600 dark:text-slate-300 mb-6">
-                    {tier.description}
-                  </p>
-
-                  {/* Features */}
-                  <ul className="space-y-3 mb-6">
-                    {tier.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start gap-3">
-                        <CheckCircle className={`w-5 h-5 mt-0.5 text-${tier.color}-500 dark:text-${tier.color}-400 flex-shrink-0`} />
-                        <span className="text-slate-700 dark:text-slate-300">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {/* Progress indicator */}
-                  <div className="flex items-center gap-2 mb-6">
-                    {[...Array(3)].map((_, i) => (
-                      <div
-                        key={i}
-                        className={`h-1 rounded-full flex-1 ${
-                          i <= index
-                            ? `bg-${tier.color}-500 dark:bg-${tier.color}-400`
-                            : 'bg-slate-200 dark:bg-slate-700'
-                        }`}
-                      />
-                    ))}
-                  </div>
-
-                  {/* CTA Button */}
-                  <Link
-                    href={`/apply?tier=${tier.name.toLowerCase()}`}
-                    className={`inline-flex items-center justify-center w-full px-4 py-2 rounded-lg bg-${tier.color}-100 dark:bg-${tier.color}-900/30 text-${tier.color}-600 dark:text-${tier.color}-400 hover:bg-${tier.color}-200 dark:hover:bg-${tier.color}-900/50 transition-colors duration-200`}
-                  >
-                    Learn more
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Link>
-                </div>
-              </div>
-            );
-          })}
+          {/* Skills */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium text-slate-900 dark:text-white mb-4">Key Skills</h4>
+            <div className="flex flex-wrap gap-2">
+              {tier.skills.map((skill, idx) => (
+                <motion.span
+                  key={skill}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: idx * 0.1 }}
+                  whileHover={{ scale: 1.05 }}
+                  className="px-3 py-1.5 text-sm rounded-lg bg-slate-100 dark:bg-slate-700/50 text-slate-700 dark:text-slate-300 border border-slate-200/10 backdrop-blur-sm"
+                >
+                  {skill}
+                </motion.span>
+              ))}
+            </div>
+          </div>
         </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const TieredJourney = () => {
+  const containerRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
+  const y = useTransform(scrollYProgress, [0, 0.2], [50, 0]);
+
+  return (
+    <section ref={containerRef} className="relative py-32 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl">
+      {/* Background decorations */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-primary-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob" />
+        <div className="absolute top-1/3 -right-20 w-96 h-96 bg-secondary-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000" />
+        <div className="absolute -bottom-20 left-1/2 w-96 h-96 bg-accent-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000" />
       </div>
+
+      <motion.div 
+        style={{ opacity }}
+        className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
+        {/* Section header */}
+        <div className="text-center max-w-3xl mx-auto mb-20">
+          <motion.div
+            style={{ y }}
+            className="inline-flex items-center px-4 py-2 rounded-full bg-primary-100 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 text-sm font-medium mb-6 border border-primary-200/20 backdrop-blur-sm"
+          >
+            <Sparkles className="w-4 h-4 mr-2" />
+            Your Learning Journey
+          </motion.div>
+
+          <motion.h2
+            style={{ y }}
+            className="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight"
+          >
+            Earn More as You{' '}
+            <span className="bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
+              Learn More
+            </span>
+          </motion.h2>
+
+          <motion.p
+            style={{ y }}
+            className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed"
+          >
+            Our tiered program structure ensures you're constantly growing while earning.
+            Each tier brings new challenges, higher earnings, and greater opportunities.
+          </motion.p>
+        </div>
+
+        {/* Tiers grid */}
+        <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
+          {tiers.map((tier, index) => (
+            <TierCard key={tier.level} tier={tier} index={index} />
+          ))}
+        </div>
+      </motion.div>
     </section>
   );
 };

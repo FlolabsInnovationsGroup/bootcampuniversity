@@ -1,5 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
+import { Badge } from '@/components/shared';
+import { BookOpen } from 'lucide-react';
 
 interface Track {
   id: string;
@@ -78,11 +80,18 @@ export default function TracksOverview() {
   ];
 
   return (
-    <div className="bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50/50 dark:from-gray-950 dark:to-gray-900/50">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-blue-600 to-teal-500 py-16">
-        <div className="absolute inset-0 overflow-hidden">
-          <svg className="absolute bottom-0 left-0 transform translate-x-1/4 translate-y-1/4 opacity-20" width="404" height="404" fill="none" viewBox="0 0 404 404">
+      <div className="relative overflow-hidden bg-gradient-to-r from-primary-600 to-primary-400 py-20">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-600/90 to-primary-400/90" />
+          <svg
+            className="absolute bottom-0 left-0 transform translate-x-1/4 translate-y-1/4 opacity-20"
+            width="404"
+            height="404"
+            fill="none"
+            viewBox="0 0 404 404"
+          >
             <defs>
               <pattern id="pattern-squares" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
                 <rect x="0" y="0" width="4" height="4" fill="white" />
@@ -91,12 +100,16 @@ export default function TracksOverview() {
             <rect width="404" height="404" fill="url(#pattern-squares)" />
           </svg>
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
-            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+            <Badge variant="secondary" className="mb-6 border-2 border-white/20">
+              <BookOpen className="mr-1.5 h-3.5 w-3.5" />
+              Learning Paths
+            </Badge>
+            <h1 className="bg-gradient-to-r from-white to-white/90 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl md:text-6xl">
               Learning Tracks
             </h1>
-            <p className="mt-6 max-w-2xl mx-auto text-xl text-white/90">
+            <p className="mx-auto mt-6 max-w-2xl text-xl text-white/90">
               Choose your path to a rewarding tech career with our specialized tracks.
               Each track follows our tiered approach from learning to earning.
             </p>
@@ -108,10 +121,10 @@ export default function TracksOverview() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="mb-16">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-extrabold text-gray-900">
-              Specialized Paths to <span className="bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">Tech Excellence</span>
+            <h2 className="text-3xl font-extrabold text-gray-900 dark:text-gray-50">
+              Specialized Paths to <span className="bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">Tech Excellence</span>
             </h2>
-            <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
               Our carefully curated tracks provide targeted learning paths in high-demand tech fields.
               All tracks follow our three-tier system that combines theory with real-world practice.
             </p>
@@ -122,51 +135,53 @@ export default function TracksOverview() {
             {tracks.map((track) => (
               <div 
                 key={track.id}
-                className="relative rounded-lg shadow-lg overflow-hidden bg-white transform transition duration-300 hover:-translate-y-1 hover:shadow-xl border border-gray-100"
+                className="group relative rounded-lg shadow-lg overflow-hidden bg-white dark:bg-gray-800 transform transition duration-300 hover:-translate-y-1 hover:shadow-xl border border-gray-200 dark:border-gray-700"
               >
                 <div className={`absolute top-0 left-0 w-full h-1 bg-${track.color}-600`}></div>
                 <div className="p-8">
                   <div className="flex items-center mb-4">
-                    <div className={`w-16 h-16 rounded-lg bg-${track.color}-100 flex items-center justify-center mr-6`}>
+                    <div className={`w-16 h-16 rounded-lg bg-${track.color}-100 dark:bg-${track.color}-900/20 flex items-center justify-center mr-6`}>
                       {track.icon}
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900">{track.title}</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-50">{track.title}</h3>
                   </div>
-                  <p className="text-gray-600 mb-6">
+                  <p className="text-gray-600 dark:text-gray-400 mb-6">
                     {track.longDescription}
                   </p>
                   
                   <div className="mb-6">
-                    <h4 className="font-medium text-gray-900 mb-2">Core Skills:</h4>
+                    <h4 className="font-medium text-gray-900 dark:text-gray-50 mb-2">Core Skills:</h4>
                     <div className="flex flex-wrap gap-2">
                       {track.skills.map((skill, index) => (
-                        <span 
+                        <Badge 
                           key={index} 
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-${track.color}-100 text-${track.color}-800`}
+                          variant="secondary"
+                          className={`bg-${track.color}-100 dark:bg-${track.color}-900/20 text-${track.color}-800 dark:text-${track.color}-300`}
                         >
                           {skill}
-                        </span>
+                        </Badge>
                       ))}
                     </div>
                   </div>
                   
                   <div className="mb-6">
-                    <h4 className="font-medium text-gray-900 mb-2">Learning Platforms:</h4>
+                    <h4 className="font-medium text-gray-900 dark:text-gray-50 mb-2">Learning Platforms:</h4>
                     <div className="flex flex-wrap gap-2">
                       {track.platforms.map((platform, index) => (
-                        <span 
-                          key={index} 
-                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                        <Badge 
+                          key={index}
+                          variant="secondary"
+                          className="bg-transparent border border-gray-200 dark:border-gray-700"
                         >
                           {platform}
-                        </span>
+                        </Badge>
                       ))}
                     </div>
                   </div>
                   
                   <div className="mb-8">
-                    <h4 className="font-medium text-gray-900 mb-2">Career Paths:</h4>
-                    <ul className="text-gray-600 list-disc pl-5 space-y-1">
+                    <h4 className="font-medium text-gray-900 dark:text-gray-50 mb-2">Career Paths:</h4>
+                    <ul className="text-gray-600 dark:text-gray-400 list-disc pl-5 space-y-1">
                       {track.careerPaths.map((path, index) => (
                         <li key={index}>{path}</li>
                       ))}
@@ -176,13 +191,13 @@ export default function TracksOverview() {
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Link
                       href={`/tracks/${track.id}`}
-                      className={`inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-${track.color}-600 hover:bg-${track.color}-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${track.color}-500`}
+                      className={`inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-${track.color}-600 hover:bg-${track.color}-700 dark:hover:bg-${track.color}-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${track.color}-500 transition-colors duration-200`}
                     >
                       Explore Curriculum
                     </Link>
                     <Link
                       href={`/apply?track=${track.id}`}
-                      className="inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      className="inline-flex justify-center items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200"
                     >
                       Apply Now
                     </Link>
@@ -194,29 +209,29 @@ export default function TracksOverview() {
         </div>
 
         {/* Track Comparison */}
-        <div className="bg-gray-50 rounded-lg p-8 mb-16">
+        <div className="bg-gray-50/50 dark:bg-gray-900/50 rounded-lg p-8 mb-16">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-50">
               Track Comparison
             </h2>
-            <p className="mt-2 text-gray-600">
+            <p className="mt-2 text-gray-600 dark:text-gray-400">
               Compare features across our different learning tracks
             </p>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-300">
+            <table className="min-w-full divide-y divide-gray-300 dark:divide-gray-700">
               <thead>
                 <tr>
-                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Feature</th>
+                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-50">Feature</th>
                   {tracks.map((track) => (
-                    <th key={track.id} scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">
+                    <th key={track.id} scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900 dark:text-gray-50">
                       {track.title}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                 <tr>
                   <td className="py-4 pl-4 pr-3 text-sm font-medium text-gray-900">Tier 1 Duration</td>
                   <td className="px-3 py-4 text-sm text-center text-gray-500">3-4 months</td>

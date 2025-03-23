@@ -1,6 +1,8 @@
 import React from 'react';
-import { Check } from 'lucide-react';
+import { Check, Sparkles } from 'lucide-react';
 import { Button } from './Button';
+import { Card, CardHeader, CardContent, CardFooter } from './Card';
+import { Badge } from './Badge';
 
 interface PricingTier {
   id: string;
@@ -11,6 +13,7 @@ interface PricingTier {
   buttonText: string;
   buttonVariant: 'primary' | 'outline';
   highlighted?: boolean;
+  badge?: string;
 }
 
 interface PricingTableProps {
@@ -20,50 +23,82 @@ interface PricingTableProps {
 export const PricingTable = ({ tiers }: PricingTableProps) => {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {tiers.map((tier) => (
-          <div
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {tiers.map((tier, index) => (
+          <Card
             key={tier.id}
-            className={`flex flex-col rounded-lg ${
+            variant={tier.highlighted ? "gradient" : "default"}
+            hover={true}
+            className={`relative flex flex-col ${
               tier.highlighted
-                ? 'bg-white shadow-xl ring-1 ring-blue-600 lg:shadow-xl'
-                : 'bg-white shadow-md ring-1 ring-gray-200'
+                ? 'ring-2 ring-primary-500 dark:ring-primary-400'
+                : ''
             }`}
           >
-            <div className="p-8">
-              <h3 className="text-lg font-semibold leading-8 text-gray-900">
-                {tier.name}
-              </h3>
-              <p className="mt-4 text-sm leading-6 text-gray-600">
-                {tier.description}
-              </p>
-              <p className="mt-6 flex items-baseline gap-x-1">
-                <span className="text-4xl font-bold tracking-tight text-gray-900">{tier.price}</span>
-              </p>
-              <Button
-                href="/apply"
-                variant={tier.buttonVariant}
-                fullWidth={true}
-                className="mt-6"
-              >
-                {tier.buttonText}
-              </Button>
-            </div>
-            <div className="flex flex-1 flex-col p-8">
-              <div className="mt-2 flex flex-1 flex-col justify-between">
-                <ul role="list" className="space-y-3">
-                  {tier.features.map((feature) => (
-                    <li key={feature} className="flex items-start">
-                      <Check className="h-6 w-6 flex-shrink-0 text-green-500" />
-                      <span className="ml-3 text-sm leading-6 text-gray-600">
-                        {feature}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+            {tier.highlighted && (
+              <div className="absolute -top-5 left-0 right-0 mx-auto w-fit">
+                <Badge
+                  variant="default"
+                  className="border-2 border-primary-500/20"
+                >
+                  <Sparkles className="mr-1 h-3 w-3" />
+                  Most Popular
+                </Badge>
               </div>
-            </div>
-          </div>
+            )}
+
+            <CardHeader>
+              {tier.badge && (
+                <Badge variant="secondary" className="w-fit">
+                  {tier.badge}
+                </Badge>
+              )}
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-50">
+                    {tier.name}
+                  </h3>
+                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    {tier.description}
+                  </p>
+                </div>
+              </div>
+              <div className="mt-6">
+                <div className="flex items-baseline gap-x-1">
+                  <span className="text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-50">
+                    {tier.price}
+                  </span>
+                </div>
+                <Button
+                  href="/apply"
+                  variant={tier.buttonVariant}
+                  size="lg"
+                  className="mt-6 w-full"
+                >
+                  {tier.buttonText}
+                </Button>
+              </div>
+            </CardHeader>
+
+            <CardContent className="flex-1">
+              <ul role="list" className="mt-2 space-y-3">
+                {tier.features.map((feature) => (
+                  <li key={feature} className="flex items-start">
+                    <Check className="h-5 w-5 flex-shrink-0 text-primary-500 dark:text-primary-400" />
+                    <span className="ml-3 text-sm text-gray-600 dark:text-gray-300">
+                      {feature}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+
+            <CardFooter className="pt-6">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Prices shown are in USD. Applicable taxes will be calculated at checkout.
+              </p>
+            </CardFooter>
+          </Card>
         ))}
       </div>
     </div>

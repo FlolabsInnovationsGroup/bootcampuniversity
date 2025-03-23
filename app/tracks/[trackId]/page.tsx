@@ -6,26 +6,37 @@ import { Badge } from '@/components/shared/Badge';
 import { TechnologyStack } from '@/components/tracks/TechnologyStack';
 import { getTrackBySlug } from '@/lib/data/tracks';
 import { getColorClass } from '@/lib/utils/tailwindhelpers';
+import { GraduationCap } from 'lucide-react';
 
-interface TrackDetailPageProps {
-  params: {
-    trackId: string;
-  };
-}
+type PageProps = {
+  params: Promise<{ trackId: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }> | undefined;
+};
 
-export default function TrackDetailPage({ params }: TrackDetailPageProps) {
-  const track = getTrackBySlug(params.trackId);
+export default async function TrackDetailPage({ 
+  params,
+  searchParams,
+}: PageProps) {
+  const resolvedParams = await params;
+  const track = getTrackBySlug(resolvedParams.trackId);
 
   if (!track) {
     notFound();
   }
 
   return (
-    <div className="bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50/50 dark:from-gray-950 dark:to-gray-900/50">
       {/* Hero Section */}
-      <div className={`relative bg-gradient-to-r ${getColorClass('bg-gradient', track.color)} py-16`}>
-        <div className="absolute inset-0 overflow-hidden">
-          <svg className="absolute bottom-0 right-0 transform translate-x-1/4 translate-y-1/4 opacity-20" width="404" height="404" fill="none" viewBox="0 0 404 404">
+      <div className={`relative overflow-hidden bg-gradient-to-r ${getColorClass('bg-gradient', track.color)} py-20`}>
+        <div className="absolute inset-0">
+          <div className={`absolute inset-0 bg-gradient-to-br ${getColorClass('bg-gradient', track.color)}/90`} />
+          <svg
+            className="absolute bottom-0 right-0 transform translate-x-1/4 translate-y-1/4 opacity-20"
+            width="404"
+            height="404"
+            fill="none"
+            viewBox="0 0 404 404"
+          >
             <defs>
               <pattern id="pattern-squares" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
                 <rect x="0" y="0" width="4" height="4" fill="white" />
@@ -34,10 +45,14 @@ export default function TrackDetailPage({ params }: TrackDetailPageProps) {
             <rect width="404" height="404" fill="url(#pattern-squares)" />
           </svg>
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           <div className="md:flex md:items-center md:justify-between">
             <div className="md:w-1/2">
-              <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">
+              <Badge variant="secondary" className="mb-6 border-2 border-white/20">
+                <GraduationCap className="mr-1.5 h-3.5 w-3.5" />
+                Learning Track
+              </Badge>
+              <h1 className="bg-gradient-to-r from-white to-white/90 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl md:text-6xl">
                 {track.title}
               </h1>
               <p className="mt-6 max-w-2xl text-xl text-white/90">
@@ -46,13 +61,13 @@ export default function TrackDetailPage({ params }: TrackDetailPageProps) {
               <div className="mt-8 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
                 <Link
                   href={`/tracks/${track.slug}/curriculum`}
-                  className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-600 focus:ring-white"
+                  className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-600 focus:ring-white transition-colors duration-200"
                 >
                   View Curriculum
                 </Link>
                 <Link
                   href="/apply"
-                  className="inline-flex items-center justify-center px-5 py-3 border border-white text-base font-medium rounded-md shadow-sm text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-600 focus:ring-white"
+                  className="inline-flex items-center justify-center px-5 py-3 border border-white text-base font-medium rounded-md shadow-sm text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-600 focus:ring-white transition-colors duration-200"
                 >
                   Apply Now
                 </Link>
@@ -78,27 +93,27 @@ export default function TrackDetailPage({ params }: TrackDetailPageProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-3 lg:gap-8">
             <div>
-              <h2 className="text-3xl font-extrabold text-gray-900">
+              <h2 className="text-3xl font-extrabold text-gray-900 dark:text-gray-50">
                 What You'll Learn
               </h2>
-              <p className="mt-4 text-lg text-gray-500">
+              <p className="mt-4 text-lg text-gray-500 dark:text-gray-400">
                 Gain in-demand skills through our comprehensive curriculum that combines 
                 theoretical learning with hands-on projects.
               </p>
             </div>
             <div className="mt-12 lg:mt-0 lg:col-span-2">
               <div className="space-y-5">
-                <h3 className="text-lg font-medium text-gray-900">Skills You'll Develop</h3>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50">Skills You'll Develop</h3>
                 <div className="flex flex-wrap gap-2">
                   {track.skills.map((skill) => (
-                    <Badge key={skill} variant="default">
+                    <Badge key={skill} variant="secondary" className="bg-primary-100 dark:bg-primary-900/20 text-primary-800 dark:text-primary-300">
                       {skill}
                     </Badge>
                   ))}
                 </div>
               </div>
               <div className="mt-12 space-y-5">
-                <h3 className="text-lg font-medium text-gray-900">Career Paths</h3>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50">Career Paths</h3>
                 <ul className="space-y-3">
                   {track.careers.map((career) => (
                     <li key={career} className="flex items-start">
@@ -114,7 +129,7 @@ export default function TrackDetailPage({ params }: TrackDetailPageProps) {
                           clipRule="evenodd"
                         />
                       </svg>
-                      <span className="ml-3 text-gray-700">{career}</span>
+                      <span className="ml-3 text-gray-700 dark:text-gray-300">{career}</span>
                     </li>
                   ))}
                 </ul>
@@ -125,7 +140,7 @@ export default function TrackDetailPage({ params }: TrackDetailPageProps) {
       </section>
 
       {/* Technologies */}
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-50/50 dark:bg-gray-900/50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <TechnologyStack 
             title="Technologies You'll Master"
@@ -139,49 +154,49 @@ export default function TrackDetailPage({ params }: TrackDetailPageProps) {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-extrabold text-gray-900">
-              Your <span className="bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">Learning Journey</span>
+            <h2 className="text-3xl font-extrabold text-gray-900 dark:text-gray-50">
+              Your <span className="bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">Learning Journey</span>
             </h2>
-            <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
               From foundational concepts to advanced mastery, our tiered program provides a clear path to success.
             </p>
           </div>
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {/* Tier 1 */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden border-t-4 border-blue-600">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
               <div className="p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Tier 1: Bootcamp</h3>
-                <p className="text-gray-600 mb-4">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-50 mb-2">Tier 1: Bootcamp</h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
                   Build a solid foundation with self-paced learning through industry platforms combined with guided projects.
                 </p>
                 <div className="mt-6">
-                  <h4 className="text-sm font-medium uppercase text-gray-500 mb-2">What You'll Learn:</h4>
+                  <h4 className="text-sm font-medium uppercase text-gray-500 dark:text-gray-400 mb-2">What You'll Learn:</h4>
                   <ul className="space-y-2">
                     <li className="flex items-start">
                       <svg className="h-5 w-5 text-blue-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="ml-2 text-gray-600">Core concepts and fundamentals</span>
+                      <span className="ml-2 text-gray-600 dark:text-gray-300">Core concepts and fundamentals</span>
                     </li>
                     <li className="flex items-start">
                       <svg className="h-5 w-5 text-blue-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="ml-2 text-gray-600">Industry-standard tools and platforms</span>
+                      <span className="ml-2 text-gray-600 dark:text-gray-300">Industry-standard tools and platforms</span>
                     </li>
                     <li className="flex items-start">
                       <svg className="h-5 w-5 text-blue-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="ml-2 text-gray-600">Guided project experience</span>
+                      <span className="ml-2 text-gray-600 dark:text-gray-300">Guided project experience</span>
                     </li>
                   </ul>
                 </div>
                 <div className="mt-6">
                   <Link
                     href={`/tracks/${track.slug}/curriculum`}
-                    className="text-blue-600 hover:text-blue-800 font-medium"
+                    className="text-blue-600 dark:text-primary-600 hover:text-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-600 focus:ring-white transition-colors duration-200"
                   >
                     View Tier 1 Curriculum
                   </Link>
@@ -190,39 +205,39 @@ export default function TrackDetailPage({ params }: TrackDetailPageProps) {
             </div>
 
             {/* Tier 2 */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden border-t-4 border-indigo-600">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
               <div className="p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Tier 2: Apprenticeship</h3>
-                <p className="text-gray-600 mb-4">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-50 mb-2">Tier 2: Apprenticeship</h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
                   Gain hands-on experience working on real client projects while earning compensation as an apprentice.
                 </p>
                 <div className="mt-6">
-                  <h4 className="text-sm font-medium uppercase text-gray-500 mb-2">What You'll Do:</h4>
+                  <h4 className="text-sm font-medium uppercase text-gray-500 dark:text-gray-400 mb-2">What You'll Do:</h4>
                   <ul className="space-y-2">
                     <li className="flex items-start">
                       <svg className="h-5 w-5 text-indigo-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="ml-2 text-gray-600">Work on real client projects</span>
+                      <span className="ml-2 text-gray-600 dark:text-gray-300">Work on real client projects</span>
                     </li>
                     <li className="flex items-start">
                       <svg className="h-5 w-5 text-indigo-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="ml-2 text-gray-600">Receive direct mentorship</span>
+                      <span className="ml-2 text-gray-600 dark:text-gray-300">Receive direct mentorship</span>
                     </li>
                     <li className="flex items-start">
                       <svg className="h-5 w-5 text-indigo-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="ml-2 text-gray-600">Build your professional portfolio</span>
+                      <span className="ml-2 text-gray-600 dark:text-gray-300">Build your professional portfolio</span>
                     </li>
                   </ul>
                 </div>
                 <div className="mt-6">
                   <Link
                     href={`/tracks/${track.slug}/internships`}
-                    className="text-indigo-600 hover:text-indigo-800 font-medium"
+                    className="text-indigo-600 dark:text-primary-600 hover:text-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-600 focus:ring-white transition-colors duration-200"
                   >
                     Explore Apprenticeship Projects
                   </Link>
@@ -231,39 +246,39 @@ export default function TrackDetailPage({ params }: TrackDetailPageProps) {
             </div>
 
             {/* Tier 3 */}
-            <div className="bg-white rounded-lg shadow-md overflow-hidden border-t-4 border-teal-600">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
               <div className="p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Tier 3: Masters Program</h3>
-                <p className="text-gray-600 mb-4">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-50 mb-2">Tier 3: Masters Program</h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
                   Advance to a fully paid position with leadership opportunities and continued professional growth.
                 </p>
                 <div className="mt-6">
-                  <h4 className="text-sm font-medium uppercase text-gray-500 mb-2">Career Growth:</h4>
+                  <h4 className="text-sm font-medium uppercase text-gray-500 dark:text-gray-400 mb-2">Career Growth:</h4>
                   <ul className="space-y-2">
                     <li className="flex items-start">
                       <svg className="h-5 w-5 text-teal-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="ml-2 text-gray-600">Take on leadership roles</span>
+                      <span className="ml-2 text-gray-600 dark:text-gray-300">Take on leadership roles</span>
                     </li>
                     <li className="flex items-start">
                       <svg className="h-5 w-5 text-teal-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="ml-2 text-gray-600">Mentor junior team members</span>
+                      <span className="ml-2 text-gray-600 dark:text-gray-300">Mentor junior team members</span>
                     </li>
                     <li className="flex items-start">
                       <svg className="h-5 w-5 text-teal-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="ml-2 text-gray-600">Develop specialized expertise</span>
+                      <span className="ml-2 text-gray-600 dark:text-gray-300">Develop specialized expertise</span>
                     </li>
                   </ul>
                 </div>
                 <div className="mt-6">
                   <Link
                     href="/tracks/how-it-works"
-                    className="text-teal-600 hover:text-teal-800 font-medium"
+                    className="text-teal-600 dark:text-primary-600 hover:text-teal-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-600 focus:ring-white transition-colors duration-200"
                   >
                     Learn About the Master's Program
                   </Link>
@@ -275,20 +290,22 @@ export default function TrackDetailPage({ params }: TrackDetailPageProps) {
       </section>
 
       {/* CTA */}
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-50/50 dark:bg-gray-900/50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-blue-600 rounded-lg shadow-xl overflow-hidden">
-            <div className="pt-10 pb-12 px-6 sm:pt-16 sm:px-16 lg:py-16 lg:pr-0 xl:py-20 xl:px-20">
+          <div className="relative overflow-hidden rounded-lg">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-400"></div>
+            <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]"></div>
+            <div className="relative pt-10 pb-12 px-6 sm:pt-16 sm:px-16 lg:py-16 lg:pr-0 xl:py-20 xl:px-20">
               <div className="lg:self-center lg:max-w-3xl">
                 <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
                   <span className="block">Ready to start your journey?</span>
                 </h2>
-                <p className="mt-4 text-lg leading-6 text-indigo-100">
+                <p className="mt-4 text-lg leading-6 text-white/90">
                   Join our next cohort and take the first step toward a rewarding career in {track.title}.
                 </p>
                 <Link
                   href="/apply"
-                  className="mt-8 bg-white border border-transparent rounded-md shadow px-6 py-3 inline-flex items-center text-base font-medium text-blue-600 hover:bg-indigo-50"
+                  className="mt-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-primary-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-600 focus:ring-white transition-colors duration-200"
                 >
                   Apply Now
                 </Link>
