@@ -4,8 +4,9 @@ import Features from '@/components/home/Features';
 import TieredJourney from '@/components/home/TieredJourney';
 import FeaturedTracks from '@/components/home/FeaturedTracks';
 import PartnerShowcase from '@/components/home/PartnerShowcase';
-import TestimonialCarousel from '@/components/home/TestimonialCarousel';
+import TestimonialCarousel from '@/components/home/Testimonials';
 import Apply from '@/components/home/Apply';
+import Testimonials from '@/components/home/Testimonials';
 
 export default function Home() {
   return (
@@ -39,7 +40,7 @@ export default function Home() {
       {/* Testimonials Section */}
       <section className="relative py-20 sm:py-32">
         <div className="absolute inset-0 bg-grid opacity-[0.03]" />
-        <TestimonialCarousel />
+        <Testimonials />
       </section>
 
       {/* Application Section */}

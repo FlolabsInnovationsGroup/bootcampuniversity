@@ -3,14 +3,19 @@
 import React, { useRef } from 'react';
 import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, ChevronRight, Star, Users, Briefcase, GraduationCap, Building2 } from 'lucide-react';
+import {
+  ArrowRight,
+  Star,
+  Users,
+  Briefcase,
+  GraduationCap,
+  Building2,
+  TerminalSquare,
+  Handshake,
+} from 'lucide-react';
 
-// Stats Card Component
 const StatsCard = ({ label, value, icon: Icon }: { label: string; value: string; icon: React.ElementType }) => (
-  <motion.div
-    whileHover={{ y: -4 }}
-    className="relative group"
-  >
+  <motion.div whileHover={{ y: -4 }} className="relative group">
     <div className="absolute -inset-2 bg-gradient-to-r from-primary-500/10 to-secondary-500/10 rounded-xl blur-lg group-hover:opacity-100 opacity-0 transition-opacity duration-500" />
     <div className="relative card flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700/50 backdrop-blur-sm">
       <div className="w-12 h-12 rounded-lg bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center mb-3">
@@ -28,7 +33,7 @@ const Hero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end start"],
+    offset: ['start start', 'end start'],
   });
 
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
@@ -36,10 +41,10 @@ const Hero: React.FC = () => {
   const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
 
   const stats = [
-    { icon: GraduationCap, value: "95%", label: "Employment Rate" },
-    { icon: Briefcase, value: "$75K", label: "Avg Starting Salary" },
-    { icon: Users, value: "1000+", label: "Graduates" },
-    { icon: Building2, value: "50+", label: "Partner Companies" },
+    { icon: GraduationCap, value: '95%', label: 'Employment Rate' },
+    { icon: Briefcase, value: '$75K', label: 'Avg Starting Salary' },
+    { icon: Users, value: '1000+', label: 'Graduates' },
+    { icon: Building2, value: '50+', label: 'Partner Companies' },
   ];
 
   return (
@@ -107,34 +112,39 @@ const Hero: React.FC = () => {
         >
           <Star className="w-4 h-4 text-primary-600 dark:text-primary-400" />
           <span className="ml-2 text-sm font-medium text-primary-600 dark:text-primary-400">
-            Applications Open for 2024
+            Applications Open for 2025
           </span>
-          <ChevronRight className="w-4 h-4 ml-1 text-primary-600 dark:text-primary-400" />
         </motion.div>
 
-        {/* Heading */}
+        {/* Title */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 dark:text-white mb-6"
         >
-          Launch Your Tech Career with{' '}
+          Choose Your Tech Path:
+          <br />
           <span className="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
-            Innovation Bootcamp
+            Bootcamp or Internship
           </span>
         </motion.h1>
 
-        {/* Subheading */}
+        {/* Subtitle */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className="max-w-2xl text-lg sm:text-xl text-slate-600 dark:text-slate-400 mb-10"
         >
-          Transform your future with hands-on training, expert mentorship, and real-world projects. 
-          Join a community of innovators and kickstart your journey in tech.
+          Learn from top platforms and get paid real-world experience. Start structured training or dive directly into internships with real companies.
+          <p className="mt-2 text-sm italic text-primary-600 dark:text-primary-400">
+  No experience needed. Just ambition.
+</p>
+
         </motion.p>
+
+        
 
         {/* CTA Buttons */}
         <motion.div
@@ -143,25 +153,22 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex flex-col sm:flex-row gap-4 mb-16"
         >
-          <Link 
-            href="/apply" 
+          <Link
+            href="/apply"
             className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium transition-all duration-200 hover:shadow-lg hover:shadow-primary-500/25 group"
           >
-            Apply Now
-            <motion.div
-              className="ml-2"
-              initial={false}
-              animate={{ x: 0 }}
-              whileHover={{ x: 4 }}
-            >
-              <ArrowRight className="w-4 h-4" />
-            </motion.div>
+            <TerminalSquare className="w-4 h-4 mr-2" />
+            Start Bootcamp
           </Link>
-          <Link 
-            href="/programs" 
+
+          <Link
+            href="https://flomad.international"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-medium transition-all duration-200"
           >
-            Explore Programs
+            <Handshake className="w-4 h-4 mr-2" />
+            Internships Only
           </Link>
         </motion.div>
 

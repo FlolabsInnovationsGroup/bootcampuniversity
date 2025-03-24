@@ -53,32 +53,21 @@ const CallToAction = () => {
 
   return (
     <section ref={containerRef} className="relative py-32 overflow-hidden">
-      {/* Background decorations */}
       <div className="absolute inset-0 bg-gradient-to-b from-slate-50/80 to-white/80 dark:from-slate-900/80 dark:to-slate-900/90 backdrop-blur-xl" />
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-primary-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob" />
-        <div className="absolute top-1/3 -right-20 w-96 h-96 bg-secondary-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000" />
-        <div className="absolute -bottom-20 left-1/2 w-96 h-96 bg-accent-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000" />
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl animate-blob" />
+        <div className="absolute top-1/3 -right-20 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-blob animation-delay-2000" />
+        <div className="absolute -bottom-20 left-1/2 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl animate-blob animation-delay-4000" />
       </div>
 
-      <motion.div 
-        style={{ opacity }}
-        className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-      >
+      <motion.div style={{ opacity }} className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Content */}
           <div>
-            <motion.div
-              style={{ y }}
-              className="mb-12"
-            >
-              <motion.div
-                className="inline-flex items-center px-4 py-2 rounded-full bg-primary-100 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 text-sm font-medium mb-6 border border-primary-200/20 backdrop-blur-sm"
-              >
+            <motion.div style={{ y }} className="mb-12">
+              <motion.div className="inline-flex items-center px-4 py-2 rounded-full bg-primary-100 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 text-sm font-medium mb-6 border border-primary-200/20 backdrop-blur-sm">
                 <Sparkles className="w-4 h-4 mr-2" />
                 Transform Your Career
               </motion.div>
-
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white mb-6">
                 Start Your Tech Career{' '}
                 <span className="bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
@@ -86,16 +75,12 @@ const CallToAction = () => {
                 </span>
               </h2>
               <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
-                Join our innovative program where you'll learn, earn, and build your way to a successful career in tech. No upfront costs, just your commitment to success.
+                Learn, earn, and launch your career with our proven, risk-free program.
               </p>
             </motion.div>
 
-            {/* Stats */}
-            <motion.div
-              style={{ y }}
-              className="grid grid-cols-3 gap-6 mb-12"
-            >
-              {stats.map((stat, index) => {
+            <motion.div style={{ y }} className="grid grid-cols-3 gap-6 mb-12">
+              {stats.map((stat) => {
                 const Icon = stat.icon;
                 return (
                   <motion.div
@@ -114,19 +99,13 @@ const CallToAction = () => {
                         {stat.unit}
                       </div>
                     </div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400">
-                      {stat.label}
-                    </div>
+                    <div className="text-sm text-slate-600 dark:text-slate-400">{stat.label}</div>
                   </motion.div>
                 );
               })}
             </motion.div>
 
-            {/* CTA Buttons */}
-            <motion.div
-              style={{ y }}
-              className="flex flex-col sm:flex-row gap-4"
-            >
+            <motion.div style={{ y }} className="flex flex-col sm:flex-row gap-4">
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Link
                   href="/apply"
@@ -148,19 +127,11 @@ const CallToAction = () => {
             </motion.div>
           </div>
 
-          {/* Features List */}
-          <motion.div
-            style={{ y }}
-            className="lg:pl-16 xl:pl-24"
-          >
+          <motion.div style={{ y }} className="lg:pl-16 xl:pl-24">
             <div className="relative overflow-hidden rounded-2xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/10 p-8 md:p-12 shadow-xl">
-              {/* Background decoration */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5" />
-              
               <div className="relative">
-                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-8">
-                  Program Highlights
-                </h3>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-8">Program Highlights</h3>
                 <div className="grid gap-6">
                   {features.map((feature, index) => (
                     <motion.div
@@ -172,7 +143,7 @@ const CallToAction = () => {
                       whileHover={{ scale: 1.02 }}
                       className="flex items-center gap-4 group"
                     >
-                      <motion.div 
+                      <motion.div
                         whileHover={{ rotate: 180 }}
                         transition={{ duration: 0.3 }}
                         className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center shadow-lg"
@@ -183,12 +154,7 @@ const CallToAction = () => {
                           viewBox="0 0 24 24"
                           stroke="currentColor"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 13l4 4L19 7"
-                          />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                       </motion.div>
                       <span className="text-lg text-slate-700 dark:text-slate-300 group-hover:text-primary-500 dark:group-hover:text-primary-400 transition-colors duration-200">
@@ -206,4 +172,4 @@ const CallToAction = () => {
   );
 };
 
-export default CallToAction; 
+export default CallToAction;

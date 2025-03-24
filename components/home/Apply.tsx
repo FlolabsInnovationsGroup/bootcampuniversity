@@ -6,6 +6,7 @@ import { useState, useRef } from 'react';
 
 interface FormData {
   step: number;
+  path: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -19,6 +20,7 @@ interface FormData {
 
 const initialFormData: FormData = {
   step: 1,
+  path: '',
   firstName: '',
   lastName: '',
   email: '',
@@ -84,6 +86,51 @@ export default function Apply() {
 
   const renderStep = () => {
     switch (formData.step) {
+      case 0:
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6 text-center"
+    >
+      <h3 className="text-2xl font-bold text-foreground mb-4">
+        Choose Your Path
+      </h3>
+      <p className="text-muted-foreground mb-6">
+        Are you applying for our guided Bootcamp program or the Internship-only path?
+      </p>
+
+      <div className="flex flex-col sm:flex-row justify-center gap-6">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => {
+            setFormData((prev) => ({
+              ...prev,
+              path: 'bootcamp',
+              step: 1, // proceed to main form
+            }));
+          }}
+          className="px-6 py-4 rounded-xl bg-gradient-to-r from-primary-600 to-primary-500 text-white font-semibold shadow-md"
+        >
+          🚀 Bootcamp Path
+        </motion.button>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => {
+            window.location.href = 'https://flomad.international';
+          }}
+          className="px-6 py-4 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold border border-slate-300 dark:border-slate-700"
+        >
+          💼 Internship Only
+        </motion.button>
+      </div>
+    </motion.div>
+  );
+
       case 1:
         return (
           <motion.div

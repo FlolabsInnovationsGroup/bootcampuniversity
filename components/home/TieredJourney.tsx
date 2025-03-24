@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Code2, Rocket, Trophy, Sparkles, GraduationCap, BrainCircuit } from 'lucide-react';
+import { Code2, Rocket, Trophy, Sparkles } from 'lucide-react';
 
 const tiers = [
   {
@@ -53,28 +53,24 @@ const TierCard = ({ tier, index }: { tier: typeof tiers[0]; index: number }) => 
     target: cardRef,
     offset: ["start end", "end start"]
   });
-  
+
   const scale = useTransform(scrollYProgress, [0, 0.5], [0.95, 1]);
   const opacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
-  
+
   return (
     <motion.div
       ref={cardRef}
       style={{ scale, opacity }}
       className="relative group"
     >
-      {/* Connection line */}
       {index < tiers.length - 1 && (
         <div className="hidden md:block absolute top-1/2 left-full w-full h-1 bg-gradient-to-r from-slate-200/50 to-transparent dark:from-slate-700/50 transform -translate-y-1/2 z-0" />
       )}
-
-      {/* Card */}
       <motion.div
         whileHover={{ scale: 1.02, y: -5 }}
         transition={{ duration: 0.2 }}
         className="relative z-10 bg-white dark:bg-slate-800/90 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden backdrop-blur-sm border border-slate-200/10"
       >
-        {/* Header */}
         <div className={`p-8 bg-gradient-to-br ${tier.color} ${tier.darkColor}`}>
           <div className="flex items-center justify-between mb-6">
             <motion.div 
@@ -94,9 +90,7 @@ const TierCard = ({ tier, index }: { tier: typeof tiers[0]; index: number }) => 
           <p className="text-white/90 text-base leading-relaxed">{tier.description}</p>
         </div>
 
-        {/* Content */}
         <div className="p-8">
-          {/* Metrics */}
           <div className="grid grid-cols-2 gap-4 mb-8">
             <motion.div 
               whileHover={{ scale: 1.02 }}
@@ -117,8 +111,6 @@ const TierCard = ({ tier, index }: { tier: typeof tiers[0]; index: number }) => 
               </p>
             </motion.div>
           </div>
-
-          {/* Skills */}
           <div className="space-y-3">
             <h4 className="text-sm font-medium text-slate-900 dark:text-white mb-4">Key Skills</h4>
             <div className="flex flex-wrap gap-2">
@@ -154,7 +146,6 @@ const TieredJourney = () => {
 
   return (
     <section ref={containerRef} className="relative py-32 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl">
-      {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 -left-20 w-96 h-96 bg-primary-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob" />
         <div className="absolute top-1/3 -right-20 w-96 h-96 bg-secondary-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000" />
@@ -165,7 +156,6 @@ const TieredJourney = () => {
         style={{ opacity }}
         className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
-        {/* Section header */}
         <div className="text-center max-w-3xl mx-auto mb-20">
           <motion.div
             style={{ y }}
@@ -194,7 +184,6 @@ const TieredJourney = () => {
           </motion.p>
         </div>
 
-        {/* Tiers grid */}
         <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
           {tiers.map((tier, index) => (
             <TierCard key={tier.level} tier={tier} index={index} />

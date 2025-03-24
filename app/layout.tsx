@@ -7,7 +7,7 @@ import { ThemeInitializer } from '@/components/shared/ThemeInitializer';
 import { Toaster } from '@/components/ui/toaster';
 import { Analytics } from '../components/shared/Analytics';
 
-// Font definitions with optimized loading
+// Font setup
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
@@ -32,6 +32,7 @@ const jetbrainsMono = JetBrains_Mono({
   fallback: ['Consolas', 'monospace'],
 });
 
+// Viewport & metadata
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -103,58 +104,44 @@ export const metadata: Metadata = {
       { url: '/icon.svg', type: 'image/svg+xml' },
       { url: '/apple-touch-icon.png', sizes: '180x180' },
     ],
-    apple: [
-      { url: '/apple-touch-icon.png' },
-    ],
+    apple: [{ url: '/apple-touch-icon.png' }],
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html 
-      lang="en" 
-      className={`${inter.variable} ${urbanist.variable} ${jetbrainsMono.variable} scroll-smooth`} 
+    <html
+      lang="en"
+      className={`${inter.variable} ${urbanist.variable} ${jetbrainsMono.variable} scroll-smooth`}
       suppressHydrationWarning
     >
       <head>
-        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f172a" />
-        <script 
+        <script
           dangerouslySetInnerHTML={{
             __html: `
               try {
-                if (localStorage.getItem('theme') === 'dark' || 
-                  (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                const theme = localStorage.getItem('theme');
+                if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                   document.documentElement.classList.add('dark');
                 } else {
                   document.documentElement.classList.remove('dark');
                 }
-              } catch (e) {}
-            `
-          }} 
+              } catch (_) {}
+            `,
+          }}
         />
       </head>
-      <body 
+      <body
         className={`
           min-h-screen flex flex-col font-sans antialiased
           bg-gradient-to-b from-white to-gray-50/50 dark:from-gray-950 dark:to-gray-900/50
           text-slate-900 dark:text-slate-50
           transition-colors duration-150
           selection:bg-primary-500/20 selection:text-primary-900 dark:selection:text-primary-100
-          overflow-x-hidden
-          scroll-smooth
+          overflow-x-hidden scroll-smooth
         `}
       >
         <ThemeInitializer />
-        <div className="fixed inset-0 flex justify-center sm:px-8 pointer-events-none">
-          <div className="flex w-full max-w-7xl">
-            <div className="w-full bg-gradient-to-b from-white to-gray-50/50 dark:from-gray-950 dark:to-gray-900/50 ring-1 ring-slate-100/10 dark:ring-slate-900/10" />
-          </div>
-        </div>
         <div className="relative flex flex-col min-h-screen">
           <Navbar />
           <main className="relative flex-grow pt-16">

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, CheckCircle2, Code, Database, Layout, Server } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Code, Server, Layout } from 'lucide-react';
 import Link from 'next/link';
 import { useRef } from 'react';
 
@@ -82,9 +82,9 @@ const ProgramCard = ({ program }: { program: Program }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: cardRef,
-    offset: ["start end", "end start"]
+    offset: ['start end', 'end start']
   });
-  
+
   const scale = useTransform(scrollYProgress, [0, 0.5], [0.95, 1]);
   const opacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
 
@@ -95,29 +95,14 @@ const ProgramCard = ({ program }: { program: Program }) => {
       whileHover={{ scale: 1.02 }}
       className="group relative overflow-hidden rounded-xl border bg-card p-6 transition-all duration-300 hover:shadow-xl dark:shadow-primary-500/5"
     >
-      <div 
-        className={`absolute -right-8 -top-8 h-40 w-40 rounded-full ${program.color} opacity-40 blur-3xl transition-all duration-500 group-hover:scale-150 group-hover:opacity-60`} 
-      />
-      
+      <div className={`absolute -right-8 -top-8 h-40 w-40 rounded-full ${program.color} opacity-40 blur-3xl transition-all duration-500 group-hover:scale-150 group-hover:opacity-60`} />
       <div className="relative">
-        {/* Header */}
-        <div 
-          className={`mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl ${program.color} transition-transform duration-300 group-hover:scale-110`}
-        >
+        <div className={`mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl ${program.color} transition-transform duration-300 group-hover:scale-110`}>
           <program.icon className={`h-7 w-7 ${program.iconColor} transition-all duration-300 group-hover:scale-110`} />
         </div>
-        
-        <h3 className="mb-2 text-2xl font-bold tracking-tight text-foreground">
-          {program.title}
-        </h3>
-        <p className="mb-4 text-sm font-medium text-muted-foreground/90">
-          {program.subtitle}
-        </p>
-        <p className="mb-6 text-muted-foreground/90">
-          {program.description}
-        </p>
-
-        {/* Details */}
+        <h3 className="mb-2 text-2xl font-bold tracking-tight text-foreground">{program.title}</h3>
+        <p className="mb-4 text-sm font-medium text-muted-foreground/90">{program.subtitle}</p>
+        <p className="mb-6 text-muted-foreground/90">{program.description}</p>
         <div className="mb-6 flex items-center justify-between rounded-lg border bg-muted/10 p-4">
           <div>
             <p className="text-sm font-medium text-muted-foreground">Duration</p>
@@ -128,11 +113,9 @@ const ProgramCard = ({ program }: { program: Program }) => {
             <p className="font-semibold text-foreground">{program.price}</p>
           </div>
         </div>
-
-        {/* Features */}
         <ul className="mb-8 space-y-3">
           {program.features.map((feature, index) => (
-            <motion.li 
+            <motion.li
               key={index}
               initial={{ opacity: 0, x: -10 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -145,11 +128,9 @@ const ProgramCard = ({ program }: { program: Program }) => {
             </motion.li>
           ))}
         </ul>
-
-        {/* CTA */}
         <Link
           href="/apply"
-          className={`group/btn inline-flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-primary-500 to-primary-600 px-6 py-3 text-sm font-semibold text-white transition-all hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:from-primary-600 dark:to-primary-700 dark:hover:from-primary-700 dark:hover:to-primary-800`}
+          className="group/btn inline-flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-primary-500 to-primary-600 px-6 py-3 text-sm font-semibold text-white transition-all hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:from-primary-600 dark:to-primary-700 dark:hover:from-primary-700 dark:hover:to-primary-800"
         >
           Apply Now
           <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
@@ -163,7 +144,7 @@ export default function Programs() {
   const containerRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "end start"]
+    offset: ['start end', 'end start']
   });
 
   const opacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
@@ -171,37 +152,24 @@ export default function Programs() {
 
   return (
     <section ref={containerRef} className="relative overflow-hidden py-24 sm:py-32">
-      {/* Background decoration */}
       <div className="absolute inset-0 bg-grid opacity-[0.02] dark:opacity-[0.03]" />
       <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-primary-50/20 via-primary-50/10 to-transparent dark:from-primary-950/20 dark:via-primary-950/10" />
       <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-secondary-50/20 via-secondary-50/10 to-transparent dark:from-secondary-950/20 dark:via-secondary-950/10" />
 
-      <motion.div 
-        style={{ opacity }}
-        className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
-      >
-        {/* Section header */}
+      <motion.div style={{ opacity }} className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl">
-          <motion.h2
-            style={{ y }}
-            className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl"
-          >
+          <motion.h2 style={{ y }} className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
             Choose Your{' '}
             <span className="text-gradient bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
               Learning Path
             </span>
           </motion.h2>
-          <motion.p
-            style={{ y }}
-            transition={{ delay: 0.1 }}
-            className="mt-6 text-lg text-muted-foreground"
-          >
+          <motion.p style={{ y }} transition={{ delay: 0.1 }} className="mt-6 text-lg text-muted-foreground">
             Our tiered program structure allows you to progress at your own pace while earning and learning. 
             Each tier builds upon the previous one, creating a comprehensive learning journey.
           </motion.p>
         </div>
 
-        {/* Programs grid */}
         <div className="mt-20 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {programs.map((program, index) => (
             <ProgramCard key={index} program={program} />
@@ -210,4 +178,4 @@ export default function Programs() {
       </motion.div>
     </section>
   );
-} 
+}

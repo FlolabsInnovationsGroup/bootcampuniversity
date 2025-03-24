@@ -13,69 +13,68 @@ interface FAQItem {
 const faqs: FAQItem[] = [
   {
     question: 'How does the earn-while-you-learn model work?',
-    answer: 'Our unique model allows you to earn income while developing your skills. As you progress through the program, you\'ll work on real client projects, receiving compensation based on your tier level and project contributions. This helps offset the cost of education while building practical experience.',
+    answer:
+      'You earn income by working on real client projects while you learn. Compensation is based on your tier level and contributions, helping offset education costs while gaining practical experience.',
     category: 'financial',
   },
   {
     question: 'What are the program prerequisites?',
-    answer: 'While no formal coding experience is required for our Foundation Builder program, we look for candidates who demonstrate strong problem-solving abilities, commitment to learning, and basic computer proficiency. Each tier has specific requirements that build upon the previous level.',
+    answer:
+      'No formal experience is needed to start. We look for strong problem-solving, commitment, and basic computer skills. Each tier builds on the one before it.',
     category: 'program',
   },
   {
     question: 'How long does it take to complete each tier?',
-    answer: 'The Foundation Builder tier typically takes 3 months, while both the Skill Accelerator and Professional Developer tiers take 6 months each. However, progression is based on competency rather than fixed timeframes, allowing students to advance at their own pace.',
+    answer:
+      'Foundation Builder takes ~3 months. Skill Accelerator and Professional Developer take ~6 months each. Progress is competency-based, so you can go at your own pace.',
     category: 'program',
   },
   {
     question: 'What kind of job support do you provide?',
-    answer: 'We offer comprehensive career support including resume building, interview preparation, portfolio development, and direct connections with our industry partners. Our career services team works with you throughout the program and after graduation to help secure relevant opportunities.',
+    answer:
+      'Career support includes portfolio reviews, resume help, interview prep, and direct connections to hiring partners. We help you land a role during and after the program.',
     category: 'career',
   },
   {
     question: 'Are there financing options available?',
-    answer: 'Yes, we offer various financing options including income share agreements, monthly payment plans, and scholarships for eligible candidates. Our earn-while-you-learn model also helps offset costs through project-based compensation.',
+    answer:
+      'Yes — we offer income share agreements, monthly plans, and scholarships. You can also earn money through project-based compensation as you learn.',
     category: 'financial',
   },
   {
     question: 'What technologies and skills will I learn?',
-    answer: 'Our curriculum covers in-demand technologies including HTML, CSS, JavaScript, React, Node.js, and more. You\'ll also learn essential soft skills, development practices, and industry tools. The curriculum is regularly updated based on industry trends and employer needs.',
+    answer:
+      'You’ll learn HTML, CSS, JavaScript, React, Node.js, and more. Soft skills, dev workflows, and industry tools are also included. The curriculum is updated often.',
     category: 'program',
   },
   {
     question: 'Can I participate while working full-time?',
-    answer: 'Yes, our program is designed to be flexible. Many students maintain full-time jobs while completing the Foundation Builder tier. As you progress to higher tiers, you may need to adjust your schedule as the workload and project commitments increase.',
+    answer:
+      'Yes! Many learners keep full-time jobs during Foundation Builder. Later tiers may require more time due to project commitments.',
     category: 'general',
   },
   {
     question: 'What makes Innovation Bootcamp different?',
-    answer: 'Our program stands out through our tiered progression system, earn-while-you-learn model, and direct industry connections. We focus on practical skills development through real projects, providing both education and professional experience simultaneously.',
+    answer:
+      'Tiered progression, project-based learning, and real income while learning. You get practical experience, industry exposure, and job-ready skills from day one.',
     category: 'general',
   },
 ];
 
-const FAQItem = ({ item, isOpen, onToggle }: { 
-  item: FAQItem; 
-  isOpen: boolean; 
-  onToggle: () => void;
-}) => (
-  <motion.div
-    initial={false}
-    className="border-b border-slate-200/10 last:border-none"
-  >
+const FAQItem = ({ item, isOpen, onToggle }: { item: FAQItem; isOpen: boolean; onToggle: () => void }) => (
+  <motion.div initial={false} className="border-b border-border last:border-none">
     <motion.button
       onClick={onToggle}
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
-      className="flex w-full items-center justify-between py-6 text-left text-foreground hover:text-primary-500 focus:outline-none transition-colors duration-200"
+      className="flex w-full items-center justify-between py-6 text-left text-foreground hover:text-primary focus:outline-none transition-colors duration-200"
     >
       <span className="text-lg font-medium pr-8">{item.question}</span>
       <motion.div
         initial={false}
         animate={{ rotate: isOpen ? 180 : 0 }}
         transition={{ duration: 0.2 }}
-        className={`h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/20 flex items-center justify-center ${
-          isOpen ? 'text-primary-500' : 'text-primary-400'
-        }`}
+        className={`h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/20 flex items-center justify-center ${isOpen ? 'text-primary-500' : 'text-primary-400'}`}
       >
         <ChevronDown className="h-4 w-4" />
       </motion.div>
@@ -86,12 +85,10 @@ const FAQItem = ({ item, isOpen, onToggle }: {
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
           className="overflow-hidden"
         >
-          <p className="pb-6 text-muted-foreground leading-relaxed">
-            {item.answer}
-          </p>
+          <p className="pb-6 text-muted-foreground leading-relaxed">{item.answer}</p>
         </motion.div>
       )}
     </AnimatePresence>
@@ -103,12 +100,8 @@ export default function FAQ() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<FAQItem['category'] | 'all'>('all');
   const containerRef = useRef<HTMLElement>(null);
-  
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
 
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ['start end', 'end start'] });
   const opacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
   const y = useTransform(scrollYProgress, [0, 0.2], [50, 0]);
 
@@ -121,58 +114,38 @@ export default function FAQ() {
   ];
 
   const filteredFaqs = faqs.filter((faq) => {
-    const matchesSearch = faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = faq.question.toLowerCase().includes(searchQuery.toLowerCase()) || faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = activeCategory === 'all' || faq.category === activeCategory;
     return matchesSearch && matchesCategory;
   });
 
   return (
     <section ref={containerRef} className="relative overflow-hidden py-32">
-      {/* Background decoration */}
       <div className="absolute inset-0 bg-grid opacity-[0.02] dark:opacity-[0.03]" />
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-primary-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob" />
-        <div className="absolute top-1/3 -right-20 w-96 h-96 bg-secondary-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000" />
-        <div className="absolute -bottom-20 left-1/2 w-96 h-96 bg-accent-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000" />
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl animate-blob" />
+        <div className="absolute top-1/3 -right-20 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-blob animation-delay-2000" />
+        <div className="absolute -bottom-20 left-1/2 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl animate-blob animation-delay-4000" />
       </div>
 
-      <motion.div 
-        style={{ opacity }}
-        className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
-      >
-        {/* Section header */}
+      <motion.div style={{ opacity }} className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-20">
           <motion.div
             style={{ y }}
             className="inline-flex items-center px-4 py-2 rounded-full bg-primary-100 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 text-sm font-medium mb-6 border border-primary-200/20 backdrop-blur-sm"
           >
-            <HelpCircle className="w-4 h-4 mr-2" />
-            Got Questions?
+            <HelpCircle className="w-4 h-4 mr-2" /> Got Questions?
           </motion.div>
 
-          <motion.h2
-            style={{ y }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground mb-6"
-          >
-            Frequently Asked{' '}
-            <span className="bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
-              Questions
-            </span>
+          <motion.h2 style={{ y }} className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground mb-6">
+            Frequently Asked <span className="bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">Questions</span>
           </motion.h2>
-          <motion.p
-            style={{ y }}
-            className="text-lg text-muted-foreground leading-relaxed"
-          >
-            Find answers to common questions about our program, financing options, and career support.
+          <motion.p style={{ y }} className="text-lg text-muted-foreground leading-relaxed">
+            Find answers to the most common questions about our program, financing, and career support.
           </motion.p>
         </div>
 
-        {/* Search and filters */}
-        <motion.div 
-          style={{ y }}
-          className="mt-12 space-y-6"
-        >
+        <motion.div style={{ y }} className="mt-12 space-y-6">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
             <input
@@ -203,26 +176,13 @@ export default function FAQ() {
           </div>
         </motion.div>
 
-        {/* FAQ list */}
-        <motion.div
-          style={{ y }}
-          className="mt-12 rounded-2xl border border-slate-200/10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-8 shadow-xl"
-        >
+        <motion.div style={{ y }} className="mt-12 rounded-2xl border border-slate-200/10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-8 shadow-xl">
           {filteredFaqs.length > 0 ? (
             filteredFaqs.map((faq, index) => (
-              <FAQItem
-                key={index}
-                item={faq}
-                isOpen={openIndex === index}
-                onToggle={() => setOpenIndex(openIndex === index ? null : index)}
-              />
+              <FAQItem key={index} item={faq} isOpen={openIndex === index} onToggle={() => setOpenIndex(openIndex === index ? null : index)} />
             ))
           ) : (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="py-8 text-center text-muted-foreground"
-            >
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-8 text-center text-muted-foreground">
               No questions found matching your search.
             </motion.p>
           )}
@@ -230,4 +190,4 @@ export default function FAQ() {
       </motion.div>
     </section>
   );
-} 
+}

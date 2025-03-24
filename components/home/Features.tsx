@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Code, Gem, GraduationCap, Users, Wallet, Zap } from 'lucide-react';
+import { Code, Gem, GraduationCap, Users, Wallet, Zap, Sparkles } from 'lucide-react';
 
 interface Feature {
   icon: React.ElementType;
@@ -68,9 +68,9 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: cardRef,
-    offset: ["start end", "end start"]
+    offset: ['start end', 'end start'],
   });
-  
+
   const scale = useTransform(scrollYProgress, [0, 0.5], [0.95, 1]);
   const opacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
 
@@ -81,11 +81,11 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
       whileHover={{ scale: 1.02 }}
       className="group relative overflow-hidden rounded-xl border bg-card p-6 transition-all duration-300 hover:shadow-xl dark:shadow-primary-500/5"
     >
-      <div 
-        className={`absolute -right-4 -top-4 h-32 w-32 rounded-full ${feature.color} opacity-40 blur-3xl transition-all duration-500 group-hover:scale-150 group-hover:opacity-60`} 
+      <div
+        className={`absolute -right-4 -top-4 h-32 w-32 rounded-full ${feature.color} opacity-40 blur-3xl transition-all duration-500 group-hover:scale-150 group-hover:opacity-60`}
       />
       <div className="relative">
-        <div 
+        <div
           className={`mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl ${feature.color} transition-transform duration-300 group-hover:scale-110`}
         >
           <feature.icon className={`h-7 w-7 ${feature.iconColor} transition-all duration-300 group-hover:scale-110`} />
@@ -105,7 +105,7 @@ export default function Features() {
   const containerRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "end start"]
+    offset: ['start end', 'end start'],
   });
 
   const opacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
@@ -113,17 +113,25 @@ export default function Features() {
 
   return (
     <section ref={containerRef} className="relative overflow-hidden py-24 sm:py-32">
-      {/* Background decoration */}
+      {/* Background decorations */}
       <div className="absolute inset-0 bg-grid opacity-[0.02] dark:opacity-[0.03]" />
       <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-primary-50/20 via-primary-50/10 to-transparent dark:from-primary-950/20 dark:via-primary-950/10" />
       <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-secondary-50/20 via-secondary-50/10 to-transparent dark:from-secondary-950/20 dark:via-secondary-950/10" />
 
-      <motion.div 
+      <motion.div
         style={{ opacity }}
         className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
       >
         {/* Section header */}
         <div className="max-w-2xl">
+          <motion.div
+            style={{ y }}
+            className="inline-flex items-center px-4 py-2 mb-4 rounded-full bg-primary-100 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 text-sm font-medium border border-primary-200/20 backdrop-blur-sm"
+          >
+            <Sparkles className="w-4 h-4 mr-2" />
+            What Makes Us Different
+          </motion.div>
+
           <motion.h2
             style={{ y }}
             className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl"
@@ -138,7 +146,7 @@ export default function Features() {
             transition={{ delay: 0.1 }}
             className="mt-6 text-lg text-muted-foreground"
           >
-            Our program is designed to transform beginners into industry-ready professionals through a unique combination of structured learning and practical experience.
+            Learn faster, earn sooner, and graduate job-ready with our hands-on, guided program.
           </motion.p>
         </div>
 
@@ -151,4 +159,4 @@ export default function Features() {
       </motion.div>
     </section>
   );
-} 
+}

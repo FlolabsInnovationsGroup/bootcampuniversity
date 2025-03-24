@@ -77,12 +77,8 @@ const PartnerCard = ({ partner, index }: { partner: typeof partners[0]; index: n
       whileHover={{ scale: 1.02 }}
       className="group relative overflow-hidden rounded-xl bg-card shadow-lg hover:shadow-xl transition-all duration-300 dark:shadow-primary-500/5"
     >
-      {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-secondary-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
-      {/* Card content */}
       <div className="relative p-6 space-y-6">
-        {/* Logo container */}
         <div className="w-full h-16 relative flex items-center justify-center rounded-lg bg-muted/30 overflow-hidden group-hover:bg-muted/50 transition-colors duration-300">
           <Image
             src={partner.logo}
@@ -92,22 +88,14 @@ const PartnerCard = ({ partner, index }: { partner: typeof partners[0]; index: n
             className="object-contain filter dark:invert-[.85] opacity-90 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-105"
           />
         </div>
-
-        {/* Partner info */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-foreground">
-              {partner.name}
-            </h3>
+            <h3 className="text-lg font-bold text-foreground">{partner.name}</h3>
             <span className="px-3 py-1 text-xs font-medium rounded-full bg-primary-100 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300">
               {partner.type}
             </span>
           </div>
-          
-          <p className="text-sm text-muted-foreground/90">
-            {partner.description}
-          </p>
-
+          <p className="text-sm text-muted-foreground/90">{partner.description}</p>
           <div className="flex items-center justify-between pt-4 border-t border-border/50">
             <div>
               <p className="text-sm font-semibold text-foreground">{partner.hires}</p>
@@ -129,7 +117,7 @@ const PartnerCard = ({ partner, index }: { partner: typeof partners[0]; index: n
 
 const StatCard = ({ stat }: { stat: typeof stats[0] }) => {
   const Icon = stat.icon;
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -143,12 +131,8 @@ const StatCard = ({ stat }: { stat: typeof stats[0] }) => {
         <div className={`w-14 h-14 mx-auto mb-4 rounded-xl ${stat.bgColor} flex items-center justify-center transform transition-transform duration-300 hover:scale-110`}>
           <Icon className={`w-7 h-7 ${stat.color}`} />
         </div>
-        <div className="text-3xl font-bold text-foreground mb-2">
-          {stat.value}
-        </div>
-        <div className="text-sm text-muted-foreground">
-          {stat.label}
-        </div>
+        <div className="text-3xl font-bold text-foreground mb-2">{stat.value}</div>
+        <div className="text-sm text-muted-foreground">{stat.label}</div>
       </div>
     </motion.div>
   );
@@ -166,44 +150,29 @@ const PartnerShowcase = () => {
 
   return (
     <section ref={containerRef} className="relative overflow-hidden py-24 sm:py-32">
-      {/* Background decorations */}
       <div className="absolute inset-0 bg-grid opacity-[0.02] dark:opacity-[0.03]" />
       <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-primary-50/20 via-primary-50/10 to-transparent dark:from-primary-950/20 dark:via-primary-950/10" />
       <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-secondary-50/20 via-secondary-50/10 to-transparent dark:from-secondary-950/20 dark:via-secondary-950/10" />
 
-      <motion.div 
-        style={{ opacity }}
-        className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
-      >
-        {/* Section header */}
+      <motion.div style={{ opacity }} className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-20">
-          <motion.h2
-            style={{ y }}
-            className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl"
-          >
+          <motion.h2 style={{ y }} className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
             Trusted by{' '}
             <span className="text-gradient bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
               Industry Leaders
             </span>
           </motion.h2>
-          <motion.p
-            style={{ y }}
-            transition={{ delay: 0.1 }}
-            className="mt-6 text-lg text-muted-foreground"
-          >
-            Partner with leading tech companies that value our graduates and provide
-            exceptional career opportunities.
+          <motion.p style={{ y }} transition={{ delay: 0.1 }} className="mt-6 text-lg text-muted-foreground">
+            Partner with leading tech companies that value our graduates and provide exceptional career opportunities.
           </motion.p>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
           {stats.map((stat, index) => (
             <StatCard key={stat.label} stat={stat} />
           ))}
         </div>
 
-        {/* Partners grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {partners.map((partner, index) => (
             <PartnerCard key={partner.name} partner={partner} index={index} />
