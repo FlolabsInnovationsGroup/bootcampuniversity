@@ -1,6 +1,23 @@
-export { Input } from './Input';
-export { Select } from './Select';
 export { Textarea } from './Textarea';
-export { Button } from './Button';
 export { Badge } from './Badge';
-export { Card, CardHeader, CardContent, CardFooter } from './Card'; 
+export { Analytics } from './Analytics';
+export { BackToTop } from './BackToTop';
+export { ProgressBar } from './ProgressBar';
+export { Providers } from './Providers';
+export { SkipLink } from './SkipLink';
+export { AnimatedSection } from './AnimatedSection';
+export { BackgroundDecorations } from './BackgroundDecorations';
+
+export {
+  LoadingPlaceholder,
+  LoadingCard,
+  LoadingGrid,
+} from './LoadingPlaceholder';
+
+// TODO: Add exports for other shared components as they are created:
+// - ErrorBoundary
+// - EmptyState
+// - PageHeader
+// - SearchInput
+// - FilterBar
+// - Pagination 

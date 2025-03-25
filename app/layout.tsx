@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter, JetBrains_Mono, Urbanist } from 'next/font/google';
 import './globals.css';
+import { cn } from '@/lib/utils';
+import { ProgressBar, SkipLink } from '@/components/shared';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { ThemeInitializer } from '@/components/shared/ThemeInitializer';
-import { Toaster } from '@/components/ui/toaster';
-import { Analytics } from '../components/shared/Analytics';
+import { Providers } from './providers';
 
 // Font setup
 const inter = Inter({
@@ -13,7 +13,6 @@ const inter = Inter({
   display: 'swap',
   variable: '--font-inter',
   preload: true,
-  fallback: ['system-ui', 'sans-serif'],
 });
 
 const urbanist = Urbanist({
@@ -21,7 +20,6 @@ const urbanist = Urbanist({
   display: 'swap',
   variable: '--font-urbanist',
   preload: true,
-  fallback: ['Inter', 'system-ui', 'sans-serif'],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -29,21 +27,9 @@ const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
   variable: '--font-jetbrains-mono',
   preload: true,
-  fallback: ['Consolas', 'monospace'],
 });
 
-// Viewport & metadata
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
-  ],
-  colorScheme: 'light dark',
-  viewportFit: 'cover',
-};
-
+// Enhanced metadata
 export const metadata: Metadata = {
   metadataBase: new URL('https://innovationbootcamp.edu'),
   title: {
@@ -106,51 +92,51 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: '/apple-touch-icon.png' }],
   },
+  other: {
+    'google-site-verification': 'your-verification-code',
+    structured: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'EducationalOrganization',
+      name: 'Innovation Bootcamp University',
+      description: 'Get paid to learn tech skills with our innovative tiered program',
+      url: 'https://innovationbootcamp.edu',
+      sameAs: [
+        'https://twitter.com/innovbootcamp',
+        'https://linkedin.com/company/innovationbootcamp',
+        'https://github.com/innovationbootcamp'
+      ]
+    })
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${urbanist.variable} ${jetbrainsMono.variable} scroll-smooth`}
+      className={cn(
+        'scroll-smooth',
+        inter.variable,
+        urbanist.variable,
+        jetbrainsMono.variable
+      )}
       suppressHydrationWarning
     >
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                const theme = localStorage.getItem('theme');
-                if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                  document.documentElement.classList.add('dark');
-                } else {
-                  document.documentElement.classList.remove('dark');
-                }
-              } catch (_) {}
-            `,
-          }}
-        />
-      </head>
-      <body
-        className={`
-          min-h-screen flex flex-col font-sans antialiased
-          bg-gradient-to-b from-white to-gray-50/50 dark:from-gray-950 dark:to-gray-900/50
-          text-slate-900 dark:text-slate-50
-          transition-colors duration-150
-          selection:bg-primary-500/20 selection:text-primary-900 dark:selection:text-primary-100
-          overflow-x-hidden scroll-smooth
-        `}
-      >
-        <ThemeInitializer />
-        <div className="relative flex flex-col min-h-screen">
-          <Navbar />
-          <main className="relative flex-grow pt-16">
-            {children}
-          </main>
-          <Footer />
-        </div>
-        <Toaster />
-        <Analytics />
+      <body className={cn(
+        'min-h-screen font-sans antialiased',
+        'bg-background text-foreground',
+        'selection:bg-primary-500/20 selection:text-foreground'
+      )}>
+        <Providers>
+          <SkipLink />
+          <ProgressBar />
+          <div className="relative flex min-h-screen flex-col">
+            <Navbar />
+            <main className="relative flex-1">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </Providers>
       </body>
     </html>
   );

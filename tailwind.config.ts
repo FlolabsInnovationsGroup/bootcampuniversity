@@ -170,9 +170,9 @@ const config: Config = {
         sm: 'calc(var(--radius) - 4px)',
       },
       fontFamily: {
-        sans: ['Inter var', 'Inter', 'system-ui', 'sans-serif'],
-        urbanist: ['Urbanist', 'Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        sans: ['var(--font-inter)'],
+        urbanist: ['var(--font-urbanist)'],
+        mono: ['var(--font-jetbrains-mono)'],
       },
       fontSize: {
         '2xs': ['0.625rem', { lineHeight: '1rem' }],
