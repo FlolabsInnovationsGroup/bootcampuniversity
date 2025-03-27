@@ -21,10 +21,10 @@ interface Program {
 const programs: Program[] = [
   {
     title: 'Foundation Builder',
-    subtitle: 'Web Development Basics',
-    description: 'Master the fundamentals of web development and start your journey in tech.',
-    duration: '3 months',
-    price: '$500/month',
+    subtitle: 'Tier 1: Learning Phase',
+    description: 'Start your journey with foundational education in tech skills. You pay for expert instruction and guided projects.',
+    duration: '2-3 months',
+    price: 'Investment: $500/month',
     icon: Layout,
     features: [
       'HTML, CSS, and JavaScript fundamentals',
@@ -40,10 +40,10 @@ const programs: Program[] = [
   },
   {
     title: 'Skill Accelerator',
-    subtitle: 'Full-Stack Development',
-    description: 'Advance your skills with modern full-stack development practices.',
-    duration: '6 months',
-    price: '$750/month',
+    subtitle: 'Tier 2: Start Earning',
+    description: 'Transition to earning while continuing to learn. Work on real-world projects and receive compensation.',
+    duration: '3-4 months',
+    price: 'Start Earning Income',
     icon: Code,
     features: [
       'Advanced React and Next.js',
@@ -59,18 +59,18 @@ const programs: Program[] = [
   },
   {
     title: 'Professional Developer',
-    subtitle: 'Enterprise Development',
-    description: 'Gain enterprise-level development experience and launch your career.',
-    duration: '6 months',
-    price: '$1000/month',
+    subtitle: 'Tier 3: Earn More',
+    description: 'Take on leadership roles in projects and earn higher compensation while mastering advanced skills.',
+    duration: '4-6 months',
+    price: 'Increased Earnings',
     icon: Server,
     features: [
       'Enterprise architecture patterns',
       'Cloud services and deployment',
       'Security best practices',
       'Team collaboration and Agile',
-      'Real-world project experience',
-      'Job placement assistance',
+      'Project leadership opportunities',
+      'Career placement support',
     ],
     color: 'bg-accent-50 dark:bg-accent-950/50',
     iconColor: 'text-accent-600 dark:text-accent-400',
@@ -177,7 +177,7 @@ const ProgramCard = ({ program }: { program: Program }) => {
             href="/apply"
             className="group/btn inline-flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-primary-500 to-primary-600 px-6 py-3 text-sm font-semibold text-white transition-all hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:from-primary-600 dark:to-primary-700 dark:hover:from-primary-700 dark:hover:to-primary-800"
           >
-            Apply Now
+            Pre-Register
             <motion.div
               animate={{ x: [0, 4, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
@@ -216,8 +216,8 @@ export default function Programs() {
             </span>
           </motion.h2>
           <motion.p style={{ y }} transition={{ delay: 0.1 }} className="mt-6 text-lg text-muted-foreground">
-            Our tiered program structure allows you to progress at your own pace while earning and learning. 
-            Each tier builds upon the previous one, creating a comprehensive learning journey.
+            Our cooperative education model transitions you from student to paid professional. 
+            Start by investing in your education, then earn income as you develop advanced skills.
           </motion.p>
         </div>
 

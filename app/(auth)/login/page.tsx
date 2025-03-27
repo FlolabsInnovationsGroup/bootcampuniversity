@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { signIn } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/forms/inputs';
 import { LoadingSpinner } from '@/components/shared/LoadingPlaceholder';
@@ -11,19 +13,61 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  useEffect(() => {
+    // Check if user was redirected from registration
+    if (searchParams.get('registered') === 'true') {
+      setSuccessMessage('Registration successful! Please log in with your new account.');
+    }
+  }, [searchParams]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError('');
     setIsLoading(true);
+    setError('');
+    setSuccessMessage('');
 
     try {
-      // TODO: Implement login logic
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated delay
-      throw new Error('Login functionality not implemented yet');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      const result = await signIn('credentials', {
+        redirect: false,
+        email,
+        password,
+      });
+
+      if (result?.error) {
+        setError(result.error);
+        console.error('Login error details:', result);
+      } else {
+        // Get session to check role and redirect accordingly
+        const response = await fetch('/api/auth/session');
+        const session = await response.json();
+        
+        // Redirect based on role
+        if (session?.user?.role === 'admin') {
+          router.push('/admin/analytics');
+        } else {
+          router.push('/dashboard');
+        }
+        
+        router.refresh(); // Refresh to update auth state in server components
+      }
+    } catch (error) {
+      setError('An unexpected error occurred. Please try again.');
+      console.error('Login error:', error);
     } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleOAuthSignIn = async (provider: string) => {
+    setIsLoading(true);
+    try {
+      await signIn(provider, { callbackUrl: '/dashboard' });
+    } catch (error) {
+      console.error(`${provider} sign in error:`, error);
       setIsLoading(false);
     }
   };
@@ -38,8 +82,31 @@ export default function LoginPage() {
           </p>
         </div>
 
+        {/* Admin-only access notice */}
+        <div className="p-3 text-sm text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
+          <strong>Note:</strong> Currently, only admin accounts can log in as we prepare for launch. Student login will be available soon.
+          <div className="mt-2">
+            <Link href="/debug-login" className="text-blue-600 hover:underline">
+              Having trouble? Try debug login →
+            </Link>
+          </div>
+        </div>
+
+        {successMessage && (
+          <div 
+            className="p-3 text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 rounded-lg"
+            role="alert"
+          >
+            {successMessage}
+          </div>
+        )}
+
         {error && (
-          <div className="p-3 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg">
+          <div 
+            className="p-3 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg"
+            role="alert"
+            data-testid="login-error"
+          >
             {error}
           </div>
         )}
@@ -116,7 +183,8 @@ export default function LoginPage() {
             type="button"
             variant="outline"
             className="w-full"
-            disabled={isLoading}
+            disabled={true}
+            title="Social login is currently disabled. Please use email/password for admin access."
           >
             Google
           </Button>
@@ -124,7 +192,8 @@ export default function LoginPage() {
             type="button"
             variant="outline"
             className="w-full"
-            disabled={isLoading}
+            disabled={true}
+            title="Social login is currently disabled. Please use email/password for admin access."
           >
             GitHub
           </Button>

@@ -30,7 +30,7 @@ const tracks = [
     icon: Code,
     name: 'Web Development',
     description: 'Master full-stack development with modern frameworks and cloud technologies. Graduate with a job-ready portfolio and GitHub presence.',
-    students: 234,
+    students: 45,
     duration: '24 weeks',
     color: 'primary' as ColorType,
     technologies: ['React', 'Node.js', 'AWS', 'TypeScript'],
@@ -40,7 +40,7 @@ const tracks = [
     icon: Brain,
     name: 'AI & Machine Learning',
     description: 'Build intelligent systems using Python, TensorFlow, and OpenAI. Prepare for in-demand roles in AI-driven companies.',
-    students: 189,
+    students: 35,
     duration: '28 weeks',
     color: 'secondary' as ColorType,
     technologies: ['Python', 'TensorFlow', 'PyTorch', 'OpenAI'],
@@ -50,7 +50,7 @@ const tracks = [
     icon: Bot,
     name: 'Robotics Engineering',
     description: 'Create autonomous systems with real hardware integration. Focus on problem-solving and industry readiness.',
-    students: 156,
+    students: 30,
     duration: '32 weeks',
     color: 'accent' as ColorType,
     technologies: ['ROS', 'C++', 'Computer Vision', 'Arduino'],
@@ -111,7 +111,7 @@ const TrackCard = ({ track }: { track: typeof tracks[0] }) => {
             >
               <Users className="w-5 h-5 text-slate-400" />
               <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                {track.students}+ learners
+                {track.students}+ initial capacity
               </span>
             </motion.div>
             <motion.div 

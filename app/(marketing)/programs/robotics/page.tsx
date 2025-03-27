@@ -2,34 +2,34 @@ import Link from 'next/link'
 import { ArrowRight, CheckCircle } from 'lucide-react'
 
 const features = [
-  'Robotics fundamentals and mechanics',
-  'Electronics and circuit design',
-  'Programming robots with Python/C++',
-  'Sensor integration and control systems',
-  'Robot vision and perception',
-  'Hands-on robotics project experience',
+  'Fundamentals of robotics and mechatronics',
+  'Programming with ROS (Robot Operating System)',
+  'Computer vision and sensor integration',
+  'Control systems and automation',
+  'Robotic design and prototyping',
+  'Industry project experience with real robots',
 ]
 
 const curriculum = [
   {
     week: 1,
-    title: 'Robotics Foundations',
-    topics: ['Mechanical Principles', 'Basic Electronics', 'Programming Basics', 'Safety Protocols'],
+    title: 'Robotics Fundamentals',
+    topics: ['Introduction to Robotics', 'Python for Robotics', 'Mechanics', 'Electronics Basics'],
   },
   {
     week: 2,
-    title: 'Robot Control',
-    topics: ['Actuators & Motors', 'Sensors', 'Control Systems', 'Circuit Design'],
+    title: 'Robotic Control',
+    topics: ['Control Theory', 'Microcontrollers', 'Actuators & Sensors', 'ROS Basics'],
   },
   {
     week: 3,
-    title: 'Advanced Robotics',
-    topics: ['Robot Vision', 'Path Planning', 'Machine Learning', 'ROS Basics'],
+    title: 'Perception & Navigation',
+    topics: ['Computer Vision', 'SLAM', 'Path Planning', 'Sensor Fusion'],
   },
   {
     week: 4,
-    title: 'Applied Robotics',
-    topics: ['Project Planning', 'Integration', 'Testing', 'Documentation'],
+    title: 'Advanced Applications',
+    topics: ['AI for Robotics', 'Autonomous Systems', 'Robot Integration', 'Industry Applications'],
   },
 ]
 
@@ -42,7 +42,7 @@ export default function RoboticsPage() {
           Robotics Program
         </h1>
         <p className="text-xl text-slate-600 dark:text-slate-400 mb-8">
-          Build and program robots while learning mechanical and electrical engineering principles
+          Master robotics engineering and launch your career in the rapidly growing field of automation
         </p>
         <Link
           href="/apply"

@@ -2,19 +2,19 @@ import Link from 'next/link'
 import { ArrowRight, CheckCircle } from 'lucide-react'
 
 const features = [
-  'Machine Learning fundamentals and algorithms',
-  'Deep Learning and Neural Networks',
+  'Machine Learning foundations and algorithms',
+  'Deep Learning with TensorFlow and PyTorch',
   'Natural Language Processing',
   'Computer Vision applications',
-  'AI model deployment and scaling',
-  'Real-world AI project experience',
+  'AI ethics and responsible development',
+  'Industry-focused capstone projects',
 ]
 
 const curriculum = [
   {
     week: 1,
-    title: 'Foundations of AI & ML',
-    topics: ['Python for AI', 'Math Fundamentals', 'Data Processing', 'Basic Statistics'],
+    title: 'AI & ML Fundamentals',
+    topics: ['Python for AI', 'Data Structures', 'Statistics', 'Linear Algebra'],
   },
   {
     week: 2,
@@ -24,12 +24,12 @@ const curriculum = [
   {
     week: 3,
     title: 'Deep Learning',
-    topics: ['Neural Networks', 'CNN', 'RNN', 'Transformers'],
+    topics: ['Neural Networks', 'TensorFlow', 'PyTorch', 'Computer Vision'],
   },
   {
     week: 4,
-    title: 'Applied AI',
-    topics: ['NLP', 'Computer Vision', 'Model Deployment', 'Ethics in AI'],
+    title: 'Advanced Applications',
+    topics: ['NLP', 'Generative AI', 'Deployment', 'AI Ethics'],
   },
 ]
 
@@ -42,7 +42,7 @@ export default function AiMlPage() {
           AI & Machine Learning Program
         </h1>
         <p className="text-xl text-slate-600 dark:text-slate-400 mb-8">
-          Master artificial intelligence and machine learning to build the future of technology
+          Master AI and ML technologies and launch your career in artificial intelligence
         </p>
         <Link
           href="/apply"

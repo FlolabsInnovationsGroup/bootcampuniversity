@@ -24,8 +24,8 @@ const features: Feature[] = [
   },
   {
     icon: Wallet,
-    title: 'Earn While You Learn',
-    description: 'Start earning as you develop your skills through our innovative paid apprenticeship model.',
+    title: 'Cooperative Education Model',
+    description: 'Start with foundational learning, then transition to earning as you develop advanced skills in our tiered program.',
     color: 'bg-secondary-50 dark:bg-secondary-950/50',
     iconColor: 'text-secondary-600 dark:text-secondary-400',
     delay: 0.2,
@@ -160,7 +160,7 @@ export default function Features() {
             transition={{ delay: 0.1 }}
             className="mt-6 text-lg text-slate-600 dark:text-slate-300 leading-relaxed"
           >
-            Learn faster, earn sooner, and graduate job-ready with our hands-on, guided program.
+            Start with education, progress to earning, and graduate as a tech professional with our cooperative approach.
           </motion.p>
         </div>
 

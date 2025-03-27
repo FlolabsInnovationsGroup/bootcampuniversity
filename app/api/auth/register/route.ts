@@ -1,34 +1,77 @@
 import { NextResponse } from 'next/server';
+import * as crypto from 'crypto';
+import { prisma } from '@/lib/prisma';
 import type { RegisterCredentials } from '@/lib/types/auth';
+import { z } from 'zod';
+
+// Simple hash function using crypto
+function hashPassword(password: string): string {
+  return crypto.createHash('sha256').update(password).digest('hex');
+}
+
+// Validation schema
+const registerSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  confirmPassword: z.string()
+}).refine(data => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
 
 export async function POST(request: Request) {
   try {
-    const body: RegisterCredentials = await request.json();
+    const body = await request.json();
 
-    // Validate request body
-    if (!body.email || !body.password || !body.name || !body.confirmPassword) {
+    // Validate the request body
+    const result = registerSchema.safeParse(body);
+    if (!result.success) {
+      const { errors } = result.error;
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Validation failed', details: errors },
         { status: 400 }
       );
     }
 
-    if (body.password !== body.confirmPassword) {
+    const { email, password, name } = result.data;
+
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
       return NextResponse.json(
-        { error: 'Passwords do not match' },
-        { status: 400 }
+        { error: 'User with this email already exists' },
+        { status: 409 }
       );
     }
 
-    // Here you would typically:
-    // 1. Hash the password
-    // 2. Check if user already exists
-    // 3. Create the user in your database
-    // 4. Send verification email
+    // Hash the password using crypto instead of bcrypt
+    const hashedPassword = hashPassword(password);
 
-    // For now, we'll just return a success response
+    // Check if this is the special admin email
+    const isAdmin = email === 'analytics.flomad@gmail.com';
+
+    // Create the user
+    const user = await prisma.user.create({
+      data: {
+        email,
+        name,
+        password: hashedPassword,
+        role: isAdmin ? 'admin' : 'user',
+      },
+    });
+
+    // Remove sensitive data from response
+    const { password: _, ...userWithoutPassword } = user;
+
     return NextResponse.json(
-      { message: 'Registration successful' },
+      { 
+        message: 'Registration successful',
+        user: userWithoutPassword
+      },
       { status: 201 }
     );
   } catch (error) {

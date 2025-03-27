@@ -5,7 +5,7 @@ import { ArrowRight, CheckCircle, ChevronRight, Loader2, Sparkles } from 'lucide
 import { useState, useRef } from 'react';
 
 interface FormData {
-  step: number;
+  step: 0 | 1 | 2 | 3 | 4;  // Explicitly define possible step values
   path: string;
   firstName: string;
   lastName: string;
@@ -35,18 +35,18 @@ const initialFormData: FormData = {
 const programs = [
   {
     id: 'foundation',
-    title: 'Foundation Builder',
-    description: 'Start your journey in web development',
+    title: 'Tier 1: Foundation Builder',
+    description: 'Start your journey with foundational education',
   },
   {
     id: 'accelerator',
-    title: 'Skill Accelerator',
-    description: 'Advance your full-stack development skills',
+    title: 'Tier 2: Skill Accelerator',
+    description: 'Transition to earning while continuing education',
   },
   {
     id: 'professional',
-    title: 'Professional Developer',
-    description: 'Master enterprise-level development',
+    title: 'Tier 3: Professional Developer',
+    description: 'Earn more with advanced skills and leadership roles',
   },
 ];
 
@@ -75,6 +75,12 @@ const validateField = (field: FormFields, value: string) => {
   let error = '';
 
   switch (field) {
+    case 'firstName':
+    case 'lastName':
+      if (!value.trim()) {
+        error = `Please enter your ${field === 'firstName' ? 'first' : 'last'} name`;
+      }
+      break;
     case 'email':
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
         error = 'Please enter a valid email address';
@@ -85,11 +91,21 @@ const validateField = (field: FormFields, value: string) => {
         error = 'Please enter a valid phone number';
       }
       break;
+    case 'program':
+      if (!value) {
+        error = 'Please select a program';
+      }
+      break;
     case 'experience':
     case 'background':
     case 'goals':
       if (value.trim().length < 20) {
         error = 'Please provide more details (at least 20 characters)';
+      }
+      break;
+    case 'heardFrom':
+      if (!value.trim()) {
+        error = 'Please tell us how you heard about us';
       }
       break;
   }
@@ -131,30 +147,118 @@ export default function Apply() {
         if (error) currentErrors[field] = error;
       });
     } else if (formData.step === 2) {
-      if (!formData.program) currentErrors.program = 'Please select a program';
-      const expError = validateField('experience', formData.experience);
-      if (expError) currentErrors.experience = expError;
+      const fields: FormFields[] = ['program', 'experience'];
+      fields.forEach(field => {
+        const error = validateField(field, formData[field]);
+        if (error) currentErrors[field] = error;
+      });
+    } else if (formData.step === 3) {
+      const fields: FormFields[] = ['background', 'goals', 'heardFrom'];
+      fields.forEach(field => {
+        const error = validateField(field, formData[field]);
+        if (error) currentErrors[field] = error;
+      });
     }
 
+    // Set errors and return if validation fails
     if (Object.keys(currentErrors).length > 0) {
       setErrors(currentErrors);
       return;
     }
 
-    setFormData((prev) => ({ ...prev, step: prev.step + 1 }));
+    // Clear errors and proceed to next step
+    setErrors({});
+    setFormData((prev) => {
+      const nextStepValue = (prev.step + 1) as 0 | 1 | 2 | 3 | 4;
+      return { ...prev, step: nextStepValue };
+    });
   };
 
   const prevStep = () => {
-    setFormData((prev) => ({ ...prev, step: prev.step - 1 }));
+    setFormData((prev) => ({ 
+      ...prev, 
+      step: (prev.step - 1) as FormData['step']
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const currentErrors: Record<string, string> = {};
+    
+    // Validate final step
+    const fields: FormFields[] = ['background', 'goals', 'heardFrom'];
+    fields.forEach(field => {
+      const error = validateField(field, formData[field]);
+      if (error) currentErrors[field] = error;
+    });
+
+    // Set errors and return if validation fails
+    if (Object.keys(currentErrors).length > 0) {
+      setErrors(currentErrors);
+      return;
+    }
+
+    // If program is not selected but path is, set foundation as the default program
+    if (!formData.program && formData.path) {
+      setFormData(prev => ({
+        ...prev,
+        program: 'foundation'
+      }));
+    }
+
+    // Clear errors and proceed with submission
+    setErrors({});
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsSubmitting(false);
-    nextStep();
+    
+    try {
+      // Prepare the data to send to the API
+      const dataToSend = {
+        ...formData,
+        // Ensure program has a value for the API
+        program: formData.program || 'foundation'
+      };
+      
+      // Send the form data to our API endpoint
+      const response = await fetch('/api/apply', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit application');
+      }
+      
+      // If successful, go to the success step
+      setFormData((prev) => {
+        const nextStepValue = (prev.step + 1) as 0 | 1 | 2 | 3 | 4;
+        return { ...prev, step: nextStepValue };
+      });
+    } catch (err) {
+      // Show an error message
+      console.error('Application submission error:', err);
+      setErrors({ 
+        submit: err instanceof Error ? err.message : 'Something went wrong. Please try again.'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const renderErrorMessage = (field: string) => {
+    if (!errors[field]) return null;
+    return (
+      <p 
+        className="text-sm text-red-500 mt-1" 
+        data-testid={`${field}-error`}
+      >
+        {errors[field]}
+      </p>
+    );
   };
 
   const renderStep = () => {
@@ -168,11 +272,11 @@ export default function Apply() {
             transition={{ duration: 0.5 }}
             className="space-y-6 text-center"
           >
-            <h3 className="text-2xl font-bold text-foreground mb-4">
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
               Choose Your Path
             </h3>
-            <p className="text-muted-foreground mb-6">
-              Are you applying for our guided Bootcamp program or the Internship-only path?
+            <p className="text-slate-600 dark:text-slate-400 mb-6">
+              Pre-register for our cooperative education program. Start with foundational learning, then progress to earning income as you develop advanced skills.
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center gap-6">
@@ -183,308 +287,370 @@ export default function Apply() {
                   setFormData((prev) => ({
                     ...prev,
                     path: 'bootcamp',
+                    program: 'foundation',
                     step: 1,
                   }));
                 }}
                 className="group relative px-6 py-4 rounded-xl bg-gradient-to-r from-primary-600 to-primary-500 text-white font-semibold shadow-md hover:shadow-xl transition-all duration-200"
               >
-                <div className="absolute inset-0 bg-white/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                <span className="relative flex items-center justify-center">
-                  🚀 Bootcamp Path
-                </span>
+                🚀 Bootcamp Path
               </motion.button>
-
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => {
-                  window.location.href = 'https://flomad.international';
+                  setFormData((prev) => ({
+                    ...prev,
+                    path: 'internship',
+                    program: 'accelerator',
+                    step: 1,
+                  }));
                 }}
-                className="group relative px-6 py-4 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold border border-slate-300 dark:border-slate-700 hover:shadow-xl transition-all duration-200"
+                className="group relative px-6 py-4 rounded-xl bg-gradient-to-r from-primary-600 to-primary-500 text-white font-semibold shadow-md hover:shadow-xl transition-all duration-200"
               >
-                <div className="absolute inset-0 bg-slate-400/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                <span className="relative flex items-center justify-center">
-                  💼 Internship Only
-                </span>
+                💼 Internship Only
               </motion.button>
             </div>
           </motion.div>
         );
-
       case 1:
         return (
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
             className="space-y-8"
           >
             <div className="space-y-6">
-              <div className="grid gap-6 sm:grid-cols-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-foreground" htmlFor="firstName">First Name</label>
-                  <motion.input
+                  <label className="text-sm font-medium text-slate-900 dark:text-white" htmlFor="firstName">
+                    First Name
+                  </label>
+                  <input
                     id="firstName"
-                    whileFocus={{ scale: 1.01 }}
                     type="text"
                     value={formData.firstName}
                     onChange={(e) => updateFormData('firstName', e.target.value)}
-                    className={`w-full rounded-xl border ${errors.firstName ? 'border-red-500 dark:border-red-400' : 'border-slate-200/10'} bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-3 mt-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200`}
+                    className="w-full rounded-xl border border-slate-200/10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-3 mt-2 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200"
                     required
-                    aria-invalid={!!errors.firstName}
-                    aria-describedby={errors.firstName ? 'firstName-error' : undefined}
                   />
                   {errors.firstName && (
-                    <p id="firstName-error" className="mt-1 text-sm text-red-500 dark:text-red-400">{errors.firstName}</p>
+                    <p 
+                      className="text-sm text-red-500 mt-1" 
+                      data-testid="firstName-error"
+                    >
+                      {errors.firstName}
+                    </p>
                   )}
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-foreground">Last Name</label>
-                  <motion.input
-                    whileFocus={{ scale: 1.01 }}
+                  <label className="text-sm font-medium text-slate-900 dark:text-white" htmlFor="lastName">
+                    Last Name
+                  </label>
+                  <input
+                    id="lastName"
                     type="text"
                     value={formData.lastName}
                     onChange={(e) => updateFormData('lastName', e.target.value)}
-                    className="w-full rounded-xl border border-slate-200/10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-3 mt-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200"
+                    className="w-full rounded-xl border border-slate-200/10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-3 mt-2 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200"
                     required
                   />
+                  {errors.lastName && (
+                    <p 
+                      className="text-sm text-red-500 mt-1" 
+                      data-testid="lastName-error"
+                    >
+                      {errors.lastName}
+                    </p>
+                  )}
                 </div>
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground">Email</label>
-                <motion.input
-                  whileFocus={{ scale: 1.01 }}
+                <label className="text-sm font-medium text-slate-900 dark:text-white" htmlFor="email">
+                  Email
+                </label>
+                <input
+                  id="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => updateFormData('email', e.target.value)}
-                  className="w-full rounded-xl border border-slate-200/10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-3 mt-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200"
+                  className="w-full rounded-xl border border-slate-200/10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-3 mt-2 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200"
                   required
                 />
+                {errors.email && (
+                  <p 
+                    className="text-sm text-red-500 mt-1" 
+                    data-testid="email-error"
+                  >
+                    {errors.email}
+                  </p>
+                )}
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground">Phone</label>
-                <motion.input
-                  whileFocus={{ scale: 1.01 }}
+                <label className="text-sm font-medium text-slate-900 dark:text-white" htmlFor="phone">
+                  Phone
+                </label>
+                <input
+                  id="phone"
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => updateFormData('phone', e.target.value)}
-                  className="w-full rounded-xl border border-slate-200/10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-3 mt-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200"
+                  className="w-full rounded-xl border border-slate-200/10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-3 mt-2 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200"
                   required
                 />
+                {errors.phone && (
+                  <p 
+                    className="text-sm text-red-500 mt-1" 
+                    data-testid="phone-error"
+                  >
+                    {errors.phone}
+                  </p>
+                )}
               </div>
             </div>
             <div className="flex justify-end">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              <button
                 type="button"
+                className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-medium shadow-lg shadow-primary-500/25 transition-all duration-200"
                 onClick={nextStep}
-                className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-medium shadow-lg shadow-primary-500/25 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={!formData.firstName || !formData.lastName || !formData.email || !formData.phone}
               >
                 Next Step
                 <ChevronRight className="ml-2 h-5 w-5" />
-              </motion.button>
+              </button>
             </div>
           </motion.div>
         );
-
       case 2:
         return (
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
             className="space-y-8"
           >
             <div className="space-y-6">
               <div>
-                <label className="text-sm font-medium text-foreground">Select Program</label>
+                <label className="text-sm font-medium text-slate-900 dark:text-white">
+                  Select Program
+                </label>
                 <div className="mt-4 grid gap-4 sm:grid-cols-3">
                   {programs.map((program) => (
-                    <motion.button
+                    <button
                       key={program.id}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
                       type="button"
                       onClick={() => updateFormData('program', program.id)}
-                      className={`group relative overflow-hidden rounded-xl border p-6 text-left transition-all ${
+                      className={`group relative overflow-hidden rounded-xl border p-6 text-left transition-all bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-slate-200/10 hover:shadow-lg ${
                         formData.program === program.id
-                          ? 'border-primary-500 bg-primary-50/50 dark:bg-primary-950/50 shadow-lg shadow-primary-500/20'
-                          : 'bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-slate-200/10 hover:shadow-lg'
+                          ? 'ring-2 ring-primary-500'
+                          : ''
                       }`}
                     >
                       <div className="absolute inset-0 bg-gradient-to-br from-primary-500/0 via-transparent to-secondary-500/0 group-hover:from-primary-500/5 group-hover:to-secondary-500/5 transition-colors duration-500" />
                       <div className="relative">
-                        <h4 className="font-semibold text-foreground mb-2">{program.title}</h4>
-                        <p className="text-sm text-muted-foreground">{program.description}</p>
-                        {formData.program === program.id && (
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="absolute right-2 top-2"
-                          >
-                            <CheckCircle className="h-5 w-5 text-primary-500" />
-                          </motion.div>
-                        )}
+                        <h4 className="font-semibold text-slate-900 dark:text-white mb-2">
+                          {program.title}
+                        </h4>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">
+                          {program.description}
+                        </p>
                       </div>
-                    </motion.button>
+                    </button>
                   ))}
                 </div>
+                {errors.program && (
+                  <p 
+                    className="text-sm text-red-500 mt-1" 
+                    data-testid="program-error"
+                  >
+                    {errors.program}
+                  </p>
+                )}
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground">Coding Experience</label>
-                <motion.textarea
-                  whileFocus={{ scale: 1.01 }}
+                <label className="text-sm font-medium text-slate-900 dark:text-white" htmlFor="experience">
+                  Tell us about your coding experience
+                </label>
+                <textarea
+                  id="experience"
                   value={formData.experience}
                   onChange={(e) => updateFormData('experience', e.target.value)}
-                  className="w-full rounded-xl border border-slate-200/10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-3 mt-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200 h-32 resize-none"
-                  placeholder="Describe your coding experience, if any..."
+                  className="w-full rounded-xl border border-slate-200/10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-3 mt-2 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200 min-h-[120px] resize-y"
                   required
                 />
+                {errors.experience && (
+                  <p 
+                    className="text-sm text-red-500 mt-1" 
+                    data-testid="experience-error"
+                  >
+                    {errors.experience}
+                  </p>
+                )}
               </div>
             </div>
             <div className="flex justify-between">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              <button
                 type="button"
                 onClick={prevStep}
                 className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-white/80 dark:bg-slate-800/80 text-slate-900 dark:text-white font-medium border border-slate-200/10 backdrop-blur-sm hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-all duration-200"
               >
                 Previous Step
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              </button>
+              <button
                 type="button"
+                className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-medium shadow-lg shadow-primary-500/25 transition-all duration-200"
                 onClick={nextStep}
-                className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-medium shadow-lg shadow-primary-500/25 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={!formData.program || !formData.experience}
               >
                 Next Step
                 <ChevronRight className="ml-2 h-5 w-5" />
-              </motion.button>
+              </button>
             </div>
           </motion.div>
         );
-
       case 3:
         return (
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
             className="space-y-8"
           >
             <div className="space-y-6">
               <div>
-                <label className="text-sm font-medium text-foreground">Educational/Professional Background</label>
-                <motion.textarea
-                  whileFocus={{ scale: 1.01 }}
+                <label className="text-sm font-medium text-slate-900 dark:text-white" htmlFor="background">
+                  Educational/Professional Background
+                </label>
+                <textarea
+                  id="background"
                   value={formData.background}
                   onChange={(e) => updateFormData('background', e.target.value)}
-                  className="w-full rounded-xl border border-slate-200/10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-3 mt-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200 h-32 resize-none"
+                  className="w-full rounded-xl border border-slate-200/10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-3 mt-2 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200 h-32 resize-none"
                   placeholder="Tell us about your educational and professional background..."
                   required
                 />
+                {errors.background && (
+                  <p 
+                    className="text-sm text-red-500 mt-1" 
+                    data-testid="background-error"
+                  >
+                    {errors.background}
+                  </p>
+                )}
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground">Career Goals</label>
-                <motion.textarea
-                  whileFocus={{ scale: 1.01 }}
+                <label className="text-sm font-medium text-slate-900 dark:text-white" htmlFor="goals">
+                  Career Goals
+                </label>
+                <textarea
+                  id="goals"
                   value={formData.goals}
                   onChange={(e) => updateFormData('goals', e.target.value)}
-                  className="w-full rounded-xl border border-slate-200/10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-3 mt-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200 h-32 resize-none"
+                  className="w-full rounded-xl border border-slate-200/10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-3 mt-2 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200 h-32 resize-none"
                   placeholder="What are your career goals?"
                   required
                 />
+                {errors.goals && (
+                  <p 
+                    className="text-sm text-red-500 mt-1" 
+                    data-testid="goals-error"
+                  >
+                    {errors.goals}
+                  </p>
+                )}
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground">How did you hear about us?</label>
-                <motion.input
-                  whileFocus={{ scale: 1.01 }}
+                <label className="text-sm font-medium text-slate-900 dark:text-white" htmlFor="heardFrom">
+                  How did you hear about us?
+                </label>
+                <input
+                  id="heardFrom"
                   type="text"
                   value={formData.heardFrom}
                   onChange={(e) => updateFormData('heardFrom', e.target.value)}
-                  className="w-full rounded-xl border border-slate-200/10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-3 mt-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200"
+                  className="w-full rounded-xl border border-slate-200/10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-3 mt-2 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200"
                   required
                 />
+                {errors.heardFrom && (
+                  <p 
+                    className="text-sm text-red-500 mt-1" 
+                    data-testid="heardFrom-error"
+                  >
+                    {errors.heardFrom}
+                  </p>
+                )}
               </div>
             </div>
             <div className="flex justify-between">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              <button
                 type="button"
                 onClick={prevStep}
                 className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-white/80 dark:bg-slate-800/80 text-slate-900 dark:text-white font-medium border border-slate-200/10 backdrop-blur-sm hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-all duration-200"
               >
                 Previous Step
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-medium shadow-lg shadow-primary-500/25 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={!formData.background || !formData.goals || !formData.heardFrom || isSubmitting}
+              </button>
+              <button
+                type="button"
+                className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-medium shadow-lg shadow-primary-500/25 transition-all duration-200"
+                onClick={handleSubmit}
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                     Submitting...
                   </>
                 ) : (
-                  <>
-                    Submit Application
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </>
+                  'Submit Application'
                 )}
-              </motion.button>
+              </button>
             </div>
+            {errors.submit && (
+              <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg text-sm">
+                {errors.submit}
+              </div>
+            )}
           </motion.div>
         );
-
       case 4:
         return (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, type: "spring" }}
-            className="text-center py-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+            className="space-y-6 text-center"
           >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: "spring" }}
-              className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 shadow-lg"
-            >
-              <CheckCircle className="h-8 w-8" />
-            </motion.div>
-            <motion.h3 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-2xl font-bold text-foreground mb-4"
-            >
-              Application Submitted!
-            </motion.h3>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="text-lg text-muted-foreground leading-relaxed"
-            >
-              Thank you for applying to Innovation Bootcamp. We'll review your application and get back to you within 2-3 business days.
-            </motion.p>
+            <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
+              <CheckCircle className="h-8 w-8 text-green-600" />
+            </div>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+              Application Received!
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400 mb-6">
+              Thank you for your interest in our program. We've received your pre-registration application for our upcoming launch. We'll notify you when enrollment officially opens and you'll be among the first to know!
+            </p>
           </motion.div>
         );
-
       default:
-        return null;
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+            className="text-center space-y-4"
+          >
+            <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
+              Application Submitted!
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
+              Thank you for your interest. We'll be in touch soon!
+            </p>
+          </motion.div>
+        );
     }
   };
 
@@ -514,7 +680,7 @@ export default function Apply() {
 
           <motion.h2
             style={{ y }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground mb-6"
+            className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 dark:text-white mb-6"
           >
             Start Your{' '}
             <span className="bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
@@ -523,7 +689,7 @@ export default function Apply() {
           </motion.h2>
           <motion.p
             style={{ y }}
-            className="text-lg text-muted-foreground leading-relaxed"
+            className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed"
           >
             Take the first step towards your new career in tech. Fill out the application below to get started.
           </motion.p>

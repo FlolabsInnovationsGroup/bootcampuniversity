@@ -46,10 +46,10 @@ const Hero: React.FC = () => {
   const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
 
   const stats = [
-    { icon: GraduationCap, value: '95%', label: 'Employment Rate' },
-    { icon: Briefcase, value: '$75K', label: 'Avg Starting Salary' },
-    { icon: Users, value: '1000+', label: 'Graduates' },
-    { icon: Building2, value: '50+', label: 'Partner Companies' },
+    { icon: GraduationCap, value: '3', label: 'Tier Learning Path' },
+    { icon: Briefcase, value: '$65K+', label: 'Potential Earnings' },
+    { icon: Users, value: '100+', label: 'Initial Student Capacity' },
+    { icon: Building2, value: '8+', label: 'Industry Sectors' },
   ];
 
   return (
@@ -60,8 +60,9 @@ const Hero: React.FC = () => {
     >
       {/* Background Effects */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-grid opacity-20 dark:opacity-10" />
+        <div data-testid="background-grid" className="absolute inset-0 bg-grid opacity-20 dark:opacity-10" />
         <motion.div
+          data-testid="background-gradient"
           animate={{
             backgroundPosition: ['0px 0px', '100px 100px'],
             opacity: [0.35, 0.25],
@@ -134,7 +135,7 @@ const Hero: React.FC = () => {
           Launch Your Tech Career
           <br />
           <span className="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
-            With Real Experience
+            From Student to Professional
           </span>
         </motion.h1>
 
@@ -145,7 +146,7 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="max-w-2xl text-lg sm:text-xl text-slate-600 dark:text-slate-400 mb-10"
         >
-          Get hands-on experience while learning from industry experts. Choose between structured bootcamp training or direct placement internships with leading tech companies.
+          Start with foundational education, then transition to earning while you learn. Our cooperative education model combines structured training with real-world project experience.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -168,7 +169,7 @@ const Hero: React.FC = () => {
             className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium transition-all duration-200 hover:shadow-lg hover:shadow-primary-500/25 group"
           >
             <TerminalSquare className="w-4 h-4 mr-2" />
-            Apply Now
+            Pre-Register
             <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
           </Link>
 

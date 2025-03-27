@@ -13,10 +13,10 @@ const tiers = [
     darkColor: 'dark:from-blue-600 dark:to-blue-700',
     iconBg: 'bg-blue-100 dark:bg-blue-900/20',
     iconColor: 'text-blue-600 dark:text-blue-400',
-    earnings: '$500-1000',
+    earnings: 'You Pay',
     duration: '2-3 months',
     skills: ['HTML/CSS', 'JavaScript', 'Git Basics', 'UI/UX Fundamentals'],
-    description: 'Build a strong foundation in web development fundamentals while earning your first rewards.'
+    description: 'Build a strong foundation in web development fundamentals with expert instruction and hands-on projects.'
   },
   {
     level: 'Tier 2',
@@ -26,10 +26,10 @@ const tiers = [
     darkColor: 'dark:from-purple-600 dark:to-purple-700',
     iconBg: 'bg-purple-100 dark:bg-purple-900/20',
     iconColor: 'text-purple-600 dark:text-purple-400',
-    earnings: '$1000-2500',
+    earnings: 'Start Earning',
     duration: '3-4 months',
     skills: ['React/Next.js', 'Node.js', 'Database Design', 'API Development'],
-    description: 'Accelerate your learning with advanced concepts and start building full-stack applications.'
+    description: 'Accelerate your learning with advanced concepts and begin earning through real-world project participation.'
   },
   {
     level: 'Tier 3',
@@ -39,10 +39,10 @@ const tiers = [
     darkColor: 'dark:from-green-600 dark:to-green-700',
     iconBg: 'bg-green-100 dark:bg-green-900/20',
     iconColor: 'text-green-600 dark:text-green-400',
-    earnings: '$2500-5000',
+    earnings: 'Earn More',
     duration: '4-6 months',
     skills: ['System Design', 'Cloud Services', 'DevOps', 'Team Leadership'],
-    description: 'Work on complex projects and prepare for professional software engineering roles.'
+    description: 'Work on complex projects, lead development teams, and earn higher compensation with advanced skills.'
   }
 ];
 
@@ -200,9 +200,9 @@ const TieredJourney = () => {
             style={{ y }}
             className="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight"
           >
-            Earn More as You{' '}
+            From Paying to{' '}
             <span className="bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
-              Learn More
+              Earning
             </span>
           </motion.h2>
 
@@ -210,8 +210,8 @@ const TieredJourney = () => {
             style={{ y }}
             className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed"
           >
-            Our tiered program structure ensures you're constantly growing while earning.
-            Each tier brings new challenges, higher earnings, and greater opportunities.
+            Our cooperative education model transitions you from student to paid professional.
+            Start with foundational learning, then progress to earning while continuing your education.
           </motion.p>
         </div>
 

@@ -270,13 +270,11 @@ const Footer = () => {
             >
               <div className="absolute -inset-1 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-full blur opacity-25"></div>
               <Link href="/" aria-label="Home">
-                <Image
-                  src="/logo.svg"
-                  alt="Innovation Bootcamp"
-                  width={32}
-                  height={32}
-                  className="relative dark:invert"
-                />
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                  <rect width="32" height="32" fill="#3B82F6" rx="6"/>
+                  <rect x="8" y="8" width="16" height="16" fill="white" rx="2"/>
+                  <rect x="12" y="12" width="8" height="8" fill="#3B82F6"/>
+                </svg>
               </Link>
             </motion.div>
             <div className="flex flex-col">
@@ -290,7 +288,7 @@ const Footer = () => {
           </div>
           <div className="flex items-center gap-6">
             <Link
-              href="/accessibility"
+              href="/legal/accessibility"
               className="group text-sm text-slate-600 dark:text-slate-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors duration-200"
             >
               <span className="relative">

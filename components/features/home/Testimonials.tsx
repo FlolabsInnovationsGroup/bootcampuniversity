@@ -8,33 +8,33 @@ import { ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react';
 const testimonials = [
   {
     id: 1,
-    name: 'Sarah Chen',
-    role: 'Frontend Developer',
+    name: 'David Park',
+    role: 'Tech Lead',
     company: 'TechCorp Solutions',
     image: '/testimonials/sarah.jpg',
-    content: 'The structured learning approach and real-world projects at Innovation Bootcamp gave me the confidence to transition into tech. Within 3 months of graduating, I landed my dream role as a frontend developer.',
+    content: 'The curriculum and hands-on approach designed by Innovation Bootcamp aligns perfectly with what we look for in junior developers. We\'re excited to welcome their first cohort of students as interns.',
     rating: 5,
-    program: 'Foundation Builder',
+    program: 'Industry Partner',
   },
   {
     id: 2,
-    name: 'Michael Rodriguez',
-    role: 'Full Stack Engineer',
+    name: 'Lisa Rodriguez',
+    role: 'HR Director',
     company: 'InnovateTech',
     image: '/testimonials/michael.jpg',
-    content: 'The earn-while-you-learn model was perfect for me. I could focus on learning without financial stress, and the practical experience I gained was invaluable in securing my current position.',
+    content: 'The Innovation Bootcamp model addresses the biggest challenge we face - finding entry-level talent with practical experience. We\'re proud to be an early partner in this initiative.',
     rating: 5,
-    program: 'Skill Accelerator',
+    program: 'Hiring Partner',
   },
   {
     id: 3,
-    name: 'Emily Thompson',
-    role: 'Senior Developer',
-    company: 'Global Systems Inc',
+    name: 'Thomas Chen',
+    role: 'Education Consultant',
+    company: 'Future Skills Institute',
     image: '/testimonials/emily.jpg',
-    content: "The mentorship and industry connections provided by Innovation Bootcamp were exceptional. The program fast-tracked my career progression, and I'm now leading development teams.",
+    content: "The program's focus on real-world projects and industry collaboration sets it apart from traditional learning paths. I've been impressed with their comprehensive curriculum design.",
     rating: 5,
-    program: 'Professional Developer',
+    program: 'Education Advisor',
   },
 ];
 
@@ -129,7 +129,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: typeof testimonials[0] 
             whileHover={{ scale: 1.05 }}
             className="text-sm font-medium bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent"
           >
-            {testimonial.program} Graduate
+            {testimonial.program}
           </motion.p>
         </motion.div>
       </motion.div>
@@ -198,21 +198,22 @@ const TestimonialCarousel = () => {
             className="inline-flex items-center px-4 py-2 rounded-full bg-primary-100 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 text-sm font-medium mb-6 border border-primary-200/20 backdrop-blur-sm"
           >
             <Star className="w-4 h-4 mr-2" />
-            Success Stories
+            Industry Feedback
           </motion.div>
 
           <motion.h2 style={{ y }} className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
-            Success{' '}
+            What{' '}
             <span className="text-gradient bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
-              Stories
+              Industry Partners 
             </span>
+            {' '}Say
           </motion.h2>
           <motion.p
             style={{ y }}
             transition={{ delay: 0.1 }}
             className="mt-6 text-lg text-muted-foreground"
           >
-            Hear from our graduates who have successfully transitioned into rewarding tech careers.
+            Hear from the tech industry professionals who have helped shape our program.
           </motion.p>
         </div>
 
@@ -252,11 +253,12 @@ const TestimonialCarousel = () => {
                   setAutoplay(false);
                   setCurrentIndex(index);
                 }}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                className={`h-3 w-3 rounded-full transition-colors duration-300 ${
                   index === currentIndex
-                    ? 'bg-gradient-to-r from-primary-500 to-secondary-500 scale-110'
-                    : 'bg-primary-200 dark:bg-primary-800 hover:bg-primary-300 dark:hover:bg-primary-700'
+                    ? 'bg-primary-500'
+                    : 'bg-slate-300 dark:bg-slate-700 hover:bg-primary-300 dark:hover:bg-primary-800'
                 }`}
+                aria-label={`Go to testimonial ${index + 1}`}
               />
             ))}
           </div>

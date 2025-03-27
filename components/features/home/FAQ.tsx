@@ -12,9 +12,9 @@ interface FAQItem {
 
 const faqs: FAQItem[] = [
   {
-    question: 'How does the earn-while-you-learn model work?',
+    question: 'How does the cooperative education model work?',
     answer:
-      'You earn income by working on real client projects while you learn. Compensation is based on your tier level and contributions, helping offset education costs while gaining practical experience.',
+      'Our model is structured in three tiers. In Tier 1, you pay for foundational education. In Tier 2, you transition to earning income through project participation while continuing your education. By Tier 3, you\'re earning more as you work on advanced projects and take on leadership roles.',
     category: 'financial',
   },
   {
@@ -26,37 +26,37 @@ const faqs: FAQItem[] = [
   {
     question: 'How long does it take to complete each tier?',
     answer:
-      'Foundation Builder takes ~3 months. Skill Accelerator and Professional Developer take ~6 months each. Progress is competency-based, so you can go at your own pace.',
+      'Foundation Builder (Tier 1) is designed to take 2-3 months. Skill Accelerator (Tier 2) takes 3-4 months, and Professional Developer (Tier 3) takes 4-6 months. Progress is competency-based, so you can advance at your own pace.',
     category: 'program',
   },
   {
     question: 'What kind of job support do you provide?',
     answer:
-      'Career support includes portfolio reviews, resume help, interview prep, and direct connections to hiring partners. We help you land a role during and after the program.',
+      'Career support includes portfolio reviews, resume help, interview prep, and connections to hiring partners. We help you land a role during and after completing the program.',
     category: 'career',
   },
   {
-    question: 'Are there financing options available?',
+    question: 'Are there financing options available for Tier 1?',
     answer:
-      'Yes — we offer income share agreements, monthly plans, and scholarships. You can also earn money through project-based compensation as you learn.',
+      'Yes — we plan to offer payment plans and scholarships for Tier 1. Remember that you\'ll start earning income in Tier 2, which helps offset your initial investment.',
     category: 'financial',
   },
   {
     question: 'What technologies and skills will I learn?',
     answer:
-      'You\'ll learn HTML, CSS, JavaScript, React, Node.js, and more. Soft skills, dev workflows, and industry tools are also included. The curriculum is updated often.',
+      'You\'ll learn HTML, CSS, JavaScript, React, Node.js, AI, robotics, and more depending on your chosen track. Soft skills, dev workflows, and industry tools are also included. Our curriculum is regularly updated to match industry demands.',
     category: 'program',
   },
   {
     question: 'Can I participate while working full-time?',
     answer:
-      'Yes! Many learners keep full-time jobs during Foundation Builder. Later tiers may require more time due to project commitments.',
+      'Yes! The program is designed so learners can maintain full-time jobs during Tier 1. Later tiers may require more time as project commitments increase, but the schedule remains flexible.',
     category: 'general',
   },
   {
     question: 'What makes Innovation Bootcamp different?',
     answer:
-      'Tiered progression, project-based learning, and real income while learning. You get practical experience, industry exposure, and job-ready skills from day one.',
+      'Our cooperative education approach bridges the gap between education and employment. You\'ll get hands-on experience with real projects and start earning while still learning, providing a practical pathway into the tech industry.',
     category: 'general',
   },
 ];

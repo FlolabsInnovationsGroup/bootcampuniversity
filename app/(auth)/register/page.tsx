@@ -2,11 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/forms/inputs';
 import { LoadingSpinner } from '@/components/shared/LoadingPlaceholder';
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,24 +21,8 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      // TODO: Implement registration logic
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated delay
-      throw new Error('Registration functionality not implemented yet');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setIsLoading(false);
-    }
+    // Registration is disabled - redirect to login
+    router.push('/login');
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,6 +41,16 @@ export default function RegisterPage() {
           </p>
         </div>
 
+        {/* Registration disabled notice */}
+        <div className="p-4 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg">
+          <strong>Registration is temporarily disabled</strong>
+          <p className="mt-1">We're preparing for our official launch. Please check back soon!</p>
+          <div className="mt-8 text-sm text-slate-600 dark:text-slate-400">
+            <p>This registration is for student accounts only. Contact us to create accounts for instructors or advisors.</p>
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">Note: You can register an admin account with email <code>analytics.flomad@gmail.com</code> by contacting the development team.</p>
+          </div>
+        </div>
+
         {error && (
           <div className="p-3 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg">
             {error}
@@ -69,7 +66,7 @@ export default function RegisterPage() {
               value={formData.name}
               onChange={handleChange}
               required
-              disabled={isLoading}
+              disabled={true}
               autoComplete="name"
             />
           </div>
@@ -81,7 +78,7 @@ export default function RegisterPage() {
               value={formData.email}
               onChange={handleChange}
               required
-              disabled={isLoading}
+              disabled={true}
               autoComplete="email"
             />
           </div>
@@ -93,7 +90,7 @@ export default function RegisterPage() {
               value={formData.password}
               onChange={handleChange}
               required
-              disabled={isLoading}
+              disabled={true}
               autoComplete="new-password"
             />
           </div>
@@ -105,7 +102,7 @@ export default function RegisterPage() {
               value={formData.confirmPassword}
               onChange={handleChange}
               required
-              disabled={isLoading}
+              disabled={true}
               autoComplete="new-password"
             />
           </div>
@@ -115,6 +112,7 @@ export default function RegisterPage() {
               <input
                 type="checkbox"
                 required
+                disabled={true}
                 className="rounded border-gray-300 text-primary focus:ring-primary"
               />
               <span>
@@ -139,48 +137,11 @@ export default function RegisterPage() {
           <Button
             type="submit"
             className="w-full"
-            disabled={isLoading}
+            disabled={true}
           >
-            {isLoading ? (
-              <>
-                <LoadingSpinner className="mr-2" />
-                Creating account...
-              </>
-            ) : (
-              'Sign up'
-            )}
+            Registration Disabled
           </Button>
         </form>
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200 dark:border-gray-800" />
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">
-              Or continue with
-            </span>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            disabled={isLoading}
-          >
-            Google
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            disabled={isLoading}
-          >
-            GitHub
-          </Button>
-        </div>
 
         <p className="text-center text-sm text-gray-600 dark:text-gray-400">
           Already have an account?{' '}

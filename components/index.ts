@@ -12,4 +12,8 @@ export * from './shared';
 export * from './tracks';
 
 // Dashboard Components
-export * from './dashboard'; 
+export * from './dashboard';
+
+// Feature Components
+export { default as Programs } from './features/home/Programs';
+export { default as Apply } from './features/home/Apply'; 

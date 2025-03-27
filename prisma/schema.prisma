@@ -43,9 +43,13 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  password      String?
+  bio           String?
+  role          String    @default("user") // Possible values: "user", "admin", "instructor"
   accounts      Account[]
   sessions      Session[]
   progress      MaterialProgress[]
+  enrollments   Enrollment[]
 }
 
 model VerificationToken {
@@ -67,6 +71,49 @@ model MaterialProgress {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  material     Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
 
   @@unique([userId, materialId])
+}
+
+model Course {
+  id          String      @id @default(cuid())
+  title       String
+  description String
+  category    String // programming, design, marketing, data
+  status      String // draft, published
+  coverImage  String?
+  duration    Int?        // In minutes
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  materials   Material[]
+  enrollments Enrollment[]
+}
+
+model Material {
+  id          String      @id @default(cuid())
+  title       String
+  description String?
+  type        String      // video, text, quiz, etc.
+  content     String?     // URL for videos, markdown for text
+  duration    Int?        // In minutes (for videos)
+  order       Int         // Position in the course
+  courseId    String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  course      Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress    MaterialProgress[]
+}
+
+model Enrollment {
+  id          String   @id @default(cuid())
+  userId      String
+  courseId    String
+  status      String   @default("active") // active, completed, dropped
+  enrolledAt  DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
 } 

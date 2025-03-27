@@ -31,22 +31,28 @@ const jetbrainsMono = JetBrains_Mono({
 
 // Enhanced metadata
 export const metadata: Metadata = {
-  metadataBase: new URL('https://innovationbootcamp.edu'),
+  metadataBase: new URL(
+    process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : 'http://localhost:3000'
+  ),
   title: {
+    default: 'Innovation Bootcamp University | From Paying to Earning Tech Skills',
     template: '%s | Innovation Bootcamp University',
-    default: 'Innovation Bootcamp University | Learn, Earn & Master Tech Skills',
   },
-  description: 'Get paid to learn tech skills with Innovation Bootcamp University. Our tiered program combines education with real-world experience.',
+  description: 'Our cooperative education model transitions you from student to paid professional. Start with foundational learning, then progress to earning.',
   keywords: [
-    'tech education',
     'bootcamp',
-    'paid internship',
+    'tech education',
+    'coding',
+    'programming',
+    'cooperative education',
+    'experiential learning',
     'tiered education',
-    'tech skills',
-    'innovation',
     'web development',
-    'software engineering',
-    'career development',
+    'AI',
+    'machine learning',
+    'robotics',
   ],
   authors: [{ name: 'Innovation Bootcamp University' }],
   robots: {
@@ -63,13 +69,12 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://innovationbootcamp.edu',
-    title: 'Innovation Bootcamp University',
-    description: 'Get paid to learn tech skills with our innovative tiered program',
-    siteName: 'Innovation Bootcamp University',
+    url: '/',
+    title: 'Innovation Bootcamp University | From Paying to Earning Tech Skills',
+    description: 'Our cooperative education model transitions you from student to paid professional. Start with foundational learning, then progress to earning.',
     images: [
       {
-        url: '/images/og-image.jpg',
+        url: '/images/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Innovation Bootcamp University',
@@ -78,10 +83,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Innovation Bootcamp University | Learn, Earn & Master Tech Skills',
-    description: 'Get paid to learn tech skills with our innovative tiered program',
-    images: ['/images/twitter-image.jpg'],
-    creator: '@innovbootcamp',
+    title: 'Innovation Bootcamp University | From Paying to Earning Tech Skills',
+    description: 'Our cooperative education model transitions you from student to paid professional. Start with foundational learning, then progress to earning.',
+    images: ['/images/twitter-image.png'],
+    creator: '@InnovationBoot',
   },
   manifest: '/site.webmanifest',
   icons: {

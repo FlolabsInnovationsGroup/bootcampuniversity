@@ -10,7 +10,7 @@ const stats = [
     icon: Clock,
     value: '6',
     unit: 'months',
-    label: 'Average Time to First Job',
+    label: 'Target Time to First Job',
     color: 'text-blue-600 dark:text-blue-400',
     bgColor: 'bg-blue-100 dark:bg-blue-900/20',
   },
@@ -18,7 +18,7 @@ const stats = [
     icon: DollarSign,
     value: '75k',
     unit: 'USD',
-    label: 'Average Starting Salary',
+    label: 'Expected Starting Salary',
     color: 'text-green-600 dark:text-green-400',
     bgColor: 'bg-green-100 dark:bg-green-900/20',
   },
@@ -26,7 +26,7 @@ const stats = [
     icon: Users,
     value: '95',
     unit: '%',
-    label: 'Employment Rate',
+    label: 'Target Employment Rate',
     color: 'text-purple-600 dark:text-purple-400',
     bgColor: 'bg-purple-100 dark:bg-purple-900/20',
   },
@@ -35,9 +35,9 @@ const stats = [
 const features = [
   'Learn from industry experts',
   'Build real-world projects',
-  'Get paid while you learn',
-  'Land a high-paying tech job',
-  'No upfront costs',
+  'Transition from paying to earning',
+  'Prepare for a high-paying tech job',
+  'Flexible payment options',
   'Career support & mentorship'
 ];
 
@@ -73,13 +73,13 @@ const CallToAction = () => {
                 Transform Your Career
               </motion.div>
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white mb-6">
-                Start Your Tech Career{' '}
+                Begin Your Journey to{' '}
                 <span className="bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
-                  Without Risk
+                  Tech Career
                 </span>
               </h2>
               <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
-                Learn, earn, and launch your career with our proven, risk-free program.
+                Start learning, progress to earning, and launch your career with our cooperative education program.
               </p>
             </motion.div>
 
@@ -129,7 +129,7 @@ const CallToAction = () => {
                   href="/apply"
                   className="group inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-medium shadow-lg shadow-primary-500/25 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900"
                 >
-                  Apply Now
+                  Pre-Register
                   <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
                 </Link>
               </motion.div>

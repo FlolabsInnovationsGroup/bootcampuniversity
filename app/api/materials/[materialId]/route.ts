@@ -14,8 +14,10 @@ const noteSchema = z.object({
 });
 
 const bookmarkSchema = z.object({
+  id: z.string(),
   time: z.number(),
   label: z.string(),
+  timestamp: z.string()
 });
 
 // GET /api/materials/[materialId]
@@ -47,10 +49,20 @@ export async function GET(
       });
     }
 
+    // Parse bookmarks JSON if it exists
+    let bookmarks = [];
+    if (materialProgress.bookmarks) {
+      try {
+        bookmarks = JSON.parse(materialProgress.bookmarks);
+      } catch (error) {
+        console.error('Error parsing bookmarks JSON:', error);
+      }
+    }
+
     return NextResponse.json({
       progress: materialProgress.progress,
       notes: materialProgress.notes || '',
-      bookmarks: materialProgress.bookmarks || [],
+      bookmarks: bookmarks,
       lastPosition: materialProgress.lastPosition,
     });
   } catch (error) {
@@ -78,7 +90,7 @@ export async function PATCH(
 
     // Validate and update progress
     if ('progress' in body) {
-      const { progress } = progressSchema.parse(body);
+      const { progress } = progressSchema.parse({ progress: body.progress });
       updates.progress = progress;
     }
 
@@ -90,8 +102,15 @@ export async function PATCH(
 
     // Update bookmarks
     if ('bookmarks' in body) {
-      const bookmarks = z.array(bookmarkSchema).parse(body.bookmarks);
-      updates.bookmarks = bookmarks;
+      try {
+        const bookmarks = z.array(bookmarkSchema).parse(body.bookmarks);
+        updates.bookmarks = JSON.stringify(bookmarks);
+      } catch (error) {
+        return NextResponse.json(
+          { error: 'Invalid bookmarks format', details: error },
+          { status: 400 }
+        );
+      }
     }
 
     // Update last position
@@ -116,7 +135,27 @@ export async function PATCH(
       },
     });
 
-    return NextResponse.json(materialProgress);
+    // Parse bookmarks for response
+    let bookmarks = [];
+    if (materialProgress.bookmarks) {
+      try {
+        bookmarks = JSON.parse(materialProgress.bookmarks);
+      } catch (error) {
+        console.error('Error parsing bookmarks JSON for response:', error);
+      }
+    }
+
+    // Return sanitized response
+    return NextResponse.json({
+      id: materialProgress.id,
+      materialId: materialProgress.materialId,
+      progress: materialProgress.progress,
+      lastPosition: materialProgress.lastPosition,
+      notes: materialProgress.notes || '',
+      bookmarks: bookmarks,
+      createdAt: materialProgress.createdAt,
+      updatedAt: materialProgress.updatedAt
+    });
   } catch (error) {
     console.error('Failed to update material data:', error);
     if (error instanceof z.ZodError) {

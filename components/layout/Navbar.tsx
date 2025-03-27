@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from 'next-themes';
+import { useSession, signOut } from 'next-auth/react';
 import {
   Menu,
   X,
@@ -15,8 +16,12 @@ import {
   Moon,
   ArrowRight,
   Laptop,
+  LogOut,
+  User,
 } from 'lucide-react';
 import { useClickAway } from 'react-use';
+import { Button } from '@/components/ui/button';
+import { LoadingSpinner } from '@/components/shared/LoadingPlaceholder';
 
 const navigation = {
   main: [
@@ -72,7 +77,7 @@ const navigation = {
       items: [
         {
           name: 'How It Works',
-          description: 'Learn about our unique learning approach',
+          description: 'Learn about our cooperative education model',
           href: '/how-it-works',
           icon: (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -162,10 +167,12 @@ const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isThemeChanging, setIsThemeChanging] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
+  const { data: session, status } = useSession();
 
   // Mount check
   useEffect(() => {
@@ -205,6 +212,21 @@ const Navbar = () => {
     setTimeout(() => setIsThemeChanging(false), 400);
   };
 
+  // Performance optimization for navigation
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, href: string) => {
+    // Only prevent default for internal links
+    if (href.startsWith('/') && !href.startsWith('//')) {
+      // Add active state to links for better feedback
+      const target = e.currentTarget;
+      target.classList.add('pointer-events-none');
+      
+      // Re-enable after a short delay (for visual feedback)
+      setTimeout(() => {
+        target.classList.remove('pointer-events-none');
+      }, 300);
+    }
+  };
+
   // Get the current theme icon
   const ThemeIcon = mounted ? (theme === 'dark' ? Moon : theme === 'light' ? Sun : Laptop) : Laptop;
 
@@ -238,6 +260,16 @@ const Navbar = () => {
     },
   };
 
+  const handleSignOut = async () => {
+    setIsLoading(true);
+    try {
+      await signOut({ redirect: true, callbackUrl: '/' });
+    } catch (error) {
+      console.error('Failed to sign out:', error);
+      setIsLoading(false);
+    }
+  };
+
   return (
     <motion.nav
       ref={navRef}
@@ -256,13 +288,11 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
               <div className="relative w-8 h-8 flex items-center justify-center">
-                <Image
-                  src="/logos/logo.svg"
-                  alt="Innovation Bootcamp"
-                  width={32}
-                  height={32}
-                  className="relative dark:invert"
-                />
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                  <rect width="32" height="32" fill="#3B82F6" rx="6"/>
+                  <rect x="8" y="8" width="16" height="16" fill="white" rx="2"/>
+                  <rect x="12" y="12" width="8" height="8" fill="#3B82F6"/>
+                </svg>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold text-lg text-slate-900 dark:text-white">
@@ -282,7 +312,10 @@ const Navbar = () => {
                 {item.items ? (
                   // Dropdown
                   <button
-                    onClick={() => setActiveDropdown(activeDropdown === item.name ? null : item.name)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setActiveDropdown(activeDropdown === item.name ? null : item.name);
+                    }}
                     className={`group flex items-center space-x-1.5 text-sm font-medium ${
                       activeDropdown === item.name
                         ? 'text-primary-600 dark:text-primary-400'
@@ -301,6 +334,7 @@ const Navbar = () => {
                         ? 'text-primary-600 dark:text-primary-400'
                         : 'text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400'
                     } transition-colors duration-200`}
+                    onClick={(e) => handleLinkClick(e, item.href)}
                   >
                     {item.name}
                   </Link>
@@ -323,6 +357,7 @@ const Navbar = () => {
                               key={subItem.name}
                               href={subItem.href}
                               className="flex items-start rounded-lg p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition duration-150 ease-in-out"
+                              onClick={(e) => handleLinkClick(e, subItem.href)}
                             >
                               <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400">
                                 {subItem.icon}
@@ -356,35 +391,79 @@ const Navbar = () => {
                 <ThemeIcon className="w-5 h-5" />
               </button>
 
-              {/* Login Button */}
-              <Link
-                href="/auth/login"
-                className="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200"
-              >
-                Sign in
-              </Link>
+              {/* Show different buttons based on authentication status */}
+              {status === 'authenticated' ? (
+                <>
+                  {/* User Avatar */}
+                  <div className="flex items-center space-x-2">
+                    <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
+                      {session?.user?.image ? (
+                        <img 
+                          src={session.user.image} 
+                          alt={session.user.name || 'User'} 
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <User className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                      )}
+                    </div>
+                    <Link
+                      href={session?.user?.role === 'admin' ? "/admin/analytics" : "/dashboard"}
+                      className="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 mr-2"
+                    >
+                      Dashboard
+                    </Link>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleSignOut}
+                      disabled={isLoading}
+                      className="text-sm font-medium"
+                    >
+                      {isLoading ? (
+                        <LoadingSpinner className="h-4 w-4 mr-1" />
+                      ) : (
+                        <LogOut className="h-4 w-4 mr-1" />
+                      )}
+                      Logout
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Login Button */}
+                  <Link
+                    href="/login"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200"
+                  >
+                    Sign in
+                  </Link>
 
-              {/* Apply Button */}
-              <Link
-                href="/apply"
-                className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors duration-200"
-              >
-                Apply Now
-                <ArrowRight className="ml-2 w-4 h-4" />
-              </Link>
+                  {/* Apply Button */}
+                  <Link
+                    href="/apply"
+                    className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors duration-200"
+                  >
+                    Apply Now
+                    <ArrowRight className="ml-2 w-4 h-4" />
+                  </Link>
+                </>
+              )}
             </div>
           </div>
 
           {/* Mobile menu button */}
-          <div className="flex md:hidden">
+          <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 focus:outline-none"
+              className="inline-flex items-center justify-center p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 focus:outline-none"
+              aria-expanded={isMobileMenuOpen}
             >
+              <span className="sr-only">Open main menu</span>
               {isMobileMenuOpen ? (
-                <X className="w-6 h-6" />
+                <X className="block h-6 w-6" aria-hidden="true" />
               ) : (
-                <Menu className="w-6 h-6" />
+                <Menu className="block h-6 w-6" aria-hidden="true" />
               )}
             </button>
           </div>
@@ -411,18 +490,39 @@ const Navbar = () => {
                   {item.name}
                 </Link>
               ))}
-              <Link
-                href="/auth/login"
-                className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-800/50"
-              >
-                Sign in
-              </Link>
-              <Link
-                href="/apply"
-                className="block px-3 py-2 rounded-md text-base font-medium text-white bg-primary-600 hover:bg-primary-700"
-              >
-                Apply Now
-              </Link>
+              
+              {/* Show different buttons based on authentication status */}
+              {status === 'authenticated' ? (
+                <div className="space-y-2">
+                  <Link
+                    href={session?.user?.role === 'admin' ? "/admin/analytics" : "/dashboard"}
+                    className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                  >
+                    Sign in
+                  </Link>
+                  <Link
+                    href="/apply"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-white bg-primary-600 hover:bg-primary-700"
+                  >
+                    Apply Now
+                  </Link>
+                </>
+              )}
             </div>
           </motion.div>
         )}
