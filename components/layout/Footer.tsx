@@ -2,9 +2,10 @@
 
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { Image } from '@/components/ui/image';
 import { motion } from 'framer-motion';
 import { ArrowRight, Mail, Github, Linkedin, Twitter } from 'lucide-react';
+import { Logo } from '@/components/ui/logo';
 
 const footerLinks = {
   programs: [
@@ -97,6 +98,23 @@ const Footer = () => {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Logo and Title */}
+        <div className="flex items-center mb-12">
+          <div className="mb-4 md:mb-0 flex items-center space-x-2">
+            <div className="relative w-8 h-8">
+              <Logo />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-bold text-base text-slate-900 dark:text-white">
+                Innovation Bootcamp
+              </span>
+              <span className="text-base text-slate-600 dark:text-slate-400 -mt-1">
+                University
+              </span>
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 pb-16 border-b border-slate-200 dark:border-slate-800">
           {/* Newsletter Section */}
           <div>
@@ -269,12 +287,8 @@ const Footer = () => {
               whileTap={{ scale: 0.95 }}
             >
               <div className="absolute -inset-1 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-full blur opacity-25"></div>
-              <Link href="/" aria-label="Home">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                  <rect width="32" height="32" fill="#3B82F6" rx="6"/>
-                  <rect x="8" y="8" width="16" height="16" fill="white" rx="2"/>
-                  <rect x="12" y="12" width="8" height="8" fill="#3B82F6"/>
-                </svg>
+              <Link href="/" aria-label="Home" className="relative w-8 h-8">
+                <Logo />
               </Link>
             </motion.div>
             <div className="flex flex-col">

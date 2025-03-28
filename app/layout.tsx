@@ -74,9 +74,9 @@ export const metadata: Metadata = {
     description: 'Our cooperative education model transitions you from student to paid professional. Start with foundational learning, then progress to earning.',
     images: [
       {
-        url: '/images/og-image.png',
-        width: 1200,
-        height: 630,
+        url: '/logos/newlogo.png',
+        width: 192,
+        height: 192,
         alt: 'Innovation Bootcamp University',
       },
     ],
@@ -85,17 +85,17 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Innovation Bootcamp University | From Paying to Earning Tech Skills',
     description: 'Our cooperative education model transitions you from student to paid professional. Start with foundational learning, then progress to earning.',
-    images: ['/images/twitter-image.png'],
+    images: ['/logos/newlogo.png'],
     creator: '@InnovationBoot',
   },
   manifest: '/site.webmanifest',
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: '32x32' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
-      { url: '/apple-touch-icon.png', sizes: '180x180' },
+      { url: '/logos/favicon.ico', sizes: '32x32' },
+      { url: '/logos/logo.svg', type: 'image/svg+xml' },
+      { url: '/logos/newlogo.png', sizes: '192x192' },
     ],
-    apple: [{ url: '/apple-touch-icon.png' }],
+    apple: [{ url: '/logos/newlogo.png' }],
   },
   other: {
     'google-site-verification': 'your-verification-code',

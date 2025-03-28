@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { Logo } from '@/components/ui/logo';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from 'next-themes';
@@ -287,18 +287,14 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="relative w-8 h-8 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                  <rect width="32" height="32" fill="#3B82F6" rx="6"/>
-                  <rect x="8" y="8" width="16" height="16" fill="white" rx="2"/>
-                  <rect x="12" y="12" width="8" height="8" fill="#3B82F6"/>
-                </svg>
+              <div className="relative w-8 h-8">
+                <Logo />
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-lg text-slate-900 dark:text-white">
+                <span className="font-bold text-base text-slate-900 dark:text-white">
                   Innovation Bootcamp
                 </span>
-                <span className="text-xs text-slate-600 dark:text-slate-400 -mt-1">
+                <span className="text-base text-slate-600 dark:text-slate-400 -mt-1">
                   University
                 </span>
               </div>

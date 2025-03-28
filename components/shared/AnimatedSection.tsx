@@ -34,22 +34,33 @@ export const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   };
 
   return (
-    <section className={`relative py-20 sm:py-32 ${className}`} suppressHydrationWarning>
+    <section 
+      className={`relative py-20 sm:py-32 ${className}`} 
+      suppressHydrationWarning
+      style={{ position: 'relative' }}
+    >
       {background !== "none" && (
-        <div className={`absolute inset-0 ${getBgClasses()}`} />
+        <div 
+          className={`absolute inset-0 ${getBgClasses()}`}
+          style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+        />
       )}
       {isMounted ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.5 }}
+          transition={{ 
+            duration: 0.5,
+            color: { duration: 0 } // Disable color animation
+          }}
           className="relative"
+          style={{ position: 'relative', color: 'inherit' }}
         >
           {children}
         </motion.div>
       ) : (
-        <div className="relative">
+        <div className="relative" style={{ position: 'relative' }}>
           {children}
         </div>
       )}

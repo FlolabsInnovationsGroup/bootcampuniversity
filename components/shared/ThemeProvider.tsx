@@ -9,8 +9,8 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return (
     <NextThemesProvider
       attribute="class"
-      defaultTheme="system"
-      enableSystem={true}
+      defaultTheme="light"
+      enableSystem={false}
       disableTransitionOnChange={false}
       storageKey="theme"
       {...props}

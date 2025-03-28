@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Image } from '@/components/ui/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSession, signOut } from 'next-auth/react';
@@ -19,6 +20,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/shared/LoadingPlaceholder';
+import { Logo } from '@/components/ui/logo';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -98,13 +100,18 @@ export default function DashboardLayout({
             <div className="flex h-full flex-col">
               {/* Sidebar Header */}
               <div className="flex h-16 items-center justify-between px-4 border-b border-gray-200 dark:border-gray-700">
-                <Link href="/dashboard" className="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 32 32" className="mr-2">
-                    <rect width="32" height="32" fill="#3B82F6" rx="6"/>
-                    <rect x="8" y="8" width="16" height="16" fill="white" rx="2"/>
-                    <rect x="12" y="12" width="8" height="8" fill="#3B82F6"/>
-                  </svg>
-                  <span className="text-lg font-bold text-primary-600 dark:text-primary-400">Dashboard</span>
+                <Link href="/dashboard" className="flex items-center space-x-2">
+                  <div className="relative w-8 h-8">
+                    <Logo />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-bold text-base text-slate-900 dark:text-white">
+                      Innovation Bootcamp
+                    </span>
+                    <span className="text-base text-slate-600 dark:text-slate-400 -mt-1">
+                      University
+                    </span>
+                  </div>
                 </Link>
                 <Button
                   variant="ghost"
@@ -206,19 +213,22 @@ export default function DashboardLayout({
           </div>
         </main>
 
-        {/* Footer - Now outside of the scroll area */}
+        {/* Footer */}
         <footer className="py-8 bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-auto">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row justify-between items-center">
-              <div className="mb-4 md:mb-0 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="mr-2">
-                  <rect width="32" height="32" fill="#3B82F6" rx="6"/>
-                  <rect x="8" y="8" width="16" height="16" fill="white" rx="2"/>
-                  <rect x="12" y="12" width="8" height="8" fill="#3B82F6"/>
-                </svg>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  © {new Date().getFullYear()} Flomad Labs. All rights reserved.
-                </p>
+              <div className="mb-4 md:mb-0 flex items-center space-x-2">
+                <div className="relative w-8 h-8">
+                  <Logo />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-bold text-base text-slate-900 dark:text-white">
+                    Innovation Bootcamp
+                  </span>
+                  <span className="text-base text-slate-600 dark:text-slate-400 -mt-1">
+                    University
+                  </span>
+                </div>
               </div>
               <div className="flex space-x-6">
                 <Link href="/terms" className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">

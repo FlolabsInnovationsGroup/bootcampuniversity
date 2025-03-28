@@ -50,9 +50,15 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
         <div className="flex justify-between items-start">
           <h3 className="text-lg font-semibold text-gray-900">{question}</h3>
           <button
+            type="button"
+            aria-label={isOpen ? 'Close answer' : 'Show answer'}
             className={`ml-4 text-gray-500 transition-transform ${
               isOpen ? 'transform rotate-180' : ''
             }`}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsOpen(!isOpen);
+            }}
           >
             ▼
           </button>
