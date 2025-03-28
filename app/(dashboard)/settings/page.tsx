@@ -52,11 +52,11 @@ export default function SettingsPage() {
 
   // Update profile state when session data is loaded
   useEffect(() => {
-    if (session?.user) {
+    if (session && session.user) {
       setProfileData({
         name: session.user.name || '',
         email: session.user.email || '',
-        bio: session.user.bio || '',
+        bio: (session.user as any).bio || '',
         image: session.user.image || ''
       });
     }

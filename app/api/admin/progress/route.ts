@@ -209,10 +209,12 @@ export async function PATCH(request: Request) {
       );
     }
 
-    // Update the enrollment progress
+    // Update the enrollment status based on progress
     const updatedEnrollment = await prisma.enrollment.update({
       where: { id: enrollmentId },
-      data: { progress },
+      data: { 
+        status: progress === 100 ? 'completed' : 'active'
+      },
       include: {
         user: {
           select: {

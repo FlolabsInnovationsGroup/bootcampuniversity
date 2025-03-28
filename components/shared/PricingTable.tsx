@@ -1,8 +1,9 @@
 import React from 'react';
 import { Check, Sparkles } from 'lucide-react';
-import { Button } from './Button';
-import { Card, CardHeader, CardContent, CardFooter } from './Card';
-import { Badge } from './Badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
 
 interface PricingTier {
   id: string;
@@ -11,7 +12,7 @@ interface PricingTier {
   price: string;
   features: string[];
   buttonText: string;
-  buttonVariant: 'primary' | 'outline';
+  buttonVariant: 'default' | 'outline';
   highlighted?: boolean;
   badge?: string;
 }
@@ -27,8 +28,6 @@ export const PricingTable = ({ tiers }: PricingTableProps) => {
         {tiers.map((tier, index) => (
           <Card
             key={tier.id}
-            variant={tier.highlighted ? "gradient" : "default"}
-            hover={true}
             className={`relative flex flex-col ${
               tier.highlighted
                 ? 'ring-2 ring-primary-500 dark:ring-primary-400'
@@ -70,12 +69,12 @@ export const PricingTable = ({ tiers }: PricingTableProps) => {
                   </span>
                 </div>
                 <Button
-                  href="/apply"
                   variant={tier.buttonVariant}
                   size="lg"
                   className="mt-6 w-full"
+                  asChild
                 >
-                  {tier.buttonText}
+                  <Link href="/apply">{tier.buttonText}</Link>
                 </Button>
               </div>
             </CardHeader>

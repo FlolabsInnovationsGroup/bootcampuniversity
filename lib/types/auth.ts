@@ -1,18 +1,18 @@
-import { DefaultSession } from 'next-auth';
+// Custom types for authentication
+import type { DefaultSession } from 'next-auth';
 
-declare module 'next-auth' {
-  interface Session extends DefaultSession {
-    user?: {
-      id: string;
-    } & DefaultSession['user'];
-  }
+// Instead of extending the next-auth types, let's create our own custom types
+export interface AppUser {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  role: string;
+}
 
-  interface User {
-    id: string;
-    email: string;
-    name: string;
-    image?: string;
-  }
+export interface AppSession {
+  user: AppUser;
+  expires: string;
 }
 
 export interface LoginCredentials {

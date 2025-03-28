@@ -1,7 +1,13 @@
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
+import fs from 'fs';
+import path from 'path';
 
 export const runtime = 'edge';
+
+// Font loading
+let interBoldFontData: ArrayBuffer;
+let interRegularFontData: ArrayBuffer;
 
 export async function GET(req: NextRequest) {
   try {
@@ -10,13 +16,13 @@ export async function GET(req: NextRequest) {
     const description = searchParams.get('description') || 'Learn, Earn & Master Tech Skills';
     const type = searchParams.get('type') || 'default';
 
-    // Load fonts
-    const interBold = await fetch(
-      new URL('/public/fonts/Inter-Bold.ttf', import.meta.url)
+    // Fetch fonts
+    interBoldFontData = await fetch(
+      new URL('/fonts/Inter-Bold.ttf', req.nextUrl.origin)
     ).then((res) => res.arrayBuffer());
-
-    const interRegular = await fetch(
-      new URL('/public/fonts/Inter-Regular.ttf', import.meta.url)
+    
+    interRegularFontData = await fetch(
+      new URL('/fonts/Inter-Regular.ttf', req.nextUrl.origin)
     ).then((res) => res.arrayBuffer());
 
     return new ImageResponse(
@@ -151,13 +157,13 @@ export async function GET(req: NextRequest) {
         fonts: [
           {
             name: 'Inter Bold',
-            data: interBold,
+            data: interBoldFontData,
             style: 'normal',
             weight: 700,
           },
           {
             name: 'Inter Regular',
-            data: interRegular,
+            data: interRegularFontData,
             style: 'normal',
             weight: 400,
           },

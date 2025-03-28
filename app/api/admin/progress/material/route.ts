@@ -255,16 +255,18 @@ export async function POST(request: Request) {
         ? Math.round((completedMaterials / totalMaterials) * 100) 
         : 0;
 
-      // Find enrollment and update progress
-      await prisma.enrollment.updateMany({
-        where: {
-          userId,
-          courseId: material.courseId,
-        },
-        data: {
-          progress: overallProgress,
-        },
-      });
+      // Update enrollment status to 'completed' if progress is 100%
+      if (overallProgress === 100) {
+        await prisma.enrollment.updateMany({
+          where: {
+            userId,
+            courseId: material.courseId,
+          },
+          data: {
+            status: 'completed',
+          },
+        });
+      }
     }
 
     return NextResponse.json(result);

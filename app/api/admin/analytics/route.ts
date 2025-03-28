@@ -213,7 +213,7 @@ export async function GET() {
         updatedAt: { gte: oneWeekAgo }
       }
     });
-    const averageProgress = await prisma.enrollment.aggregate({
+    const averageProgress = await prisma.materialProgress.aggregate({
       _avg: {
         progress: true
       }
@@ -322,7 +322,7 @@ export async function GET() {
       engagement: {
         totalMaterialInteractions: totalMaterialProgress,
         activeMaterialInteractionsLastWeek: activeMaterialProgressLastWeek,
-        averageCourseProgress: Math.round(averageProgress._avg.progress || 0)
+        averageCourseProgress: Math.round(averageProgress._avg?.progress || 0)
       },
       trending: {
         courses: trendingCoursesDetails.length > 0 ? trendingCoursesDetails : generateMockData().trending.courses

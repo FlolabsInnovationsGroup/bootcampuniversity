@@ -133,6 +133,55 @@ The contact and application forms on the site are configured to send email notif
    - The system is configured to use Resend.com for reliable email delivery
    - Free tier allows 100 emails/day
 
+## Deployment to Vercel
+
+To deploy this application to Vercel:
+
+1. **Create a PostgreSQL Database**:
+   - Use Vercel Postgres, Supabase, or another PostgreSQL provider
+   - Get your PostgreSQL connection string
+
+2. **Set Required Environment Variables**:
+   In Vercel's dashboard under your project settings, add these environment variables:
+   ```
+   # Database
+   DATABASE_URL=postgresql://username:password@host:port/database
+   
+   # NextAuth
+   NEXTAUTH_URL=https://your-production-url.vercel.app
+   NEXTAUTH_SECRET=your-long-random-secret-key
+   
+   # Email (Resend)
+   SMTP_HOST=smtp.resend.com
+   SMTP_PORT=587
+   SMTP_USER=resend
+   SMTP_PASSWORD=your-resend-api-key
+   
+   # Email Addresses
+   CONTACT_EMAIL=analytics@flomadlabs.com
+   ADMISSIONS_EMAIL=analytics@flomadlabs.com
+   FROM_EMAIL=analytics@flomadlabs.com
+   
+   # Performance optimization
+   NEXT_PUBLIC_PRODUCTION=true
+   
+   # Required for email sending
+   NODE_ENV=production
+   ```
+
+3. **Configure Build Settings**:
+   - Build Command: `pnpm prisma generate && pnpm build`
+   - Output Directory: `.next`
+   - Install Command: `pnpm install`
+
+4. **Deploy Hooks**:
+   If needed, add a Build hook in the Git section to deploy when you push to your repository.
+
+5. **Troubleshooting**:
+   - If deployment fails, check Vercel logs for specific errors
+   - Ensure Prisma is generating correctly during build
+   - Check that PostgreSQL connection string is valid and accessible from Vercel
+
 ## License
 
 MIT

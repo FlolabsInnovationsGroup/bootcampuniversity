@@ -24,7 +24,7 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Schedule', href: '/dashboard/schedule', icon: Calendar },
   { name: 'Messages', href: '/dashboard/messages', icon: MessageSquare },
-  { name: 'Courses', href: '/dashboard/courses', icon: BookOpen },
+  { name: 'My Programs', href: '/my-programs', icon: BookOpen },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ];
 

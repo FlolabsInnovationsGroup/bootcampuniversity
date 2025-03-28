@@ -43,9 +43,7 @@ export async function GET(request: Request) {
         email: true,
         image: true,
         role: true,
-        createdAt: false,
-        updatedAt: false,
-        emailVerified: false,
+        emailVerified: true,
         password: false,
         // Count of course enrollments
         _count: {

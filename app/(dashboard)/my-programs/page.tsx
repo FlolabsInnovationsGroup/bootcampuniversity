@@ -184,7 +184,7 @@ const fetchUserPrograms = async (): Promise<Program[]> => {
   ];
 };
 
-export default function ProgramsPage() {
+export default function MyProgramsPage() {
   const [programs, setPrograms] = useState<Program[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -421,7 +421,7 @@ export default function ProgramsPage() {
                               </div>
                             </div>
                             {assignment.status === 'graded' && (
-                              <Badge variant="success">
+                              <Badge variant="default" className="bg-green-500">
                                 Grade: {assignment.grade}%
                               </Badge>
                             )}
@@ -439,12 +439,12 @@ export default function ProgramsPage() {
 
       {selectedMaterial && (
         <MaterialViewer
-          material={selectedMaterial}
+          material={selectedMaterial as any}
           isOpen={!!selectedMaterial}
           onClose={() => setSelectedMaterial(null)}
           onProgressUpdate={(progress: number) => {
-            // TODO: Update material progress in the backend
-            console.log(`Material ${selectedMaterial.id} progress: ${progress}%`);
+            // Update progress logic here
+            console.log('Progress updated:', progress);
           }}
         />
       )}
