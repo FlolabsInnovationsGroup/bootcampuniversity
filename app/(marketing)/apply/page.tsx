@@ -13,24 +13,24 @@ const DynamicApply = dynamic(() => import('@/components/features/home/Apply'), {
 
 export default function ApplyPage() {
   const [activeTab, setActiveTab] = useState<'tier1' | 'tier2' | 'tier3'>('tier1');
-  
+
   return (
     <div className="container mx-auto px-4 py-16">
       {/* Hero Section */}
       <div className="max-w-3xl mx-auto text-center mb-16">
         <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl mb-4">
           Apply to Innovation Bootcamp
-        </h1>
+            </h1>
         <p className="text-xl text-slate-600 dark:text-slate-400 mb-8">
           Join our cooperative education program and transition from student to paid professional
-        </p>
+            </p>
       </div>
 
       {/* Cooperative Education Model Explanation */}
       <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-8 mb-16">
         <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8 text-center">
           Our Cooperative Education Model
-        </h2>
+              </h2>
         
         <div className="flex flex-wrap justify-center mb-8">
           <button
@@ -64,7 +64,7 @@ export default function ApplyPage() {
             Tier 3: Earn More
           </button>
         </div>
-        
+
         <div className="bg-white dark:bg-slate-800 rounded-xl p-6">
           {activeTab === 'tier1' && (
             <div>
@@ -94,7 +94,7 @@ export default function ApplyPage() {
               </ul>
             </div>
           )}
-          
+            
           {activeTab === 'tier2' && (
             <div>
               <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
@@ -123,7 +123,7 @@ export default function ApplyPage() {
               </ul>
             </div>
           )}
-          
+            
           {activeTab === 'tier3' && (
             <div>
               <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
@@ -152,8 +152,8 @@ export default function ApplyPage() {
               </ul>
             </div>
           )}
-        </div>
-        
+            </div>
+            
         <div className="mt-8 flex justify-center">
           <div className="inline-flex items-center p-4 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg max-w-2xl">
             <Info className="w-5 h-5 mr-3 flex-shrink-0" />

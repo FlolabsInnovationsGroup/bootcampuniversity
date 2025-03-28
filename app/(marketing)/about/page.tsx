@@ -2,140 +2,139 @@
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import Link from 'next/link';
-import { ArrowRight, Target, Users, Heart, Globe2 } from 'lucide-react';
+import { ArrowRight, GraduationCap, Users, Briefcase, TrendingUp, Target, Heart, Globe2, Code } from 'lucide-react';
 
 const stats = [
-  { label: 'Students Trained', value: '1000+' },
-  { label: 'Industry Partners', value: '100+' },
-  { label: 'Expert Advisors', value: '50+' },
-  { label: 'Success Rate', value: '95%' },
+  { label: 'Program Success Rate', value: '95%', icon: TrendingUp },
+  { label: 'Industry Partners', value: '50+', icon: Briefcase },
+  { label: 'Expert Mentors', value: '25+', icon: Users },
+  { label: 'Average Salary Increase', value: '40%', icon: TrendingUp },
 ];
 
 const values = [
   {
-    title: 'Innovation First',
-    description: 'We embrace cutting-edge technology and innovative teaching methods.',
-    icon: Target,
+    title: 'Learn & Earn Model',
+    description: 'Start with foundational learning, then progress to earning while developing advanced skills.',
+    icon: GraduationCap,
   },
   {
-    title: 'Student Success',
-    description: "Our students' success is our primary measure of achievement.",
-    icon: Users,
+    title: 'Industry-Driven',
+    description: 'Our curriculum is shaped by real industry needs and current tech trends.',
+    icon: Code,
   },
   {
-    title: 'Community Impact',
-    description: "We're committed to making tech education accessible to all.",
+    title: 'Community Focus',
+    description: 'Build lasting connections with peers, mentors, and industry professionals.',
     icon: Heart,
   },
   {
-    title: 'Global Reach',
-    description: 'Our community spans across continents, bringing diverse perspectives.',
+    title: 'Global Opportunities',
+    description: 'Access remote work opportunities with companies worldwide.',
     icon: Globe2,
   },
 ];
 
-const team = [
+const programs = [
   {
-    name: 'Dr. Sarah Chen',
-    role: 'Founder & CEO',
-    image: '/team/sarah-chen.jpg',
-    bio: 'Former ML researcher at Stanford, passionate about democratizing tech education.',
+    title: 'Foundation Developer',
+    description: 'Master programming fundamentals and build your first professional projects.',
+    duration: '3-4 months',
+    focus: 'Core Programming Skills',
   },
   {
-    name: 'Michael Rodriguez',
-    role: 'Head of Education',
-    image: '/team/michael-rodriguez.jpg',
-    bio: '15+ years in EdTech, previously led curriculum development at top coding bootcamps.',
+    title: 'Professional Developer',
+    description: 'Earn more with advanced skills and leadership roles.',
+    duration: '6-8 months',
+    focus: 'Advanced Development',
   },
   {
-    name: 'Dr. James Wilson',
-    role: 'Technical Director',
-    image: '/team/james-wilson.jpg',
-    bio: 'PhD in Computer Science, specialized in AI and robotics education.',
+    title: 'Specialized Tracks',
+    description: 'Deep dive into specific technologies like AI, Cloud, or Mobile Development.',
+    duration: 'Varies',
+    focus: 'Specialized Skills',
   },
 ];
 
 export default function AboutPage() {
   return (
-    <div className="container mx-auto px-4 py-16">
-      {/* Hero Section */}
-      <section className="text-center mb-20">
-        <h1 className="text-4xl font-bold mb-6">About Innovation Bootcamp</h1>
-        <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-          We are on a mission to transform tech education by combining cutting-edge curriculum 
-          with hands-on learning experiences. Our focus is on preparing the next generation 
-          of innovators and leaders in technology.
-        </p>
-      </section>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+      <div className="container mx-auto px-4 py-16 space-y-20">
+        {/* Hero Section */}
+        <section className="text-center max-w-4xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80 dark:from-primary-400 dark:to-primary-600">
+            Transforming Tech Education
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300">
+            Innovation Bootcamp University pioneers a unique cooperative education model 
+            that combines intensive learning with real-world experience. Our mission is 
+            to make high-quality tech education accessible while ensuring our students 
+            can earn as they learn.
+          </p>
+        </section>
 
-      {/* Stats Section */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20">
-        {stats.map((stat) => (
-          <div key={stat.label} className="text-center">
-            <div className="text-3xl font-bold mb-2">{stat.value}</div>
-            <div className="text-muted-foreground">{stat.label}</div>
+        {/* Stats Section */}
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          {stats.map((stat) => (
+            <Card key={stat.label} className="p-6 text-center hover:shadow-lg transition-shadow">
+              <stat.icon className="w-8 h-8 mx-auto mb-4 text-primary-500 dark:text-primary-400" />
+              <div className="text-3xl font-bold mb-2 text-gray-900 dark:text-gray-100">{stat.value}</div>
+              <div className="text-gray-600 dark:text-gray-400">{stat.label}</div>
+            </Card>
+          ))}
+        </section>
+
+        {/* Values Section */}
+        <section>
+          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-gray-100">Our Core Values</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {values.map((value) => (
+              <Card key={value.title} className="p-6 hover:shadow-lg transition-shadow">
+                <value.icon className="w-12 h-12 mb-4 text-primary-500 dark:text-primary-400" />
+                <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">{value.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400">{value.description}</p>
+              </Card>
+            ))}
           </div>
-        ))}
-      </section>
+        </section>
 
-      {/* Values Section */}
-      <section className="mb-20">
-        <h2 className="text-3xl font-bold text-center mb-12">Our Values</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {values.map((value) => (
-            <div key={value.title} className="text-center p-6 rounded-lg border">
-              <value.icon className="w-12 h-12 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">{value.title}</h3>
-              <p className="text-muted-foreground">{value.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+        {/* Programs Section */}
+        <section>
+          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-gray-100">Our Programs</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {programs.map((program) => (
+              <Card key={program.title} className="p-6 hover:shadow-lg transition-shadow">
+                <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">{program.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">{program.description}</p>
+                <div className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+                  <div>Duration: {program.duration}</div>
+                  <div>Focus: {program.focus}</div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </section>
 
-      {/* Team Section */}
-      <section className="mb-20">
-        <h2 className="text-3xl font-bold text-center mb-12">Meet Our Team</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {team.map((member) => (
-            <div key={member.name} className="text-center">
-              <div className="relative w-48 h-48 mx-auto mb-4">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="rounded-full object-cover"
-                />
-              </div>
-              <h3 className="text-xl font-semibold mb-1">{member.name}</h3>
-              <p className="text-muted-foreground mb-2">{member.role}</p>
-              <p className="text-sm text-muted-foreground">{member.bio}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="text-center">
-        <h2 className="text-3xl font-bold mb-6">Join Our Mission</h2>
-        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-          Whether you're a student looking to accelerate your career or an organization 
-          interested in partnering with us, we'd love to hear from you.
-        </p>
-        <div className="flex justify-center gap-4">
-          <Link
-            href="/programs"
-            className="inline-flex items-center px-6 py-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
-          >
-            Explore Programs <ArrowRight className="ml-2 h-4 w-4" />
-          </Link>
-          <Link
-            href="/contact"
-            className="inline-flex items-center px-6 py-3 rounded-lg border hover:bg-accent"
-          >
-            Contact Us
-          </Link>
-        </div>
-      </section>
+        {/* CTA Section */}
+        <section className="text-center max-w-3xl mx-auto">
+          <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">Ready to Start Your Journey?</h2>
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
+            Pre-register now for our cooperative education program and take the first step 
+            towards a rewarding career in technology.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Button asChild size="lg" className="gap-2">
+              <Link href="/apply">
+                Apply Now <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <Link href="/contact">Contact Us</Link>
+            </Button>
+          </div>
+        </section>
+      </div>
     </div>
   );
 } 
