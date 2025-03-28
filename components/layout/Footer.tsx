@@ -2,7 +2,6 @@
 
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
-import { Image } from '@/components/ui/image';
 import { motion } from 'framer-motion';
 import { ArrowRight, Mail, Github, Linkedin, Twitter } from 'lucide-react';
 import { Logo } from '@/components/ui/logo';
