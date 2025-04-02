@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
 import { generateMetadata } from '@/lib/utils/metadata';
+import { Logo } from '@/components/ui/logo';
 
 export const metadata: Metadata = generateMetadata({
   title: 'Authentication',
@@ -25,12 +26,8 @@ export default function AuthLayout({
       <div className="container relative z-10 mx-auto px-4 py-12 flex-1 flex flex-col">
         <div className="mb-8">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="relative w-8 h-8 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                <rect width="32" height="32" fill="#3B82F6" rx="6"/>
-                <rect x="8" y="8" width="16" height="16" fill="white" rx="2"/>
-                <rect x="12" y="12" width="8" height="8" fill="#3B82F6"/>
-              </svg>
+            <div className="relative w-8 h-8">
+              <Logo />
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-lg text-slate-900 dark:text-white">

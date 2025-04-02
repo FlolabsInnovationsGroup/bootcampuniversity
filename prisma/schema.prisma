@@ -58,6 +58,10 @@ model User {
   materialProgress MaterialProgress[]
   notifications  Notification[]
   activityLogs   ActivityLog[]
+  assignmentSubmissions AssignmentSubmission[]
+  discussions           Discussion[]
+  comments             Comment[]
+  courseProgress       CourseProgress[]
 
   @@index([email])
   @@index([role])
@@ -104,6 +108,9 @@ model Course {
   materials      Material[]
   enrollments    Enrollment[]
   curriculum     Curriculum?
+  assignments    Assignment[]
+  discussions    Discussion[]
+  courseProgress CourseProgress[]
 
   @@index([category])
   @@index([status])
@@ -265,6 +272,73 @@ model Module {
   section     Section         @relation(fields: [sectionId], references: [id], onDelete: Cascade)
   sectionId   String
   progress    ModuleProgress[]
+  courseProgress CourseProgress[]
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
+}
+
+model Assignment {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  dueDate     DateTime
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id])
+  submissions AssignmentSubmission[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AssignmentSubmission {
+  id           String     @id @default(cuid())
+  assignmentId String
+  assignment   Assignment @relation(fields: [assignmentId], references: [id])
+  userId       String
+  user         User       @relation(fields: [userId], references: [id])
+  content      String
+  grade        Float?
+  feedback     String?
+  status       String     @default("submitted") // submitted, graded, returned
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Discussion {
+  id        String       @id @default(cuid())
+  title     String
+  content   String
+  courseId  String
+  course    Course       @relation(fields: [courseId], references: [id])
+  userId    String
+  user      User         @relation(fields: [userId], references: [id])
+  comments  Comment[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model Comment {
+  id           String     @id @default(cuid())
+  content      String
+  discussionId String
+  discussion   Discussion @relation(fields: [discussionId], references: [id])
+  userId       String
+  user         User       @relation(fields: [userId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model CourseProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id])
+  moduleId    String
+  module      Module   @relation(fields: [moduleId], references: [id])
+  status      String   @default("not_started") // not_started, in_progress, completed
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, moduleId])
 }

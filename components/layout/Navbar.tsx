@@ -173,6 +173,11 @@ const Navbar = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
   const { data: session, status } = useSession();
+  const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/register') || pathname.startsWith('/forgot-password');
+
+  if (isAuthPage) {
+    return null;
+  }
 
   // Mount check
   useEffect(() => {
@@ -404,7 +409,7 @@ const Navbar = () => {
                       )}
                     </div>
                     <Link
-                      href={session?.user?.role === 'admin' ? "/admin/analytics" : "/dashboard"}
+                      href={session?.user?.role === 'admin' ? "/admin" : "/dashboard"}
                       className="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 mr-2"
                     >
                       Dashboard
@@ -491,7 +496,7 @@ const Navbar = () => {
               {status === 'authenticated' ? (
                 <div className="space-y-2">
                   <Link
-                    href={session?.user?.role === 'admin' ? "/admin/analytics" : "/dashboard"}
+                    href={session?.user?.role === 'admin' ? "/admin" : "/dashboard"}
                     className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-800/50"
                   >
                     Dashboard
