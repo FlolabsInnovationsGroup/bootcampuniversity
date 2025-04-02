@@ -1,12 +1,18 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { startOfMonth, subMonths, endOfMonth } from 'date-fns';
 
-async function isAdmin(session: any) {
-  if (!session || !session.user || session.user.role !== 'admin') {
-    return false;
+// Helper function to get dates for the last n days
+function getLastNDays(n: number) {
+  const dates = [];
+  for (let i = n - 1; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    dates.push(date.toISOString().split('T')[0]);
   }
-  return true;
+  return dates;
 }
 
 // Generate mock data for empty database scenario
@@ -123,216 +129,122 @@ function generateMockData() {
   };
 }
 
+// GET /api/admin/analytics
 export async function GET() {
   try {
-    console.log('Analytics API endpoint called');
-    const session = await getServerSession();
-    console.log('Session in analytics API:', session?.user?.email, session?.user?.role);
-    
-    // If there's no session or the user is not an admin, log it but still return mock data for development
-    if (!(await isAdmin(session))) {
-      console.log('Unauthorized access attempt or session not available. Using mock data.');
-      return NextResponse.json(generateMockData());
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user) {
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    // Get current date and calculate dates for different periods
-    const now = new Date();
-    const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    const threeMonthsAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email! },
+      select: { role: true },
+    });
 
-    // Get user statistics
-    const totalUsers = await prisma.user.count();
-    
-    // Check if we have real data, if not return mock data for development
-    if (totalUsers === 0) {
-      console.log('No users found, returning mock data for development');
-      return NextResponse.json(generateMockData());
+    if (user?.role !== 'ADMIN') {
+      return new NextResponse('Forbidden', { status: 403 });
     }
-    
-    // We don't have createdAt in User model, using placeholder values
-    const newUsersLastWeek = 0;
-    const newUsersLastMonth = 0;
-    
-    const usersByRole = await prisma.user.groupBy({
-      by: ['role'],
-      _count: {
-        id: true
-      }
-    });
 
-    // Get course statistics
-    const totalCourses = await prisma.course.count();
-    const coursesCreatedLastMonth = await prisma.course.count({
-      where: {
-        createdAt: { gte: oneMonthAgo }
-      }
-    });
-    const coursesByCategory = await prisma.course.groupBy({
-      by: ['category'],
-      _count: {
-        id: true
-      }
-    });
-    const coursesByStatus = await prisma.course.groupBy({
-      by: ['status'],
-      _count: {
-        id: true
-      }
-    });
-
-    // Get enrollment statistics
-    const totalEnrollments = await prisma.enrollment.count();
-    const newEnrollmentsLastWeek = await prisma.enrollment.count({
-      where: {
-        enrolledAt: { gte: oneWeekAgo }
-      }
-    });
-    const newEnrollmentsLastMonth = await prisma.enrollment.count({
-      where: {
-        enrolledAt: { gte: oneMonthAgo }
-      }
-    });
-
-    // Get course completion statistics
-    const completedEnrollments = await prisma.enrollment.count({
-      where: {
-        status: 'completed'
-      }
-    });
-
-    // Calculate average course completion rate
-    const completionRate = totalEnrollments > 0
-      ? Math.round((completedEnrollments / totalEnrollments) * 100)
-      : 0;
-
-    // Get engagement statistics
-    const totalMaterialProgress = await prisma.materialProgress.count();
-    const activeMaterialProgressLastWeek = await prisma.materialProgress.count({
-      where: {
-        updatedAt: { gte: oneWeekAgo }
-      }
-    });
-    const averageProgress = await prisma.materialProgress.aggregate({
-      _avg: {
-        progress: true
-      }
-    });
-
-    // Get trending courses (most enrollments in last 30 days)
-    const trendingCourses = await prisma.enrollment.groupBy({
-      by: ['courseId'],
-      where: {
-        enrolledAt: { gte: oneMonthAgo }
-      },
-      _count: {
-        id: true
-      },
-      orderBy: {
-        _count: {
-          id: 'desc'
-        }
-      },
-      take: 5,
-    });
-
-    // Get course details for trending courses
-    const trendingCoursesDetails = await Promise.all(
-      trendingCourses.map(async (course: { courseId: string, _count: { id: number } }) => {
-        const courseDetails = await prisma.course.findUnique({
-          where: { id: course.courseId },
-          select: {
-            id: true,
-            title: true,
-            category: true,
-            _count: {
-              select: {
-                enrollments: true,
-                materials: true
-              }
-            }
-          }
+    // Get total users and monthly growth
+    const sixMonthsAgo = subMonths(new Date(), 6);
+    const userGrowth = await Promise.all(
+      Array.from({ length: 6 }).map(async (_, i) => {
+        const start = startOfMonth(subMonths(new Date(), i));
+        const end = endOfMonth(subMonths(new Date(), i));
+        const count = await prisma.user.count({
+          where: {
+            createdAt: {
+              lte: end,
+            },
+          },
         });
         return {
-          ...courseDetails,
-          enrollmentsLastMonth: course._count.id
+          name: start.toLocaleString('default', { month: 'short' }),
+          users: count,
         };
       })
     );
 
-    // Get time-series data for enrollments over the last 3 months
-    const enrollmentTimeSeries = await prisma.enrollment.groupBy({
-      by: ['enrolledAt'],
+    // Get course completion rates
+    const courses = await prisma.course.findMany({
       where: {
-        enrolledAt: { gte: threeMonthsAgo }
+        status: 'published',
       },
-      _count: {
-        id: true
-      }
+      select: {
+        id: true,
+        title: true,
+        enrollments: {
+          select: {
+            status: true,
+          },
+        },
+      },
     });
 
-    // Format enrollment time series data by week
-    const weeklyEnrollments = enrollmentTimeSeries.reduce((acc: Record<string, number>, curr: { enrolledAt: Date, _count: { id: number } }) => {
-      const date = new Date(curr.enrolledAt);
-      const weekStart = new Date(date.setDate(date.getDate() - date.getDay()));
-      const weekKey = weekStart.toISOString().split('T')[0];
-      
-      if (!acc[weekKey]) {
-        acc[weekKey] = 0;
-      }
-      acc[weekKey] += curr._count.id;
-      return acc;
-    }, {});
+    const courseCompletion = courses.map((course) => {
+      const totalEnrollments = course.enrollments.length;
+      const completedEnrollments = course.enrollments.filter(
+        (e) => e.status === 'completed'
+      ).length;
+      return {
+        name: course.title,
+        completion: totalEnrollments > 0
+          ? Math.round((completedEnrollments / totalEnrollments) * 100)
+          : 0,
+      };
+    });
 
-    // Convert to array format for charting
-    const formattedWeeklyEnrollments = Object.entries(weeklyEnrollments).map(
-      ([date, count]) => ({ date, count })
-    );
+    // Get content engagement data for the last 7 days
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    // Combine all statistics
-    const analyticsData = {
-      users: {
-        total: totalUsers,
-        newLastWeek: newUsersLastWeek,
-        newLastMonth: newUsersLastMonth,
-        byRole: usersByRole.reduce((acc: Record<string, number>, curr: { role: string, _count: { id: number } }) => {
-          acc[curr.role] = curr._count.id;
-          return acc;
-        }, {})
+    const materialProgress = await prisma.materialProgress.groupBy({
+      by: ['createdAt'],
+      _count: {
+        id: true,
       },
-      courses: {
-        total: totalCourses,
-        newLastMonth: coursesCreatedLastMonth,
-        byCategory: coursesByCategory.reduce((acc: Record<string, number>, curr: { category: string, _count: { id: number } }) => {
-          acc[curr.category] = curr._count.id;
-          return acc;
-        }, {}),
-        byStatus: coursesByStatus.reduce((acc: Record<string, number>, curr: { status: string, _count: { id: number } }) => {
-          acc[curr.status] = curr._count.id;
-          return acc;
-        }, {})
+      where: {
+        createdAt: {
+          gte: sevenDaysAgo,
+        },
       },
-      enrollments: {
-        total: totalEnrollments,
-        newLastWeek: newEnrollmentsLastWeek,
-        newLastMonth: newEnrollmentsLastMonth,
-        completionRate,
-        weeklyTrend: formattedWeeklyEnrollments.length > 0 ? formattedWeeklyEnrollments : generateMockData().enrollments.weeklyTrend
-      },
-      engagement: {
-        totalMaterialInteractions: totalMaterialProgress,
-        activeMaterialInteractionsLastWeek: activeMaterialProgressLastWeek,
-        averageCourseProgress: Math.round(averageProgress._avg?.progress || 0)
-      },
-      trending: {
-        courses: trendingCoursesDetails.length > 0 ? trendingCoursesDetails : generateMockData().trending.courses
-      }
-    };
+    });
 
-    return NextResponse.json(analyticsData);
+    const contentEngagement = materialProgress.map((day) => ({
+      name: day.createdAt.toLocaleString('default', { weekday: 'short' }),
+      views: day._count.id,
+      completions: Math.round(day._count.id * 0.6), // Assuming 60% completion rate
+    }));
+
+    // Get summary statistics
+    const totalUsers = await prisma.user.count();
+    const totalViews = await prisma.materialProgress.count();
+    const activeCourses = await prisma.course.count({
+      where: { status: 'published' },
+    });
+
+    const averageCompletion = courseCompletion.length > 0
+      ? Math.round(
+          courseCompletion.reduce((sum, course) => sum + course.completion, 0) /
+          courseCompletion.length
+        )
+      : 0;
+
+    return NextResponse.json({
+      userGrowth: userGrowth.reverse(),
+      courseCompletion,
+      contentEngagement,
+      summary: {
+        totalUsers,
+        averageCompletion,
+        totalViews,
+        activeCourses,
+      },
+    });
   } catch (error) {
-    console.error('Error in analytics API:', error);
-    // Return mock data in case of error to prevent UI failures
-    return NextResponse.json(generateMockData());
+    console.error('[ANALYTICS_GET]', error);
+    return new NextResponse('Internal Error', { status: 500 });
   }
 } 

@@ -1,48 +1,72 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth/options';
+import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
+import { authOptions } from '@/lib/auth';
 
-export async function GET() {
+const courseSchema = z.object({
+  title: z.string().min(1),
+  description: z.string().min(1),
+  category: z.string().min(1),
+  coverImage: z.string().url().optional(),
+  status: z.enum(['draft', 'published']),
+});
+
+export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+
+    if (session.user.role !== 'admin') {
+      return new NextResponse('Forbidden', { status: 403 });
+    }
+
+    const json = await req.json();
+    const body = courseSchema.parse(json);
+
+    const course = await prisma.course.create({
+      data: {
+        title: body.title,
+        description: body.description,
+        category: body.category,
+        coverImage: body.coverImage,
+        status: body.status,
+      },
+    });
+
+    return NextResponse.json(course);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return new NextResponse('Invalid request data', { status: 422 });
+    }
+
+    return new NextResponse('Internal error', { status: 500 });
+  }
+}
+
+export async function GET(req: Request) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+
+    if (session.user.role !== 'admin') {
+      return new NextResponse('Forbidden', { status: 403 });
     }
 
     const courses = await prisma.course.findMany({
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        category: true,
-        status: true,
-        coverImage: true,
-        duration: true,
-        createdAt: true,
-        updatedAt: true,
-        _count: {
-          select: {
-            materials: true,
-            enrollments: true,
-          },
-        },
-      },
       orderBy: {
         createdAt: 'desc',
       },
     });
 
-    return NextResponse.json({ courses });
+    return NextResponse.json(courses);
   } catch (error) {
-    console.error('Error fetching courses:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch courses' },
-      { status: 500 }
-    );
+    return new NextResponse('Internal error', { status: 500 });
   }
 }
