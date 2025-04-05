@@ -275,7 +275,7 @@ const Footer = () => {
               </Link>
             </motion.div>
             <div className="flex flex-col">
-              <span className="text-sm font-medium bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+              <span className="text-sm font-bold bg-gradient-to-br from-primary-600 via-primary-500 to-secondary-500 bg-clip-text text-transparent drop-shadow-sm">
                 Innovation Bootcamp University
               </span>
               <span className="text-xs text-slate-600 dark:text-slate-400">

@@ -90,10 +90,11 @@ export async function GET(req: NextRequest) {
                   fontWeight: 700,
                   color: 'white',
                   fontFamily: 'Inter Bold',
-                  background: 'linear-gradient(90deg, #3B82F6 0%, #93C5FD 100%)',
+                  background: 'linear-gradient(135deg, #3B82F6 0%, #6366F1 50%, #8B5CF6 100%)',
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.1)',
                 }}
               >
                 Innovation Bootcamp University

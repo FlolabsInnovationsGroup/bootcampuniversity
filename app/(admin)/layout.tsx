@@ -111,7 +111,7 @@ export default function AdminLayout({
               <rect x="8" y="8" width="16" height="16" fill="white" rx="2"/>
               <rect x="12" y="12" width="8" height="8" fill="#3B82F6"/>
             </svg>
-            <span className="font-semibold text-base bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+            <span className="font-bold text-base bg-gradient-to-br from-primary-600 via-primary-500 to-secondary-500 bg-clip-text text-transparent drop-shadow-sm">
               Innovation Bootcamp University
             </span>
           </Link>
@@ -224,7 +224,7 @@ export default function AdminLayout({
                   <rect x="12" y="12" width="8" height="8" fill="#3B82F6"/>
                 </svg>
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+                  <span className="font-bold text-base bg-gradient-to-br from-primary-600 via-primary-500 to-secondary-500 bg-clip-text text-transparent drop-shadow-sm">
                     Innovation Bootcamp University
                   </span>
                   <span className="text-xs text-muted-foreground">

@@ -33,7 +33,7 @@ export default function AuthLayout({
               </svg>
             </div>
             <div className="flex flex-col">
-              <span className="font-semibold text-base bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+              <span className="font-bold text-base bg-gradient-to-br from-primary-600 via-primary-500 to-secondary-500 bg-clip-text text-transparent drop-shadow-sm">
                 Innovation Bootcamp University
               </span>
             </div>
