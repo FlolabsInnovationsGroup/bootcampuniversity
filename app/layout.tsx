@@ -126,6 +126,32 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       )}
       suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              // Immediately set to light mode before any rendering
+              document.documentElement.classList.remove('dark');
+              localStorage.setItem('theme', 'light');
+              
+              // Forcefully prevent system preference from taking over
+              const observer = new MutationObserver((mutations) => {
+                if (document.documentElement.classList.contains('dark')) {
+                  document.documentElement.classList.remove('dark');
+                }
+              });
+              
+              observer.observe(document.documentElement, { 
+                attributes: true,
+                attributeFilter: ['class']
+              });
+              
+              // Disconnect after initial page load
+              setTimeout(() => observer.disconnect(), 2000);
+            })();
+          `
+        }} />
+      </head>
       <body className={cn(
         'min-h-screen font-sans antialiased',
         'bg-background text-foreground',

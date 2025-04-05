@@ -19,7 +19,7 @@ export default function ApplyPage() {
       {/* Hero Section */}
       <div className="max-w-3xl mx-auto text-center mb-16">
         <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl mb-4">
-          Apply to Innovation Bootcamp
+          Apply to Innovation Bootcamp University
             </h1>
         <p className="text-xl text-slate-600 dark:text-slate-400 mb-8">
           Join our cooperative education program and transition from student to paid professional

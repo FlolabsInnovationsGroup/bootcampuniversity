@@ -212,7 +212,7 @@ const Navbar = () => {
   // Handle theme change with animation
   const handleThemeChange = () => {
     setIsThemeChanging(true);
-    const nextTheme = theme === 'dark' ? 'light' : theme === 'light' ? 'system' : 'dark';
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
     setTimeout(() => setIsThemeChanging(false), 400);
   };
@@ -233,7 +233,7 @@ const Navbar = () => {
   };
 
   // Get the current theme icon
-  const ThemeIcon = mounted ? (theme === 'dark' ? Moon : theme === 'light' ? Sun : Laptop) : Laptop;
+  const ThemeIcon = mounted ? (theme === 'dark' ? Moon : Sun) : Sun;
 
   // Animation variants
   const navVariants = {
@@ -295,14 +295,9 @@ const Navbar = () => {
               <div className="relative w-8 h-8">
                 <Logo />
               </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-base text-slate-900 dark:text-white">
-                  Innovation Bootcamp
-                </span>
-                <span className="text-base text-slate-600 dark:text-slate-400 -mt-1">
-                  University
-                </span>
-              </div>
+              <span className="font-bold text-base text-slate-900 dark:text-white bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-transparent">
+                Innovation Bootcamp University
+              </span>
             </Link>
           </div>
 

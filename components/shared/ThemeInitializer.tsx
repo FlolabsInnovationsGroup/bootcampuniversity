@@ -17,14 +17,12 @@ export function ThemeInitializer() {
   React.useEffect(() => {
     setMounted(true);
     
-    // Force the theme to be applied immediately on client side
-    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const savedTheme = localStorage.getItem('theme');
+    // Force light theme to be applied immediately on client side
     const html = document.documentElement;
     
     function applyTheme() {
-      const prefersDark = darkModeMediaQuery.matches;
-      const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+      // Always default to light mode
+      const isDark = localStorage.getItem('theme') === 'dark';
       
       // Add transition class before theme changes
       html.classList.add('transitioning-theme');
@@ -88,13 +86,12 @@ export function ThemeInitializer() {
       applyTheme();
     };
     
-    // Listen for system theme changes
-    darkModeMediaQuery.addEventListener('change', (e) => {
-      if (!localStorage.getItem('theme')) {
-        setTheme(e.matches ? 'dark' : 'light');
-        applyTheme();
-      }
-    });
+    // Force light mode on first load if no theme is set
+    if (!localStorage.getItem('theme')) {
+      setTheme('light');
+      localStorage.setItem('theme', 'light');
+      applyTheme();
+    }
     
     // Create a MutationObserver to watch for class changes on <html>
     const observer = new MutationObserver((mutations) => {
@@ -142,7 +139,6 @@ export function ThemeInitializer() {
     }, 100);
     
     return () => {
-      darkModeMediaQuery.removeEventListener('change', applyTheme);
       observer.disconnect();
       style.remove();
     };

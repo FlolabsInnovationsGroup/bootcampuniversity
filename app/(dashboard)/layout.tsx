@@ -130,7 +130,7 @@ export default function DashboardLayout({
             <div className="h-8 w-8">
               <Logo />
             </div>
-            <span className="font-semibold text-lg">IBU</span>
+            <span className="font-semibold text-lg bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-transparent">IBU</span>
           </div>
           <Button
             variant="ghost"
@@ -165,11 +165,8 @@ export default function DashboardLayout({
                     <Logo />
                   </div>
                   <div className="flex flex-col">
-                    <span className="font-bold text-base text-slate-900 dark:text-white">
-                      Innovation Bootcamp
-                    </span>
-                    <span className="text-sm text-slate-600 dark:text-slate-400">
-                      University
+                    <span className="font-bold text-base bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-transparent">
+                      Innovation Bootcamp University
                     </span>
                   </div>
                 </Link>
@@ -316,14 +313,9 @@ export default function DashboardLayout({
                 <div className="relative w-8 h-8">
                   <Logo />
                 </div>
-                <div className="flex flex-col">
-                  <span className="font-bold text-base text-slate-900 dark:text-white">
-                    Innovation Bootcamp
-                  </span>
-                  <span className="text-sm text-slate-600 dark:text-slate-400">
-                    University
-                  </span>
-                </div>
+                <span className="font-bold text-base bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-transparent">
+                  Innovation Bootcamp University
+                </span>
               </div>
               <div className="flex flex-wrap justify-center gap-6">
                 <Link href="/terms" className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">

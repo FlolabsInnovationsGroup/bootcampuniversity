@@ -103,14 +103,9 @@ const Footer = () => {
             <div className="relative w-8 h-8">
               <Logo />
             </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-base text-slate-900 dark:text-white">
-                Innovation Bootcamp
-              </span>
-              <span className="text-base text-slate-600 dark:text-slate-400 -mt-1">
-                University
-              </span>
-            </div>
+            <span className="font-bold text-base bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-transparent">
+              Innovation Bootcamp University
+            </span>
           </div>
         </div>
 
@@ -290,14 +285,12 @@ const Footer = () => {
                 <Logo />
               </Link>
             </motion.div>
-            <div className="flex flex-col">
-              <span className="text-sm font-medium bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 dark:from-white dark:via-slate-200 dark:to-white bg-clip-text text-transparent">
-                Innovation Bootcamp
-              </span>
-              <span className="text-xs text-slate-600 dark:text-slate-400">
-                © {new Date().getFullYear()} All rights reserved.
-              </span>
-            </div>
+            <span className="text-sm font-medium bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-transparent">
+              Innovation Bootcamp University
+            </span>
+            <span className="text-xs text-slate-600 dark:text-slate-400">
+              © {new Date().getFullYear()} All rights reserved.
+            </span>
           </div>
           <div className="flex items-center gap-6">
             <Link
