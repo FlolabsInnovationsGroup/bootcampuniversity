@@ -1,4 +1,4 @@
-import { load } from 'cheerio'
+import * as cheerio from 'cheerio'
 import { google } from 'googleapis'
 import { prisma } from '@/lib/prisma'
 
@@ -34,17 +34,17 @@ async function importFromYouTube(playlistId: string): Promise<ImportedMaterial[]
 
     const items = response.data.items || []
     for (const item of items) {
-      if (item.snippet) {
+      if (item.snippet && item.snippet.resourceId?.videoId) {
         materials.push({
           type: 'VIDEO',
           title: item.snippet.title || '',
-          url: `https://www.youtube.com/watch?v=${item.snippet.resourceId?.videoId}`,
-          content: item.snippet.description,
+          url: `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`,
+          content: item.snippet.description || '',
         })
       }
     }
 
-    nextPageToken = response.data.nextPageToken
+    nextPageToken = response.data.nextPageToken || undefined
   } while (nextPageToken)
 
   return materials
@@ -53,7 +53,7 @@ async function importFromYouTube(playlistId: string): Promise<ImportedMaterial[]
 async function importFromWebsite(url: string): Promise<ImportedMaterial[]> {
   const response = await fetch(url)
   const html = await response.text()
-  const $ = load(html)
+  const $ = cheerio.load(html)
   const materials: ImportedMaterial[] = []
 
   // Find main content area (customize selectors based on target website structure)
@@ -104,11 +104,12 @@ export async function importAndSaveMaterials(
   try {
     // Create all materials in a transaction
     await prisma.$transaction(
-      materials.map((material) =>
+      materials.map((material, index) =>
         prisma.material.create({
           data: {
             ...material,
             courseId,
+            order: index + 1,
           },
         })
       )
