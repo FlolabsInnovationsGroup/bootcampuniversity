@@ -15,7 +15,6 @@ import {
   Sun,
   Moon,
   ArrowRight,
-  Laptop,
   LogOut,
   User,
 } from 'lucide-react';
@@ -207,7 +206,7 @@ const Navbar = () => {
   // Handle theme change with animation
   const handleThemeChange = () => {
     setIsThemeChanging(true);
-    const nextTheme = theme === 'dark' ? 'light' : theme === 'light' ? 'system' : 'dark';
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
     setTimeout(() => setIsThemeChanging(false), 400);
   };
@@ -228,7 +227,7 @@ const Navbar = () => {
   };
 
   // Get the current theme icon
-  const ThemeIcon = mounted ? (theme === 'dark' ? Moon : theme === 'light' ? Sun : Laptop) : Laptop;
+  const ThemeIcon = mounted ? (theme === 'dark' ? Moon : Sun) : Sun;
 
   // Animation variants
   const navVariants = {
