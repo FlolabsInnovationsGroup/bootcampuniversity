@@ -90,9 +90,13 @@ export async function GET(req: NextRequest) {
                   fontWeight: 700,
                   color: 'white',
                   fontFamily: 'Inter Bold',
+                  background: 'linear-gradient(90deg, #3B82F6 0%, #93C5FD 100%)',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
                 }}
               >
-                Innovation Bootcamp
+                Innovation Bootcamp University
               </span>
             </div>
 

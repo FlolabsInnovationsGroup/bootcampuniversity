@@ -111,7 +111,9 @@ export default function AdminLayout({
               <rect x="8" y="8" width="16" height="16" fill="white" rx="2"/>
               <rect x="12" y="12" width="8" height="8" fill="#3B82F6"/>
             </svg>
-            <span className="text-lg font-bold">Admin Panel</span>
+            <span className="font-semibold text-base bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+              Innovation Bootcamp University
+            </span>
           </Link>
         </div>
 
@@ -215,15 +217,20 @@ export default function AdminLayout({
         <footer className="mt-auto py-8 bg-card border-t border-border w-full">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row justify-between items-center">
-              <div className="mb-4 md:mb-0 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="mr-2">
+              <div className="mb-4 md:mb-0 flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32" className="text-primary">
                   <rect width="32" height="32" fill="#3B82F6" rx="6"/>
                   <rect x="8" y="8" width="16" height="16" fill="white" rx="2"/>
                   <rect x="12" y="12" width="8" height="8" fill="#3B82F6"/>
                 </svg>
-                <p className="text-sm text-muted-foreground">
-                  © {new Date().getFullYear()} Flomad Labs. All rights reserved.
-                </p>
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+                    Innovation Bootcamp University
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    © {new Date().getFullYear()} All rights reserved.
+                  </span>
+                </div>
               </div>
               <div className="flex space-x-6">
                 <Link href="/terms" className="text-sm text-muted-foreground hover:text-primary">

@@ -103,14 +103,9 @@ export default function DashboardLayout({
                   <div className="relative w-8 h-8">
                     <Logo />
                   </div>
-                  <div className="flex flex-col">
-                    <span className="font-bold text-base text-slate-900 dark:text-white">
-                      Innovation Bootcamp
-                    </span>
-                    <span className="text-base text-slate-600 dark:text-slate-400 -mt-1">
-                      University
-                    </span>
-                  </div>
+                  <span className="font-semibold text-base bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+                    Innovation Bootcamp University
+                  </span>
                 </Link>
                 <Button
                   variant="ghost"
@@ -220,14 +215,9 @@ export default function DashboardLayout({
                 <div className="relative w-8 h-8">
                   <Logo />
                 </div>
-                <div className="flex flex-col">
-                  <span className="font-bold text-base text-slate-900 dark:text-white">
-                    Innovation Bootcamp
-                  </span>
-                  <span className="text-base text-slate-600 dark:text-slate-400 -mt-1">
-                    University
-                  </span>
-                </div>
+                <span className="font-semibold text-base bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+                  Innovation Bootcamp University
+                </span>
               </div>
               <div className="flex space-x-6">
                 <Link href="/terms" className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">
