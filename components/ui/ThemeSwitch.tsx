@@ -45,9 +45,17 @@ export function ThemeSwitch() {
   // Check if we're on client side
   React.useEffect(() => {
     setMounted(true);
+    // Ensure light mode is set by default
+    if (typeof window !== "undefined") {
+      const html = document.documentElement;
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      }
+    }
   }, []);
   
-  // Determine current theme for icon display
+  // Determine current theme for icon display - default to light mode
   const isDarkMode = mounted ? document.documentElement.classList.contains('dark') : false;
   
   return (

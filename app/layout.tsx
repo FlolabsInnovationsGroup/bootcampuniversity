@@ -126,6 +126,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       )}
       suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            // Force light mode
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+          `
+        }} />
+      </head>
       <body className={cn(
         'min-h-screen font-sans antialiased',
         'bg-background text-foreground',
