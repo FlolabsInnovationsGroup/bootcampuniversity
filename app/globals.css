@@ -350,16 +350,6 @@
   @apply transition-transform duration-200 ease-out hover:-translate-y-0.5;
 }
 
-/* Focus Ring Enhancement */
-.focus-ring {
-  @apply focus:outline-none;
-  @apply focus-visible:ring-2;
-  @apply focus-visible:ring-primary-500/50;
-  @apply focus-visible:ring-offset-2;
-  @apply focus-visible:ring-offset-background;
-  @apply dark:focus-visible:ring-primary-400/30;
-}
-
 /* Text Selection */
 ::selection {
   @apply bg-primary-500/20 text-foreground dark:bg-primary-400/20;
@@ -371,7 +361,8 @@
 }
 
 .transition-bounce {
-  @apply transition-all duration-500 ease-[cubic-bezier(0.175,0.885,0.32,1.275)];
+  @apply transition-all duration-500;
+  transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 /* Backdrop Blur Variations */
