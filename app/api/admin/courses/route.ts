@@ -199,6 +199,7 @@ export async function PUT(req: NextRequest) {
     });
 
     // Log course update with changed fields
+    type CourseKey = keyof typeof existingCourse;
     const changes = Object.entries({
       title,
       description,
@@ -207,8 +208,14 @@ export async function PUT(req: NextRequest) {
       level,
       estimatedHours,
     })
-      .filter(([key, value]) => value !== undefined && value !== existingCourse[key])
-      .map(([key, value]) => `${key}: ${existingCourse[key]} → ${value}`)
+      .filter(([key, value]) => {
+        const courseKey = key as CourseKey;
+        return value !== undefined && value !== existingCourse[courseKey];
+      })
+      .map(([key, value]) => {
+        const courseKey = key as CourseKey;
+        return `${key}: ${existingCourse[courseKey]} → ${value}`;
+      })
       .join(', ');
 
     await logActivity({

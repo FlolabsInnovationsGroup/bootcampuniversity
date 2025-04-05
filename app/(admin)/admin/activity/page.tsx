@@ -22,8 +22,14 @@ async function getInitialActivityLogs() {
 
   const total = await prisma.activityLog.count()
 
+  // Convert Date objects to ISO strings for client-side rendering
+  const serializedLogs = logs.map(log => ({
+    ...log,
+    createdAt: log.createdAt.toISOString(),
+  }))
+
   return {
-    logs,
+    logs: serializedLogs,
     pagination: {
       total,
       pages: Math.ceil(total / 50),

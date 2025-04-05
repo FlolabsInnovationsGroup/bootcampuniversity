@@ -6,17 +6,7 @@ import { prisma } from '@/lib/prisma';
 // Helper function to check if user is an admin
 async function isAdmin(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  
-  if (!session || !session.user?.email) {
-    return false;
-  }
-  
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-    select: { role: true },
-  });
-  
-  return user?.role === 'admin';
+  return session?.user?.role === 'admin';
 }
 
 // GET - Fetch materials (for a specific course if courseId is provided)
@@ -90,9 +80,9 @@ export async function POST(req: NextRequest) {
       );
     }
     
-    // Get request body
+    // Validate required fields
     const body = await req.json();
-    const { courseId, title, description, type, content, duration, order } = body;
+    const { courseId, title, type, content, url, order } = body;
     
     // Validate required fields
     if (!courseId || !title || !type) {
@@ -132,10 +122,9 @@ export async function POST(req: NextRequest) {
       data: {
         courseId,
         title,
-        description: description || '',
         type,
         content: content || '',
-        duration: duration ? parseInt(duration.toString()) : null,
+        url: url || null,
         order: materialOrder,
       },
     });
@@ -163,7 +152,7 @@ export async function PUT(req: NextRequest) {
     
     // Get request body
     const body = await req.json();
-    const { id, title, description, type, content, duration, order, courseId } = body;
+    const { id, title, type, content, order, courseId, url } = body;
     
     // Validate required fields
     if (!id) {
@@ -188,10 +177,9 @@ export async function PUT(req: NextRequest) {
     // Prepare update data
     const updateData: any = {};
     if (title !== undefined) updateData.title = title;
-    if (description !== undefined) updateData.description = description;
     if (type !== undefined) updateData.type = type;
     if (content !== undefined) updateData.content = content;
-    if (duration !== undefined) updateData.duration = parseInt(duration.toString());
+    if (url !== undefined) updateData.url = url;
     if (order !== undefined) updateData.order = order;
     if (courseId !== undefined) {
       // Check if course exists if changing courseId

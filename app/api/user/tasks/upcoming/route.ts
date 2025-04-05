@@ -26,9 +26,9 @@ export async function GET() {
                   include: {
                     modules: {
                       include: {
-                        progress: {
-                          where: {
-                            userId: session.user.id
+                        moduleProgress: {
+                          include: {
+                            module: true
                           }
                         }
                       }
@@ -47,7 +47,7 @@ export async function GET() {
       const courseSections = enrollment.course.curriculum?.sections || [];
       return courseSections.flatMap(section => 
         section.modules
-          .filter(module => !module.progress.some(p => p.status === 'COMPLETED'))
+          .filter(module => !module.moduleProgress.some(p => p.status === 'COMPLETED'))
           .map(module => ({
             id: module.id,
             title: module.title,

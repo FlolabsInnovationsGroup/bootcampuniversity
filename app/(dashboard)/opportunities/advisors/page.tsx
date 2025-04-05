@@ -68,8 +68,6 @@ export default function AdvisorsPage() {
           {advisors.map((advisor) => (
             <Card
               key={advisor.id}
-              variant="glass"
-              hover="default"
               className="flex flex-col overflow-hidden"
             >
               <div className="relative h-64 w-full overflow-hidden rounded-t-xl">
@@ -142,7 +140,6 @@ export default function AdvisorsPage() {
       <div className="bg-gray-50/50 dark:bg-gray-900/50 py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Card
-            variant="gradient"
             className="overflow-hidden bg-gradient-to-br from-primary-600 to-primary-400"
           >
             <div className="pt-10 pb-12 px-6 sm:pt-16 sm:px-16 lg:py-16 lg:pr-0 xl:py-20 xl:px-20">

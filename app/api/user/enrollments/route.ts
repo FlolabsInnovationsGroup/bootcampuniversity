@@ -41,8 +41,9 @@ export async function GET() {
             description: true,
             category: true,
             status: true,
-            coverImage: true,
-            duration: true,
+            image: true,
+            level: true,
+            estimatedHours: true,
             _count: {
               select: {
                 materials: true,

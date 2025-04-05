@@ -8,8 +8,10 @@ const courseSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
   category: z.string().min(1),
-  coverImage: z.string().url().optional(),
-  status: z.enum(['draft', 'published']),
+  image: z.string().url().optional(),
+  level: z.string().default('BEGINNER'),
+  estimatedHours: z.number().default(1),
+  status: z.enum(['DRAFT', 'PUBLISHED']),
 });
 
 export async function POST(req: Request) {
@@ -32,8 +34,15 @@ export async function POST(req: Request) {
         title: body.title,
         description: body.description,
         category: body.category,
-        coverImage: body.coverImage,
+        level: body.level || 'BEGINNER',
+        estimatedHours: body.estimatedHours || 1,
+        image: body.image,
         status: body.status,
+        creator: {
+          connect: {
+            id: session.user.id
+          }
+        }
       },
     });
 

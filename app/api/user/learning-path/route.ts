@@ -51,7 +51,7 @@ export async function GET(req: Request) {
             }
           }
         },
-        progress: {
+        moduleProgress: {
           include: {
             module: true
           }
@@ -62,7 +62,7 @@ export async function GET(req: Request) {
     // Transform the data for the learning path view
     const sections: SectionWithProgress[] = enrolledCourses.flatMap(enrollment => {
       const moduleProgressMap = new Map(
-        enrollment.progress.map(p => [p.moduleId, p])
+        enrollment.moduleProgress.map(p => [p.moduleId, p])
       );
       
       return enrollment.course.curriculum?.sections.map(section => {

@@ -18,13 +18,18 @@ export async function POST(req: Request) {
     const course = await prisma.course.create({
       data: {
         title,
+        description: `Imported course: ${title} from ${sourceType} source`,
         category,
         level,
         estimatedHours,
         sourceType,
         sourceUrl,
         status: 'DRAFT',
-        creatorId: session.user.id,
+        creator: {
+          connect: {
+            id: session.user.id
+          }
+        }
       },
     });
 

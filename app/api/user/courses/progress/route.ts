@@ -26,9 +26,9 @@ export async function GET() {
                   include: {
                     modules: {
                       include: {
-                        progress: {
-                          where: {
-                            userId: session.user.id
+                        moduleProgress: {
+                          include: {
+                            module: true
                           }
                         }
                       }
@@ -46,12 +46,12 @@ export async function GET() {
     const courses = enrollments.map(enrollment => {
       const allModules = enrollment.course.curriculum?.sections.flatMap(section => section.modules) || [];
       const completedModules = allModules.filter(module => 
-        module.progress.some(p => p.status === 'COMPLETED')
+        module.moduleProgress.some(p => p.status === 'COMPLETED')
       ).length;
       
       // Find the next incomplete module
       const nextModule = allModules.find(module => 
-        !module.progress.some(p => p.status === 'COMPLETED')
+        !module.moduleProgress.some(p => p.status === 'COMPLETED')
       );
 
       return {

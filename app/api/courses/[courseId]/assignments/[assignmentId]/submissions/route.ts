@@ -38,25 +38,38 @@ export async function POST(
       );
     }
 
-    // Create or update submission
-    const submission = await prisma.assignmentSubmission.upsert({
+    // Check if the user already has a submission for this assignment
+    const existingSubmission = await prisma.assignmentSubmission.findFirst({
       where: {
-        userId_assignmentId: {
-          userId: session.user.id,
-          assignmentId: params.assignmentId,
-        },
-      },
-      update: {
-        content: validatedData.content,
-        status: 'submitted',
-      },
-      create: {
-        content: validatedData.content,
         userId: session.user.id,
         assignmentId: params.assignmentId,
-        status: 'submitted',
       },
     });
+
+    let submission;
+
+    if (existingSubmission) {
+      // Update existing submission
+      submission = await prisma.assignmentSubmission.update({
+        where: {
+          id: existingSubmission.id
+        },
+        data: {
+          content: validatedData.content,
+          status: 'submitted',
+        },
+      });
+    } else {
+      // Create new submission
+      submission = await prisma.assignmentSubmission.create({
+        data: {
+          content: validatedData.content,
+          userId: session.user.id,
+          assignmentId: params.assignmentId,
+          status: 'submitted',
+        },
+      });
+    }
 
     return NextResponse.json(submission);
   } catch (error) {

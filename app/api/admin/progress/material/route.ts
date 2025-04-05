@@ -7,10 +7,7 @@ import { prisma } from '@/lib/prisma';
 const materialProgressSchema = z.object({
   userId: z.string().min(1, 'User ID is required'),
   materialId: z.string().min(1, 'Material ID is required'),
-  progress: z.number().min(0).max(100).optional(),
-  notes: z.string().optional().nullable(),
-  bookmarks: z.string().optional().nullable(),
-  lastPosition: z.number().min(0).optional(),
+  status: z.enum(['NOT_STARTED', 'IN_PROGRESS', 'COMPLETED']).optional(),
 });
 
 // Helper function to check if user is admin
@@ -105,7 +102,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { userId, materialId, progress, notes, bookmarks, lastPosition } = validation.data;
+    const { userId, materialId, status } = validation.data;
 
     // Check if user exists
     const user = await prisma.user.findUnique({
@@ -133,10 +130,7 @@ export async function POST(request: Request) {
 
     // Prepare data to update
     const data: any = {};
-    if (progress !== undefined) data.progress = progress;
-    if (notes !== undefined) data.notes = notes;
-    if (bookmarks !== undefined) data.bookmarks = bookmarks;
-    if (lastPosition !== undefined) data.lastPosition = lastPosition;
+    if (status !== undefined) data.status = status;
 
     // Check if progress entry already exists
     const existingProgress = await prisma.materialProgress.findUnique({
@@ -189,10 +183,7 @@ export async function POST(request: Request) {
         data: {
           userId,
           materialId,
-          progress: progress || 0,
-          notes,
-          bookmarks,
-          lastPosition: lastPosition || 0,
+          status: status || 'NOT_STARTED',
         },
         include: {
           user: {
@@ -220,7 +211,7 @@ export async function POST(request: Request) {
     }
 
     // Update enrollment progress if material progress is updated
-    if (progress !== undefined && material.courseId) {
+    if (status !== undefined && material.courseId) {
       // Get all material progress for this user and course
       const allMaterialProgress = await prisma.materialProgress.findMany({
         where: {
@@ -250,7 +241,7 @@ export async function POST(request: Request) {
 
       // Calculate overall course progress
       const totalMaterials = allMaterials.length;
-      const completedMaterials = allMaterialProgress.filter((mp: any) => mp.progress >= 100).length;
+      const completedMaterials = allMaterialProgress.filter((mp: any) => mp.status === 'COMPLETED').length;
       const overallProgress = totalMaterials > 0 
         ? Math.round((completedMaterials / totalMaterials) * 100) 
         : 0;

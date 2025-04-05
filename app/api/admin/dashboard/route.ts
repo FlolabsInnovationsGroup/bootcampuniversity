@@ -19,7 +19,7 @@ export async function GET() {
     const userCountLastMonth = 0; // Placeholder value
 
     // Get progress stats
-    const materialProgressStats = await prisma.materialProgress.aggregate({
+    const enrollmentProgressStats = await prisma.enrollment.aggregate({
       _avg: {
         progress: true,
       },
@@ -62,8 +62,8 @@ export async function GET() {
         userGrowth: userGrowthRate,
         // In a real app, these would be actual counts from the database
         totalCourses: 32,
-        totalMaterials: materialProgressStats._count.id || 0,
-        averageCompletion: Math.round((materialProgressStats._avg.progress || 0) * 100),
+        totalMaterials: enrollmentProgressStats._count.id || 0,
+        averageCompletion: Math.round((enrollmentProgressStats._avg.progress || 0) * 100),
         activeUsers,
       },
       recentUsers,

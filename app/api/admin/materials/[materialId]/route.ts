@@ -56,7 +56,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
 
   try {
     const json = await request.json();
-    const { title, description, type, content, duration, courseId, order } = json;
+    const { title, type, content, courseId, order, url } = json;
 
     const material = await prisma.material.update({
       where: {
@@ -64,10 +64,9 @@ export async function PUT(request: Request, { params }: RouteParams) {
       },
       data: {
         title,
-        description,
         type,
         content,
-        duration: duration ? parseInt(duration) : null,
+        url,
         courseId,
         order: order || 0,
       },

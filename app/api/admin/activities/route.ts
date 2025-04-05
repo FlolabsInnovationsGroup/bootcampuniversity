@@ -65,9 +65,12 @@ export async function POST(req: Request) {
       data: {
         userId: user.id,
         action,
-        entityType,
-        entityId,
-        details,
+        target: `${entityType}:${entityId}`,
+        metadata: {
+          entityType,
+          entityId,
+          details
+        },
       },
     })
 

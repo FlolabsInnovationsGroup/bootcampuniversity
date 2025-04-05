@@ -19,7 +19,7 @@ interface ActivityLog {
   action: string
   target: string | null
   metadata: any
-  createdAt: string
+  createdAt: string | Date
   user: {
     name: string | null
     email: string | null
@@ -196,7 +196,11 @@ export function ActivityLogTable({ initialLogs, initialPagination }: ActivityLog
                       {getDetails(log.metadata)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDistance(new Date(log.createdAt), new Date(), { addSuffix: true })}
+                      {formatDistance(
+                        typeof log.createdAt === 'string' ? new Date(log.createdAt) : log.createdAt,
+                        new Date(),
+                        { addSuffix: true }
+                      )}
                     </td>
                   </tr>
                 ))

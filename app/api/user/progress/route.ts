@@ -8,16 +8,12 @@ interface MaterialProgressWithMaterial {
   id: string;
   userId: string;
   materialId: string;
-  progress: number;
-  notes: string | null;
-  bookmarks: string | null;
-  lastPosition: number;
+  status: string;
   createdAt: Date;
   updatedAt: Date;
   material: {
     id: string;
     title: string;
-    description: string | null;
     type: string;
     courseId: string;
     course: {
@@ -60,7 +56,6 @@ export async function GET(req: NextRequest) {
           select: {
             id: true,
             title: true,
-            description: true,
             type: true,
             courseId: true,
             course: {
@@ -79,27 +74,15 @@ export async function GET(req: NextRequest) {
 
     // Calculate statistics
     const totalItems = materials.length;
-    const completedItems = materials.filter((item: MaterialProgressWithMaterial) => item.progress === 100).length;
-    const inProgressItems = materials.filter((item: MaterialProgressWithMaterial) => item.progress > 0 && item.progress < 100).length;
-    const totalBookmarks = materials.reduce((count: number, item: MaterialProgressWithMaterial) => {
-      try {
-        const bookmarks = item.bookmarks ? JSON.parse(item.bookmarks) : [];
-        return count + bookmarks.length;
-      } catch {
-        return count;
-      }
-    }, 0);
+    const completedItems = materials.filter((item: MaterialProgressWithMaterial) => item.status === 'COMPLETED').length;
+    const inProgressItems = materials.filter((item: MaterialProgressWithMaterial) => item.status === 'IN_PROGRESS').length;
     
-    const totalProgress = materials.reduce((sum: number, item: MaterialProgressWithMaterial) => sum + item.progress, 0);
-    const averageCompletion = totalItems > 0 ? Math.round(totalProgress / totalItems) : 0;
-
     return NextResponse.json({
       materials,
       statistics: {
         completedMaterials: completedItems,
         inProgressMaterials: inProgressItems,
-        totalBookmarks,
-        averageCompletion,
+        totalItems,
       }
     });
   } catch (error) {
@@ -124,7 +107,7 @@ export async function POST(req: NextRequest) {
 
     // Get request body
     const body = await req.json();
-    const { materialId, progress, notes, bookmarks, lastPosition } = body;
+    const { materialId, status } = body;
     
     if (!materialId) {
       return NextResponse.json(
@@ -166,18 +149,12 @@ export async function POST(req: NextRequest) {
         },
       },
       update: {
-        progress: progress !== undefined ? progress : undefined,
-        notes: notes !== undefined ? notes : undefined,
-        bookmarks: bookmarks !== undefined ? JSON.stringify(bookmarks) : undefined,
-        lastPosition: lastPosition !== undefined ? lastPosition : undefined,
+        status: status !== undefined ? status : undefined,
       },
       create: {
         userId: user.id,
         materialId,
-        progress: progress || 0,
-        notes,
-        bookmarks: bookmarks ? JSON.stringify(bookmarks) : null,
-        lastPosition: lastPosition || 0,
+        status: status || 'NOT_STARTED',
       },
     });
 

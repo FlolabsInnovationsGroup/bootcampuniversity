@@ -134,12 +134,10 @@ export async function POST(request: Request) {
       const results = await Promise.allSettled(
         userIds.map(async (userId) => {
           // Check if enrollment already exists
-          const existingEnrollment = await prisma.enrollment.findUnique({
+          const existingEnrollment = await prisma.enrollment.findFirst({
             where: {
-              userId_courseId: {
-                userId,
-                courseId,
-              },
+              userId,
+              courseId,
             },
           });
           
@@ -204,12 +202,10 @@ export async function POST(request: Request) {
       }
       
       // Check if enrollment already exists
-      const existingEnrollment = await prisma.enrollment.findUnique({
+      const existingEnrollment = await prisma.enrollment.findFirst({
         where: {
-          userId_courseId: {
-            userId,
-            courseId,
-          },
+          userId,
+          courseId,
         },
       });
       

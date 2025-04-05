@@ -81,7 +81,6 @@ export async function GET(request: Request) {
         select: {
           id: true,
           title: true,
-          description: true,
           type: true,
           course: {
             select: {

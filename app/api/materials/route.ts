@@ -6,11 +6,10 @@ import { authOptions } from '@/lib/auth'
 
 const materialSchema = z.object({
   title: z.string().min(1),
-  description: z.string().min(1),
   type: z.enum(['video', 'article', 'external']),
-  content: z.string().min(1),
+  content: z.string().min(1).optional(),
+  url: z.string().optional(),
   courseId: z.string().min(1),
-  duration: z.number().min(0).optional(),
 })
 
 export async function POST(req: Request) {
@@ -31,11 +30,10 @@ export async function POST(req: Request) {
     const material = await prisma.material.create({
       data: {
         title: body.title,
-        description: body.description,
         type: body.type,
         content: body.content,
+        url: body.url,
         courseId: body.courseId,
-        duration: body.duration,
         order: await getNextOrder(body.courseId),
       },
     })

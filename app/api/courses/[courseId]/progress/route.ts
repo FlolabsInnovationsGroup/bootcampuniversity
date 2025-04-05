@@ -25,10 +25,14 @@ export async function POST(
     const validatedData = progressSchema.parse(body);
 
     // Check if module exists and belongs to the course
-    const module = await prisma.module.findUnique({
+    const module = await prisma.module.findFirst({
       where: {
         id: validatedData.moduleId,
-        courseId: params.courseId,
+        section: {
+          curriculum: {
+            courseId: params.courseId
+          }
+        }
       },
     });
 

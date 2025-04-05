@@ -5,8 +5,8 @@ import { prisma } from '@/lib/prisma';
 import { authOptions } from '@/lib/auth/options';
 
 // Validation schemas
-const progressSchema = z.object({
-  progress: z.number().min(0).max(100),
+const statusSchema = z.object({
+  status: z.enum(['NOT_STARTED', 'IN_PROGRESS', 'COMPLETED']),
 });
 
 const noteSchema = z.object({
@@ -42,28 +42,12 @@ export async function GET(
 
     if (!materialProgress) {
       return NextResponse.json({
-        progress: 0,
-        notes: '',
-        bookmarks: [],
-        lastPosition: 0,
+        status: 'NOT_STARTED',
       });
     }
 
-    // Parse bookmarks JSON if it exists
-    let bookmarks = [];
-    if (materialProgress.bookmarks) {
-      try {
-        bookmarks = JSON.parse(materialProgress.bookmarks);
-      } catch (error) {
-        console.error('Error parsing bookmarks JSON:', error);
-      }
-    }
-
     return NextResponse.json({
-      progress: materialProgress.progress,
-      notes: materialProgress.notes || '',
-      bookmarks: bookmarks,
-      lastPosition: materialProgress.lastPosition,
+      status: materialProgress.status,
     });
   } catch (error) {
     console.error('Failed to fetch material data:', error);
@@ -88,71 +72,52 @@ export async function PATCH(
     const body = await request.json();
     const updates: Record<string, any> = {};
 
-    // Validate and update progress
-    if ('progress' in body) {
-      const { progress } = progressSchema.parse({ progress: body.progress });
-      updates.progress = progress;
+    // Validate and update status
+    if ('status' in body) {
+      const { status } = statusSchema.parse({ status: body.status });
+      updates.status = status;
     }
 
-    // Update notes
-    if ('notes' in body) {
-      const { content } = noteSchema.parse({ content: body.notes });
-      updates.notes = content;
+    // If no valid updates, return error
+    if (Object.keys(updates).length === 0) {
+      return NextResponse.json(
+        { error: 'No valid updates provided' },
+        { status: 400 }
+      );
     }
 
-    // Update bookmarks
-    if ('bookmarks' in body) {
-      try {
-        const bookmarks = z.array(bookmarkSchema).parse(body.bookmarks);
-        updates.bookmarks = JSON.stringify(bookmarks);
-      } catch (error) {
-        return NextResponse.json(
-          { error: 'Invalid bookmarks format', details: error },
-          { status: 400 }
-        );
-      }
-    }
-
-    // Update last position
-    if ('lastPosition' in body) {
-      const lastPosition = z.number().min(0).parse(body.lastPosition);
-      updates.lastPosition = lastPosition;
-    }
-
-    // Update or create material progress
-    const materialProgress = await prisma.materialProgress.upsert({
+    // Find existing material progress
+    const existingProgress = await prisma.materialProgress.findFirst({
       where: {
-        userId_materialId: {
-          userId: session.user.id,
-          materialId: params.materialId,
-        },
-      },
-      update: updates,
-      create: {
         userId: session.user.id,
         materialId: params.materialId,
-        ...updates,
       },
     });
 
-    // Parse bookmarks for response
-    let bookmarks = [];
-    if (materialProgress.bookmarks) {
-      try {
-        bookmarks = JSON.parse(materialProgress.bookmarks);
-      } catch (error) {
-        console.error('Error parsing bookmarks JSON for response:', error);
-      }
+    let materialProgress;
+    
+    if (existingProgress) {
+      // Update existing progress
+      materialProgress = await prisma.materialProgress.update({
+        where: { id: existingProgress.id },
+        data: updates,
+      });
+    } else {
+      // Create new progress entry
+      materialProgress = await prisma.materialProgress.create({
+        data: {
+          userId: session.user.id,
+          materialId: params.materialId,
+          ...updates,
+        },
+      });
     }
 
     // Return sanitized response
     return NextResponse.json({
       id: materialProgress.id,
       materialId: materialProgress.materialId,
-      progress: materialProgress.progress,
-      lastPosition: materialProgress.lastPosition,
-      notes: materialProgress.notes || '',
-      bookmarks: bookmarks,
+      status: materialProgress.status,
       createdAt: materialProgress.createdAt,
       updatedAt: materialProgress.updatedAt
     });
@@ -183,14 +148,19 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    await prisma.materialProgress.delete({
+    // Find and delete material progress
+    const existingProgress = await prisma.materialProgress.findFirst({
       where: {
-        userId_materialId: {
-          userId: session.user.id,
-          materialId: params.materialId,
-        },
+        userId: session.user.id,
+        materialId: params.materialId,
       },
     });
+
+    if (existingProgress) {
+      await prisma.materialProgress.delete({
+        where: { id: existingProgress.id },
+      });
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
