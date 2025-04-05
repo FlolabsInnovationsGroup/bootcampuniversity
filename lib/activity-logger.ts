@@ -19,6 +19,13 @@ export async function logActivity({
   details,
 }: LogActivityParams) {
   try {
+    // Create metadata object from the parameters
+    const metadata = {
+      entityType,
+      entityId,
+      details,
+    };
+
     const log = await prisma.activityLog.create({
       data: {
         user: {
@@ -27,9 +34,8 @@ export async function logActivity({
           }
         },
         action,
-        entityType,
-        entityId,
-        details,
+        target: `${entityType}:${entityId}`,
+        metadata: metadata,
       },
     })
     return log
