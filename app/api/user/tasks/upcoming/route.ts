@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { ModuleProgress } from '@prisma/client';
 
 export async function GET() {
   try {
@@ -24,15 +25,7 @@ export async function GET() {
               include: {
                 sections: {
                   include: {
-                    modules: {
-                      include: {
-                        moduleProgress: {
-                          include: {
-                            module: true
-                          }
-                        }
-                      }
-                    }
+                    modules: true
                   }
                 }
               }
@@ -42,12 +35,30 @@ export async function GET() {
       }
     });
 
+    // Get module progress for the user
+    const moduleProgress = await prisma.moduleProgress.findMany({
+      where: {
+        userId: session.user.id,
+      },
+      include: {
+        module: true
+      }
+    });
+
+    // Create a map for faster lookup
+    const completedModuleIds = new Set<string>();
+    moduleProgress.forEach((progress) => {
+      if (progress.status === 'COMPLETED') {
+        completedModuleIds.add(progress.moduleId);
+      }
+    });
+
     // Get all modules from enrolled courses
     const tasks = enrollments.flatMap(enrollment => {
       const courseSections = enrollment.course.curriculum?.sections || [];
       return courseSections.flatMap(section => 
         section.modules
-          .filter(module => !module.moduleProgress.some(p => p.status === 'COMPLETED'))
+          .filter(module => !completedModuleIds.has(module.id))
           .map(module => ({
             id: module.id,
             title: module.title,
