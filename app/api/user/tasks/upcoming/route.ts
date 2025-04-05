@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { ModuleProgress } from '@prisma/client';
 
 export async function GET() {
   try {
@@ -39,15 +38,12 @@ export async function GET() {
     const moduleProgress = await prisma.moduleProgress.findMany({
       where: {
         userId: session.user.id,
-      },
-      include: {
-        module: true
       }
     });
 
-    // Create a map for faster lookup
+    // Create a set of completed module IDs for faster lookup
     const completedModuleIds = new Set<string>();
-    moduleProgress.forEach((progress) => {
+    moduleProgress.forEach(progress => {
       if (progress.status === 'COMPLETED') {
         completedModuleIds.add(progress.moduleId);
       }
