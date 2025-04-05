@@ -16,7 +16,8 @@ import {
   Menu,
   Bell,
   User,
-  LogOut
+  LogOut,
+  X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/shared/LoadingPlaceholder';
@@ -74,6 +75,40 @@ export default function DashboardLayout({
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Fixed Header */}
+      <header className="fixed w-full h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 md:px-6 z-30">
+        <div className="flex items-center space-x-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          >
+            {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+          <div className="flex items-center space-x-2">
+            <div className="h-8 w-8">
+              <Logo />
+            </div>
+            <span className="font-semibold text-base bg-gradient-to-r from-primary-500 via-secondary-500 to-primary-600 bg-clip-text text-transparent drop-shadow-sm tracking-tight">
+              IBU
+            </span>
+          </div>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative"
+        >
+          <Bell className="h-5 w-5" />
+          {notifications > 0 && (
+            <span className="absolute top-0 right-0 -mt-1 -mr-1 h-4 w-4 rounded-full bg-red-500 text-[10px] font-medium text-white flex items-center justify-center">
+              {notifications}
+            </span>
+          )}
+        </Button>
+      </header>
+
       {/* Mobile Sidebar Toggle */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <Button
@@ -104,11 +139,8 @@ export default function DashboardLayout({
                     <Logo />
                   </div>
                   <div className="flex flex-col">
-                    <span className="font-bold text-base text-slate-900 dark:text-white">
-                      Innovation Bootcamp
-                    </span>
-                    <span className="text-base text-slate-600 dark:text-slate-400 -mt-1">
-                      University
+                    <span className="font-semibold text-base bg-gradient-to-r from-primary-500 via-secondary-500 to-primary-600 bg-clip-text text-transparent drop-shadow-sm tracking-tight">
+                      Innovation Bootcamp University
                     </span>
                   </div>
                 </Link>
@@ -204,30 +236,33 @@ export default function DashboardLayout({
       </AnimatePresence>
 
       {/* Main Content Wrapper */}
-      <div className={`flex flex-col flex-grow ${isSidebarOpen ? 'lg:ml-64' : ''} transition-all duration-300`}>
+      <div 
+        className={`flex flex-col flex-grow transition-all duration-300 ${
+          isSidebarOpen ? 'lg:ml-64' : ''
+        } ${
+          isSidebarOpen ? 'lg:pl-0' : 'pl-0'
+        }`}
+      >
         {/* Main Content */}
-        <main className="flex-grow pt-16 pb-32">
+        <main className="flex-grow pt-16 lg:pt-8 pb-20">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            {children}
+            <div className="max-w-7xl mx-auto">
+              {children}
+            </div>
           </div>
         </main>
 
         {/* Footer */}
-        <footer className="py-8 bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-auto">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row justify-between items-center">
+        <footer className="mt-auto py-6 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+          <div className="container mx-auto">
+            <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
               <div className="mb-4 md:mb-0 flex items-center space-x-2">
                 <div className="relative w-8 h-8">
                   <Logo />
                 </div>
-                <div className="flex flex-col">
-                  <span className="font-bold text-base text-slate-900 dark:text-white">
-                    Innovation Bootcamp
-                  </span>
-                  <span className="text-base text-slate-600 dark:text-slate-400 -mt-1">
-                    University
-                  </span>
-                </div>
+                <span className="font-semibold text-base bg-gradient-to-r from-primary-500 via-secondary-500 to-primary-600 bg-clip-text text-transparent drop-shadow-sm tracking-tight">
+                  Innovation Bootcamp University
+                </span>
               </div>
               <div className="flex space-x-6">
                 <Link href="/terms" className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">

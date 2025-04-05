@@ -111,7 +111,9 @@ export default function AdminLayout({
               <rect x="8" y="8" width="16" height="16" fill="white" rx="2"/>
               <rect x="12" y="12" width="8" height="8" fill="#3B82F6"/>
             </svg>
-            <span className="text-lg font-bold">Admin Panel</span>
+            <span className="font-semibold text-base bg-gradient-to-r from-primary-500 via-secondary-500 to-primary-600 bg-clip-text text-transparent drop-shadow-sm tracking-tight">
+              Admin Panel
+            </span>
           </Link>
         </div>
 
@@ -221,9 +223,9 @@ export default function AdminLayout({
                   <rect x="8" y="8" width="16" height="16" fill="white" rx="2"/>
                   <rect x="12" y="12" width="8" height="8" fill="#3B82F6"/>
                 </svg>
-                <p className="text-sm text-muted-foreground">
-                  © {new Date().getFullYear()} Flomad Labs. All rights reserved.
-                </p>
+                <span className="font-semibold text-sm bg-gradient-to-r from-primary-500 via-secondary-500 to-primary-600 bg-clip-text text-transparent drop-shadow-sm tracking-tight">
+                  Innovation Bootcamp University
+                </span>
               </div>
               <div className="flex space-x-6">
                 <Link href="/terms" className="text-sm text-muted-foreground hover:text-primary">

@@ -37,7 +37,7 @@ export default function RegisterPage() {
         <div className="space-y-2 text-center">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Create an account</h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Join Innovation Bootcamp and start your journey
+            Join Innovation Bootcamp University and start your journey
           </p>
         </div>
 

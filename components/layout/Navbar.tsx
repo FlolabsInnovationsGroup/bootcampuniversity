@@ -290,14 +290,9 @@ const Navbar = () => {
               <div className="relative w-8 h-8">
                 <Logo />
               </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-base text-slate-900 dark:text-white">
-                  Innovation Bootcamp
-                </span>
-                <span className="text-base text-slate-600 dark:text-slate-400 -mt-1">
-                  University
-                </span>
-              </div>
+              <span className="font-semibold text-base bg-gradient-to-r from-primary-500 via-secondary-500 to-primary-600 bg-clip-text text-transparent drop-shadow-sm tracking-tight">
+                Innovation Bootcamp University
+              </span>
             </Link>
           </div>
 

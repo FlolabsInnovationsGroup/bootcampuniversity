@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 
 const faqs = [
   {
-    question: 'What makes Innovation Bootcamp different?',
+    question: 'What makes Innovation Bootcamp University different?',
     answer: 'Our program combines hands-on learning, industry mentorship, and real-world projects to provide a comprehensive learning experience. We focus on both technical skills and professional development.',
   },
   {

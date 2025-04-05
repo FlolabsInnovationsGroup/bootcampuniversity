@@ -92,7 +92,7 @@ export async function GET(req: NextRequest) {
                   fontFamily: 'Inter Bold',
                 }}
               >
-                Innovation Bootcamp
+                Innovation Bootcamp University
               </span>
             </div>
 

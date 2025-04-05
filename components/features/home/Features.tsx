@@ -152,7 +152,7 @@ export default function Features() {
           >
             Why Choose{' '}
             <span className="text-gradient bg-gradient-to-r from-primary-500 via-secondary-500 to-accent-500 bg-clip-text text-transparent">
-              Innovation Bootcamp
+              Innovation Bootcamp University
             </span>
           </motion.h2>
           <motion.p

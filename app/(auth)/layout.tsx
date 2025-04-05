@@ -4,7 +4,7 @@ import { generateMetadata } from '@/lib/utils/metadata';
 
 export const metadata: Metadata = generateMetadata({
   title: 'Authentication',
-  description: 'Sign in or create an account to access your Innovation Bootcamp dashboard.',
+  description: 'Sign in or create an account to access your Innovation Bootcamp University dashboard.',
   noIndex: true, // Prevent indexing of auth pages
 });
 
@@ -33,11 +33,8 @@ export default function AuthLayout({
               </svg>
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-lg text-slate-900 dark:text-white">
-                Innovation Bootcamp
-              </span>
-              <span className="text-xs text-slate-600 dark:text-slate-400 -mt-1">
-                University
+              <span className="font-semibold text-lg bg-gradient-to-r from-primary-500 via-secondary-500 to-primary-600 bg-clip-text text-transparent drop-shadow-sm tracking-tight">
+                Innovation Bootcamp University
               </span>
             </div>
           </Link>
