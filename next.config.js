@@ -14,12 +14,8 @@ const nextConfig = {
     });
     return config;
   },
-  // Add transpilePackages for problematic dependencies
-  transpilePackages: ['cheerio', 'undici'],
-  // Handle modern JS features not supported in some environments
+  // Use minimal experimental features
   experimental: {
-    // Opt-in to newer JS transforms
-    serverActions: true,
     swcMinify: true,
   },
 };
