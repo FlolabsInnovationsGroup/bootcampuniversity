@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
     
     // Get request body
     const body = await req.json();
-    const { title, description, category, status, coverImage, duration } = body;
+    const { title, description, category, status, duration } = body;
     
     // Validate required fields
     if (!title || !description || !category) {
@@ -95,7 +95,6 @@ export async function POST(req: NextRequest) {
         description,
         category,
         status: status || 'draft',
-        coverImage,
         duration: duration ? parseInt(duration) : null,
       },
     });
@@ -123,7 +122,7 @@ export async function PUT(req: NextRequest) {
     
     // Get request body
     const body = await req.json();
-    const { id, title, description, category, status, coverImage, duration } = body;
+    const { id, title, description, category, status, duration } = body;
     
     // Validate required fields
     if (!id) {
@@ -153,7 +152,6 @@ export async function PUT(req: NextRequest) {
         description: description || existingCourse.description,
         category: category || existingCourse.category,
         status: status || existingCourse.status,
-        coverImage: coverImage !== undefined ? coverImage : existingCourse.coverImage,
         duration: duration !== undefined ? parseInt(duration) : existingCourse.duration,
       },
     });
