@@ -9,7 +9,7 @@ export default function PrivacyPage() {
       <section>
         <h2>Introduction</h2>
         <p>
-          Innovation Bootcamp ("we," "our," or "us") is committed to protecting your privacy. 
+          Innovation Bootcamp University ("we," "our," or "us") is committed to protecting your privacy. 
           This Privacy Policy explains how we collect, use, disclose, and safeguard your information 
           when you visit our website, use our platform, or participate in our programs.
         </p>

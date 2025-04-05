@@ -4,7 +4,7 @@ import { generateMetadata } from '@/lib/utils/metadata';
 
 export const metadata: Metadata = generateMetadata({
   title: 'Authentication',
-  description: 'Sign in or create an account to access your Innovation Bootcamp dashboard.',
+  description: 'Sign in or create an account to access your Innovation Bootcamp University dashboard.',
   noIndex: true, // Prevent indexing of auth pages
 });
 
