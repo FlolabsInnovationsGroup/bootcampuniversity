@@ -17,9 +17,8 @@ interface ActivityLog {
   id: string
   userId: string
   action: string
-  entityType: string
-  entityId: string
-  details: string
+  target: string | null
+  metadata: any
   createdAt: string
   user: {
     name: string | null
@@ -95,6 +94,20 @@ export function ActivityLogTable({ initialLogs, initialPagination }: ActivityLog
       setIsLoading(false)
     }
   }
+
+  // Helper function to extract entity type from target string (format: "entityType:entityId")
+  const getEntityType = (target: string | null): string => {
+    if (!target) return 'unknown';
+    const parts = target.split(':');
+    return parts.length > 0 ? parts[0] : 'unknown';
+  };
+
+  // Helper function to get details from metadata
+  const getDetails = (metadata: any): string => {
+    if (!metadata) return '';
+    if (metadata.details) return metadata.details;
+    return JSON.stringify(metadata);
+  };
 
   return (
     <div className="space-y-4">
@@ -177,10 +190,10 @@ export function ActivityLogTable({ initialLogs, initialPagination }: ActivityLog
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">
-                      {log.entityType}
+                      {getEntityType(log.target)}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500">
-                      {log.details}
+                      {getDetails(log.metadata)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {formatDistance(new Date(log.createdAt), new Date(), { addSuffix: true })}

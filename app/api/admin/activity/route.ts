@@ -17,11 +17,11 @@ export async function GET(req: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '50')
 
     const where = {
-      ...(filter !== 'all' && { entityType: filter }),
+      ...(filter !== 'all' && { target: { contains: filter + ':' } }),
       ...(search && {
         OR: [
-          { details: { contains: search } },
-          { entityId: { contains: search } },
+          { target: { contains: search } },
+          { metadata: { path: '$.details', string_contains: search } },
           { user: { name: { contains: search } } },
           { user: { email: { contains: search } } },
         ],
@@ -76,13 +76,19 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { action, entityType, entityId, details } = body
 
+    // Create metadata object
+    const metadata = {
+      entityType,
+      entityId,
+      details,
+    };
+
     const log = await prisma.activityLog.create({
       data: {
         userId: session.user.id,
         action,
-        entityType,
-        entityId,
-        details,
+        target: `${entityType}:${entityId}`,
+        metadata,
       },
     })
 
