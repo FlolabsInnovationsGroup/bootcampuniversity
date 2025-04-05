@@ -63,9 +63,9 @@ export function ContentManagement() {
   };
 
   const getStatusBadge = (status: Content['status']) => {
-    const variants = {
+    const variants: Record<Content['status'], 'default' | 'destructive' | 'outline' | 'secondary' | 'success'> = {
       published: 'success',
-      draft: 'warning',
+      draft: 'secondary',
       archived: 'destructive'
     };
     return <Badge variant={variants[status]}>{status}</Badge>;
