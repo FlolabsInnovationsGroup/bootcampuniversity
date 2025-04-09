@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 
 export async function GET(req: NextRequest) {
   try {
@@ -16,14 +17,20 @@ export async function GET(req: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '50')
 
-    const where = {
-      ...(filter !== 'all' && { entityType: filter }),
+    const where: Prisma.ActivityLogWhereInput = {
+      ...(filter !== 'all' && { target: filter }),
       ...(search && {
         OR: [
-          { details: { contains: search } },
+          { target: { contains: search } },
           { entityId: { contains: search } },
-          { user: { name: { contains: search } } },
-          { user: { email: { contains: search } } },
+          {
+            user: {
+              OR: [
+                { name: { contains: search } },
+                { email: { contains: search } },
+              ],
+            },
+          },
         ],
       }),
     }
@@ -80,7 +87,7 @@ export async function POST(request: Request) {
       data: {
         userId: session.user.id,
         action,
-        entityType,
+        target: entityType,
         entityId,
         details,
       },

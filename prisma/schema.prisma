@@ -80,6 +80,10 @@ model MaterialProgress {
   userId     String
   materialId String
   status     String   @default("NOT_STARTED")
+  progress   Float    @default(0)
+  notes      String?
+  bookmarks  Json?
+  lastPosition Float? @default(0)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   user       User     @relation(fields: [userId], references: [id])
@@ -93,9 +97,10 @@ model MaterialProgress {
 model Course {
   id             String       @id @default(cuid())
   title          String
-  description    String
+  description    String?
   image          String?
-  category       String       @default("Other")
+  coverImage     String?
+  category       String?
   level          String       @default("BEGINNER")
   estimatedHours Int         @default(1)
   sourceType     String       @default("CUSTOM")
@@ -112,6 +117,7 @@ model Course {
   discussions    Discussion[]
   courseProgress CourseProgress[]
 
+  @@index([title])
   @@index([category])
   @@index([status])
   @@index([creatorId])
@@ -122,8 +128,10 @@ model Material {
   courseId    String
   type        String
   title       String
+  description String?
   url         String?
   content     String?
+  duration    Int?       // Duration in minutes
   order       Int
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -149,6 +157,7 @@ model Enrollment {
   course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   moduleProgress ModuleProgress[]
 
+  @@unique([userId, courseId])
   @@index([userId])
   @@index([courseId])
   @@index([status])
@@ -232,13 +241,16 @@ model ActivityLog {
   userId    String
   action    String
   target    String?
-  metadata  Json?
+  details   Json?    // Changed from metadata to details
+  entityType String?
+  entityId   String?
   createdAt DateTime @default(now())
   
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([action])
+  @@index([entityType])
   @@index([createdAt])
 }
 
@@ -301,6 +313,8 @@ model AssignmentSubmission {
   status       String     @default("submitted") // submitted, graded, returned
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
+
+  @@unique([userId, assignmentId])
 }
 
 model Discussion {

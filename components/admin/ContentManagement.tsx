@@ -62,13 +62,16 @@ export function ContentManagement() {
     return icons[type];
   };
 
+  const variants: Record<string, "default" | "secondary" | "destructive" | "success" | "outline"> = {
+    DRAFT: "secondary",
+    PUBLISHED: "success",
+    ARCHIVED: "destructive",
+    IN_REVIEW: "default",
+    PENDING: "outline"
+  };
+
   const getStatusBadge = (status: Content['status']) => {
-    const variants = {
-      published: 'success',
-      draft: 'warning',
-      archived: 'destructive'
-    };
-    return <Badge variant={variants[status]}>{status}</Badge>;
+    return <Badge variant={variants[status] || "default"}>{status}</Badge>;
   };
 
   return (

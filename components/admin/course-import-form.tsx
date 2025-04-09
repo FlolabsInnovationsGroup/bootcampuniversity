@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
@@ -23,6 +25,18 @@ export function CourseImportForm() {
   const router = useRouter()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -30,19 +44,23 @@ export function CourseImportForm() {
 
     try {
       const formData = new FormData(event.currentTarget)
-      const data = {
-        title: formData.get('title'),
-        sourceType: formData.get('sourceType'),
-        sourceUrl: formData.get('sourceUrl'),
-        category: formData.get('category'),
-        level: formData.get('level'),
-        estimatedHours: parseInt(formData.get('estimatedHours') as string),
+      const imageFile = formData.get('image') as File
+
+      // Create multipart form data
+      const submitFormData = new FormData()
+      submitFormData.append('title', formData.get('title') as string)
+      submitFormData.append('sourceType', formData.get('sourceType') as string)
+      submitFormData.append('sourceUrl', formData.get('sourceUrl') as string)
+      submitFormData.append('category', formData.get('category') as string)
+      submitFormData.append('level', formData.get('level') as string)
+      submitFormData.append('estimatedHours', formData.get('estimatedHours') as string)
+      if (imageFile && imageFile.size > 0) {
+        submitFormData.append('image', imageFile)
       }
 
       const response = await fetch('/api/admin/courses/import', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: submitFormData, // Send as FormData instead of JSON
       })
 
       if (!response.ok) {
@@ -79,6 +97,27 @@ export function CourseImportForm() {
           required
           placeholder="Enter course title"
         />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="image">Course Image</Label>
+        <Input
+          id="image"
+          name="image"
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
+        />
+        {imagePreview && (
+          <div className="mt-2">
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="w-full max-w-md rounded-lg border border-gray-200"
+            />
+          </div>
+        )}
       </div>
 
       <div className="space-y-2">

@@ -2,110 +2,87 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/options';
 import { prisma } from '@/lib/prisma';
+import { MaterialProgressWithMaterial } from '@/types/models';
+import { Prisma } from '@prisma/client';
 
-// Define interfaces based on the Prisma schema
-interface MaterialProgressWithMaterial {
-  id: string;
-  userId: string;
-  materialId: string;
-  progress: number;
-  notes: string | null;
-  bookmarks: string | null;
-  lastPosition: number;
-  createdAt: Date;
-  updatedAt: Date;
-  material: {
-    id: string;
-    title: string;
-    description: string | null;
-    type: string;
-    courseId: string;
-    course: {
-      id: string;
-      title: string;
-    };
-  };
-}
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    
-    if (!session || !session.user?.email) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get query parameters
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get('userId') || session.user.id;
-    
-    // Check if the requesting user matches the requested userId or is an admin
-    if (userId !== session.user.id && session.user.role !== 'admin') {
-      return NextResponse.json(
-        { error: 'Unauthorized to access this user data' },
-        { status: 403 }
-      );
-    }
-
-    // Get user material progress with material details
     const materials = await prisma.materialProgress.findMany({
       where: {
-        userId: userId,
+        userId: session.user.id,
       },
-      include: {
+      select: {
+        id: true,
+        userId: true,
+        materialId: true,
+        status: true,
+        progress: true,
+        notes: true,
+        bookmarks: true,
+        lastPosition: true,
+        createdAt: true,
+        updatedAt: true,
         material: {
           select: {
             id: true,
             title: true,
-            description: true,
             type: true,
-            courseId: true,
-            course: {
-              select: {
-                id: true,
-                title: true,
-              },
-            },
-          },
-        },
-      },
-      orderBy: {
-        updatedAt: 'desc',
-      },
+            url: true,
+            createdAt: true,
+            updatedAt: true
+          }
+        }
+      }
     });
 
-    // Calculate statistics
     const totalItems = materials.length;
-    const completedItems = materials.filter((item: MaterialProgressWithMaterial) => item.progress === 100).length;
-    const inProgressItems = materials.filter((item: MaterialProgressWithMaterial) => item.progress > 0 && item.progress < 100).length;
-    const totalBookmarks = materials.reduce((count: number, item: MaterialProgressWithMaterial) => {
-      try {
-        const bookmarks = item.bookmarks ? JSON.parse(item.bookmarks) : [];
-        return count + bookmarks.length;
-      } catch {
-        return count;
+    const completedItems = materials.filter(item => item.progress === 100).length;
+    const inProgressItems = materials.filter(item => item.progress > 0 && item.progress < 100).length;
+    const totalBookmarks = materials.reduce((count, item) => {
+      if (item.bookmarks) {
+        try {
+          const bookmarks = JSON.parse(item.bookmarks as string);
+          return count + (Array.isArray(bookmarks) ? bookmarks.length : 0);
+        } catch {
+          return count;
+        }
       }
+      return count;
     }, 0);
-    
-    const totalProgress = materials.reduce((sum: number, item: MaterialProgressWithMaterial) => sum + item.progress, 0);
+
+    const totalProgress = materials.reduce((sum, item) => sum + (item.progress || 0), 0);
     const averageCompletion = totalItems > 0 ? Math.round(totalProgress / totalItems) : 0;
 
     return NextResponse.json({
-      materials,
-      statistics: {
-        completedMaterials: completedItems,
-        inProgressMaterials: inProgressItems,
-        totalBookmarks,
-        averageCompletion,
-      }
+      totalItems,
+      completedItems,
+      inProgressItems,
+      totalBookmarks,
+      averageCompletion,
+      materials: materials.map(item => ({
+        id: item.id,
+        materialId: item.materialId,
+        status: item.status,
+        progress: item.progress,
+        notes: item.notes,
+        bookmarks: item.bookmarks ? JSON.parse(item.bookmarks as string) : null,
+        lastPosition: item.lastPosition,
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt,
+        material: item.material,
+      })),
     });
   } catch (error) {
-    console.error('Error fetching user progress:', error);
+    console.error('Error fetching progress:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch progress data' },
+      { error: 'Failed to fetch progress' },
       { status: 500 }
     );
   }
@@ -176,7 +153,7 @@ export async function POST(req: NextRequest) {
         materialId,
         progress: progress || 0,
         notes,
-        bookmarks: bookmarks ? JSON.stringify(bookmarks) : null,
+        bookmarks: bookmarks ? JSON.stringify(bookmarks) : Prisma.JsonNull,
         lastPosition: lastPosition || 0,
       },
     });

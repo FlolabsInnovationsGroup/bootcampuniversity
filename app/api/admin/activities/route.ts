@@ -61,17 +61,18 @@ export async function POST(req: Request) {
 
     const { action, entityType, entityId, details } = await req.json()
 
-    const activity = await prisma.activityLog.create({
+    const activityLog = await prisma.activityLog.create({
       data: {
-        userId: user.id,
+        userId: session.user.id,
         action,
         entityType,
         entityId,
-        details,
-      },
+        target: entityType,
+        details: details || null
+      }
     })
 
-    return NextResponse.json(activity)
+    return NextResponse.json(activityLog)
   } catch (error) {
     console.error('[ACTIVITIES_POST]', error)
     return new NextResponse('Internal Error', { status: 500 })

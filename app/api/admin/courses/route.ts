@@ -186,29 +186,30 @@ export async function PUT(req: NextRequest) {
       );
     }
     
+    const updateData = {
+      title: title || existingCourse.title,
+      description: description || existingCourse.description,
+      category: category || existingCourse.category,
+      status: status || existingCourse.status,
+      level: level || existingCourse.level,
+      estimatedHours: estimatedHours || existingCourse.estimatedHours,
+    };
+    
     const updatedCourse = await prisma.course.update({
       where: { id },
-      data: {
-        title: title || existingCourse.title,
-        description: description || existingCourse.description,
-        category: category || existingCourse.category,
-        status: status || existingCourse.status,
-        level: level || existingCourse.level,
-        estimatedHours: estimatedHours || existingCourse.estimatedHours,
-      },
+      data: updateData,
     });
 
     // Log course update with changed fields
-    const changes = Object.entries({
-      title,
-      description,
-      category,
-      status,
-      level,
-      estimatedHours,
-    })
-      .filter(([key, value]) => value !== undefined && value !== existingCourse[key])
-      .map(([key, value]) => `${key}: ${existingCourse[key]} → ${value}`)
+    const changes = Object.entries(updateData)
+      .filter(([key, value]) => {
+        const k = key as keyof typeof existingCourse;
+        return value !== undefined && value !== existingCourse[k];
+      })
+      .map(([key, value]) => {
+        const k = key as keyof typeof existingCourse;
+        return `${key}: ${existingCourse[k]} → ${value}`;
+      })
       .join(', ');
 
     await logActivity({

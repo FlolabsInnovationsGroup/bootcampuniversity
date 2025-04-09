@@ -160,6 +160,13 @@ const navigation = {
 };
 
 const Navbar = () => {
+  const pathname = usePathname();
+  const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/register') || pathname.startsWith('/forgot-password');
+
+  if (isAuthPage) {
+    return null;
+  }
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -168,15 +175,9 @@ const Navbar = () => {
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { theme, setTheme } = useTheme();
-  const pathname = usePathname();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
   const { data: session, status } = useSession();
-  const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/register') || pathname.startsWith('/forgot-password');
-
-  if (isAuthPage) {
-    return null;
-  }
 
   // Mount check
   useEffect(() => {

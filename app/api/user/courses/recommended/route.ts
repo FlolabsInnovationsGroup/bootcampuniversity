@@ -32,7 +32,7 @@ export async function GET() {
         AND: [
           {
             OR: [
-              { category: { in: Array.from(userCategories) } },
+              { category: { in: Array.from(userCategories).filter((cat): cat is string => cat !== null) } },
               { level: { in: Array.from(userLevels) } }
             ]
           },

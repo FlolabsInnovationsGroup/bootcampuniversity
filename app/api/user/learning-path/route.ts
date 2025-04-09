@@ -29,10 +29,10 @@ export async function GET(req: Request) {
     }
 
     // Get user's enrolled courses with their curricula
-    const enrolledCourses = await prisma.enrollment.findMany({
+    const enrollments = await prisma.enrollment.findMany({
       where: {
         userId: session.user.id,
-        status: 'ACTIVE'
+        status: 'ACTIVE',
       },
       include: {
         course: {
@@ -42,61 +42,52 @@ export async function GET(req: Request) {
                 sections: {
                   include: {
                     modules: true
-                  },
-                  orderBy: {
-                    order: 'asc'
                   }
                 }
               }
             }
           }
         },
-        progress: {
-          include: {
-            module: true
-          }
-        }
+        moduleProgress: true
       }
     });
 
-    // Transform the data for the learning path view
-    const sections: SectionWithProgress[] = enrolledCourses.flatMap(enrollment => {
+    const learningPath = enrollments.map(enrollment => {
       const moduleProgressMap = new Map(
-        enrollment.progress.map(p => [p.moduleId, p])
+        enrollment.moduleProgress.map(p => [p.moduleId, p])
       );
-      
-      return enrollment.course.curriculum?.sections.map(section => {
-        const modules: ModuleWithProgress[] = section.modules.map(module => {
+
+      const sections = enrollment.course.curriculum?.sections.map(section => {
+        const modules = section.modules.map(module => {
           const progress = moduleProgressMap.get(module.id);
           const isCompleted = progress?.status === 'COMPLETED';
-          const previousModule = section.modules[module.order - 1];
-          const previousModuleCompleted = module.order === 0 || 
+          const previousModule = section.modules.find(m => m.order === module.order - 1);
+          const isUnlocked = module.order === 1 || 
             (previousModule && moduleProgressMap.get(previousModule.id)?.status === 'COMPLETED');
 
           return {
-            id: module.id,
-            title: module.title,
-            type: module.type,
-            duration: module.duration,
-            completed: isCompleted,
-            locked: !previousModuleCompleted && module.order !== 0
+            ...module,
+            progress: progress || null,
+            isCompleted,
+            isUnlocked
           };
         });
 
-        const completedModules = modules.filter(m => m.completed).length;
-        const totalModules = modules.length;
-        const progress = totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0;
-
         return {
-          id: section.id,
-          title: section.title,
-          modules,
-          progress
+          ...section,
+          modules
         };
       }) || [];
+
+      return {
+        id: enrollment.id,
+        courseId: enrollment.courseId,
+        courseName: enrollment.course.title,
+        sections
+      };
     });
 
-    return NextResponse.json({ sections });
+    return NextResponse.json({ learningPath });
   } catch (error) {
     console.error('Error fetching learning path:', error);
     return new NextResponse('Internal Server Error', { status: 500 });

@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth';
 import { prisma } from '@/lib/prisma';
 import { authOptions } from '@/lib/auth/options';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
@@ -27,6 +29,8 @@ export async function GET() {
         id: true,
       },
     });
+
+    const averageCompletion = Math.round((materialProgressStats._avg?.progress || 0) * 100);
 
     // Calculate active users (users with activity in the last 7 days)
     const activeUsers = await prisma.user.count({
@@ -63,7 +67,7 @@ export async function GET() {
         // In a real app, these would be actual counts from the database
         totalCourses: 32,
         totalMaterials: materialProgressStats._count.id || 0,
-        averageCompletion: Math.round((materialProgressStats._avg.progress || 0) * 100),
+        averageCompletion,
         activeUsers,
       },
       recentUsers,

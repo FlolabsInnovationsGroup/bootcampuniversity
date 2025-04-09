@@ -1,4 +1,3 @@
-import { load } from 'cheerio'
 import { google } from 'googleapis'
 import { prisma } from '@/lib/prisma'
 
@@ -10,71 +9,82 @@ export interface ImportedMaterial {
   title: string
   url: string
   content?: string
+  order: number
 }
 
-const youtube = google.youtube('v3')
-
 async function importFromYouTube(playlistId: string): Promise<ImportedMaterial[]> {
-  const apiKey = process.env.YOUTUBE_API_KEY
-  if (!apiKey) {
-    throw new Error('YouTube API key not configured')
-  }
-
+  const youtube = google.youtube('v3')
   const materials: ImportedMaterial[] = []
-  let nextPageToken: string | undefined
 
-  do {
+  try {
     const response = await youtube.playlistItems.list({
-      key: apiKey,
       part: ['snippet'],
       playlistId,
       maxResults: 50,
-      pageToken: nextPageToken,
     })
 
-    const items = response.data.items || []
-    for (const item of items) {
-      if (item.snippet) {
-        materials.push({
-          type: 'VIDEO',
-          title: item.snippet.title || '',
-          url: `https://www.youtube.com/watch?v=${item.snippet.resourceId?.videoId}`,
-          content: item.snippet.description,
-        })
-      }
+    if (response.data.items) {
+      materials.push(
+        ...response.data.items.map((item, index) => ({
+          type: 'VIDEO' as MaterialType,
+          title: item.snippet?.title || 'Untitled Video',
+          url: `https://www.youtube.com/watch?v=${item.snippet?.resourceId?.videoId}`,
+          content: item.snippet?.description || '',
+          order: index + 1,
+        }))
+      )
     }
-
-    nextPageToken = response.data.nextPageToken
-  } while (nextPageToken)
+  } catch (error) {
+    console.error('Error fetching YouTube playlist:', error)
+    throw new Error('Failed to import from YouTube')
+  }
 
   return materials
 }
 
 async function importFromWebsite(url: string): Promise<ImportedMaterial[]> {
-  const response = await fetch(url)
-  const html = await response.text()
-  const $ = load(html)
-  const materials: ImportedMaterial[] = []
+  try {
+    const response = await fetch(url)
+    const html = await response.text()
+    const materials: ImportedMaterial[] = []
 
-  // Find main content area (customize selectors based on target website structure)
-  const mainContent = $('main, article, .content')
-  
-  // Extract sections or articles
-  mainContent.find('h1, h2, h3').each((_, element) => {
-    const title = $(element).text().trim()
-    const content = $(element).nextUntil('h1, h2, h3').text().trim()
+    // Create a temporary DOM element to parse the HTML
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(html, 'text/html')
+
+    // Find main content area (customize selectors based on target website structure)
+    const mainContent = doc.querySelector('main, article, .content')
     
-    if (title && content) {
-      materials.push({
-        type: 'ARTICLE',
-        title,
-        url: url + '#' + title.toLowerCase().replace(/\s+/g, '-'),
-        content,
+    if (mainContent) {
+      // Extract headings and their content
+      const headings = mainContent.querySelectorAll('h1, h2, h3')
+      headings.forEach((heading, index) => {
+        let content = ''
+        let nextElement = heading.nextElementSibling
+
+        // Collect content until the next heading
+        while (nextElement && !nextElement.matches('h1, h2, h3')) {
+          content += nextElement.textContent + '\n'
+          nextElement = nextElement.nextElementSibling
+        }
+
+        if (heading.textContent && content.trim()) {
+          materials.push({
+            type: 'ARTICLE',
+            title: heading.textContent.trim(),
+            url: `${url}#${heading.textContent.trim().toLowerCase().replace(/\s+/g, '-')}`,
+            content: content.trim(),
+            order: index + 1,
+          })
+        }
       })
     }
-  })
 
-  return materials
+    return materials
+  } catch (error) {
+    console.error('Error importing from website:', error)
+    throw new Error('Failed to import from website')
+  }
 }
 
 export async function importCourseContent(
@@ -103,12 +113,16 @@ export async function importAndSaveMaterials(
 ): Promise<void> {
   try {
     // Create all materials in a transaction
-    await prisma.$transaction(
+    const createdMaterials = await Promise.all(
       materials.map((material) =>
         prisma.material.create({
           data: {
-            ...material,
             courseId,
+            type: material.type,
+            title: material.title,
+            url: material.url,
+            content: material.content,
+            order: material.order,
           },
         })
       )

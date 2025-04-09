@@ -38,6 +38,18 @@ export async function GET(
           materialId: params.materialId,
         },
       },
+      select: {
+        id: true,
+        userId: true,
+        materialId: true,
+        status: true,
+        progress: true,
+        notes: true,
+        bookmarks: true,
+        lastPosition: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
     if (!materialProgress) {
@@ -53,9 +65,9 @@ export async function GET(
     let bookmarks = [];
     if (materialProgress.bookmarks) {
       try {
-        bookmarks = JSON.parse(materialProgress.bookmarks);
+        bookmarks = JSON.parse(materialProgress.bookmarks.toString());
       } catch (error) {
-        console.error('Error parsing bookmarks JSON:', error);
+        console.error('Error parsing bookmarks:', error);
       }
     }
 
@@ -139,9 +151,9 @@ export async function PATCH(
     let bookmarks = [];
     if (materialProgress.bookmarks) {
       try {
-        bookmarks = JSON.parse(materialProgress.bookmarks);
+        bookmarks = JSON.parse(materialProgress.bookmarks.toString());
       } catch (error) {
-        console.error('Error parsing bookmarks JSON for response:', error);
+        console.error('Error parsing bookmarks:', error);
       }
     }
 

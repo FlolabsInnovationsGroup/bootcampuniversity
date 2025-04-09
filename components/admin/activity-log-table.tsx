@@ -17,10 +17,11 @@ interface ActivityLog {
   id: string
   userId: string
   action: string
-  entityType: string
-  entityId: string
-  details: string
-  createdAt: string
+  target: string | null
+  details: any
+  entityType: string | null
+  entityId: string | null
+  createdAt: Date
   user: {
     name: string | null
     email: string | null
@@ -177,10 +178,10 @@ export function ActivityLogTable({ initialLogs, initialPagination }: ActivityLog
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">
-                      {log.entityType}
+                      {log.target}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500">
-                      {log.details}
+                      {JSON.stringify(log.details)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {formatDistance(new Date(log.createdAt), new Date(), { addSuffix: true })}
