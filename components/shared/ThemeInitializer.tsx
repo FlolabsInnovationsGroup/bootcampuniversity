@@ -23,8 +23,8 @@ export function ThemeInitializer() {
     const html = document.documentElement;
     
     function applyTheme() {
-      const prefersDark = darkModeMediaQuery.matches;
-      const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+      const prefersDark = false; // Always prefer light mode
+      const isDark = savedTheme === 'dark'; // Only use dark if explicitly saved
       
       // Add transition class before theme changes
       html.classList.add('transitioning-theme');
@@ -88,12 +88,10 @@ export function ThemeInitializer() {
       applyTheme();
     };
     
-    // Listen for system theme changes
+    // Listen for system theme changes - but don't automatically apply them
     darkModeMediaQuery.addEventListener('change', (e) => {
-      if (!localStorage.getItem('theme')) {
-        setTheme(e.matches ? 'dark' : 'light');
-        applyTheme();
-      }
+      // Don't automatically change theme based on system preference
+      // Only apply if user has manually chosen a theme
     });
     
     // Create a MutationObserver to watch for class changes on <html>

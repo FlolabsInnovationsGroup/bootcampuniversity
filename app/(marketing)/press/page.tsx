@@ -4,18 +4,18 @@ import Link from 'next/link'
 const pressReleases = [
   {
     date: 'March 15, 2024',
-    title: 'Innovation Bootcamp Launches New AI & Machine Learning Program',
-    excerpt: 'Responding to industry demand, Innovation Bootcamp introduces a comprehensive program focused on artificial intelligence and machine learning.',
+    title: 'Innovation Bootcamp University Launches New AI & Machine Learning Program',
+    excerpt: 'Responding to industry demand, Innovation Bootcamp University introduces a comprehensive program focused on artificial intelligence and machine learning.',
   },
   {
     date: 'February 1, 2024',
     title: 'Partnership Announcement with Leading Tech Companies',
-    excerpt: 'Innovation Bootcamp partners with top tech companies to provide enhanced career opportunities for graduates.',
+    excerpt: 'Innovation Bootcamp University partners with top tech companies to provide enhanced career opportunities for graduates.',
   },
   {
     date: 'January 10, 2024',
     title: '2023 Student Success Report',
-    excerpt: '95% of Innovation Bootcamp graduates secured technical roles within 6 months of program completion.',
+    excerpt: '95% of Innovation Bootcamp University graduates secured technical roles within 6 months of program completion.',
   },
 ]
 
@@ -40,19 +40,19 @@ const mediaResources = [
 const coverageHighlights = [
   {
     source: 'TechCrunch',
-    title: 'Innovation Bootcamp Revolutionizes Tech Education',
+    title: 'Innovation Bootcamp University Revolutionizes Tech Education',
     date: 'March 2024',
     url: 'https://techcrunch.com',
   },
   {
     source: 'Forbes',
-    title: "The Future of Tech Education: Innovation Bootcamp's Approach",
+    title: "The Future of Tech Education: Innovation Bootcamp University's Approach",
     date: 'February 2024',
     url: 'https://forbes.com',
   },
   {
     source: 'EdTech Magazine',
-    title: 'How Innovation Bootcamp is Bridging the Tech Skills Gap',
+    title: 'How Innovation Bootcamp University is Bridging the Tech Skills Gap',
     date: 'January 2024',
     url: 'https://edtechmagazine.com',
   },
@@ -65,7 +65,7 @@ export default function PressPage() {
       <section className="text-center mb-20">
         <h1 className="text-4xl font-bold mb-6">Press & Media</h1>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-          Get the latest news and updates about Innovation Bootcamp. For press inquiries, 
+          Get the latest news and updates about Innovation Bootcamp University. For press inquiries, 
           please contact our media relations team.
         </p>
         <div className="mt-8">

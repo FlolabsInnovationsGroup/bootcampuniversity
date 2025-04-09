@@ -73,7 +73,7 @@ export default function HandbookPage() {
           Student Handbook
         </h1>
         <p className="text-xl text-slate-600 dark:text-slate-400 mb-8">
-          Everything you need to know about your journey with Innovation Bootcamp
+          Everything you need to know about your journey with Innovation Bootcamp University
         </p>
         <Link
           href="/faqs"

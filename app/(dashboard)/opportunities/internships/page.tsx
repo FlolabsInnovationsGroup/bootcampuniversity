@@ -29,7 +29,7 @@ export default function InternshipsPage() {
     {
       id: 'bootcamp-platform',
       title: 'Bootcamp Platform',
-      description: 'Creating the website and learning management system for Innovation Bootcamp',
+      description: 'Creating the website and learning management system for Innovation Bootcamp University',
       image: '/projects/bootcamp-platform.jpg',
       track: 'Web Development',
       trackColor: 'blue',
@@ -74,7 +74,7 @@ export default function InternshipsPage() {
 
   const testimonials = [
     {
-      quote: "The co-op model at Innovation Bootcamp gave me real-world experience that was immediately valuable to employers. I started in Tier 1 with basic knowledge and progressed to Tier 3 where I led development teams. The progression felt natural and supportive.",
+      quote: "The co-op model at Innovation Bootcamp University gave me real-world experience that was immediately valuable to employers. I started in Tier 1 with basic knowledge and progressed to Tier 3 where I led development teams. The progression felt natural and supportive.",
       name: "Jamie Chen",
       role: "Former Tier 3 Student, now Software Engineer at TechCorp",
       image: "/testimonials/jamie.jpg"

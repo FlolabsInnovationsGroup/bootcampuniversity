@@ -9,7 +9,7 @@ export default function TermsPage() {
       <section>
         <h2>1. Agreement to Terms</h2>
         <p>
-          By accessing and using Innovation Bootcamp's website and services, you agree 
+          By accessing and using Innovation Bootcamp University's website and services, you agree 
           to be bound by these Terms of Service. If you do not agree to these terms, 
           please do not use our services.
         </p>
@@ -18,7 +18,7 @@ export default function TermsPage() {
       <section>
         <h2>2. Services Description</h2>
         <p>
-          Innovation Bootcamp provides educational services, including but not limited to:
+          Innovation Bootcamp University provides educational services, including but not limited to:
         </p>
         <ul>
           <li>Online coding bootcamps and courses</li>
@@ -105,7 +105,7 @@ export default function TermsPage() {
       <section>
         <h2>8. Limitation of Liability</h2>
         <p>
-          Innovation Bootcamp provides its services "as is" and makes no warranties, 
+          Innovation Bootcamp University provides its services "as is" and makes no warranties, 
           express or implied. We shall not be liable for any indirect, incidental, 
           special, consequential, or punitive damages.
         </p>

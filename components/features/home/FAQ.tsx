@@ -54,7 +54,7 @@ const faqs: FAQItem[] = [
     category: 'general',
   },
   {
-    question: 'What makes Innovation Bootcamp different?',
+    question: 'What makes Innovation Bootcamp University different?',
     answer:
       'Our cooperative education approach bridges the gap between education and employment. You\'ll get hands-on experience with real projects and start earning while still learning, providing a practical pathway into the tech industry.',
     category: 'general',

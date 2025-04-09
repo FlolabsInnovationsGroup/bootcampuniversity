@@ -15,7 +15,6 @@ import {
   Sun,
   Moon,
   ArrowRight,
-  Laptop,
   LogOut,
   User,
 } from 'lucide-react';
@@ -212,7 +211,7 @@ const Navbar = () => {
   // Handle theme change with animation
   const handleThemeChange = () => {
     setIsThemeChanging(true);
-    const nextTheme = theme === 'dark' ? 'light' : theme === 'light' ? 'system' : 'dark';
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
     setTimeout(() => setIsThemeChanging(false), 400);
   };
@@ -233,7 +232,7 @@ const Navbar = () => {
   };
 
   // Get the current theme icon
-  const ThemeIcon = mounted ? (theme === 'dark' ? Moon : theme === 'light' ? Sun : Laptop) : Laptop;
+  const ThemeIcon = mounted ? (theme === 'dark' ? Moon : Sun) : Sun;
 
   // Animation variants
   const navVariants = {
@@ -295,14 +294,9 @@ const Navbar = () => {
               <div className="relative w-8 h-8">
                 <Logo />
               </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-base text-slate-900 dark:text-white">
-                  Innovation Bootcamp
-                </span>
-                <span className="text-base text-slate-600 dark:text-slate-400 -mt-1">
-                  University
-                </span>
-              </div>
+              <span className="font-bold text-lg bg-gradient-to-br from-primary-600 via-primary-500 to-secondary-500 bg-clip-text text-transparent drop-shadow-sm hover:drop-shadow-md transition-all">
+                Innovation Bootcamp University
+              </span>
             </Link>
           </div>
 
