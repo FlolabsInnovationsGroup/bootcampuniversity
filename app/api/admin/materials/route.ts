@@ -32,36 +32,21 @@ export async function GET(req: NextRequest) {
 
     // Get query parameters
     const { searchParams } = new URL(req.url);
+    const type = searchParams.get('type');
     const courseId = searchParams.get('courseId');
-    const materialId = searchParams.get('id');
-    
-    // If materialId is provided, return a single material
-    if (materialId) {
-      const material = await prisma.material.findUnique({
-        where: { id: materialId },
-        include: {
-          course: {
-            select: {
-              id: true,
-              title: true,
-            },
-          },
-        },
-      });
-      
-      if (!material) {
-        return NextResponse.json(
-          { error: 'Material not found' },
-          { status: 404 }
-        );
-      }
-      
-      return NextResponse.json({ material });
-    }
+    const search = searchParams.get('search');
     
     // Build filter conditions
-    const where: any = {};
-    if (courseId) where.courseId = courseId;
+    const where: any = {
+      ...(type && { type }),
+      ...(courseId && { courseId }),
+      ...(search && {
+        OR: [
+          { title: { contains: search, mode: 'insensitive' } },
+          { description: { contains: search, mode: 'insensitive' } },
+        ],
+      }),
+    };
     
     // Fetch materials with filters
     const materials = await prisma.material.findMany({
@@ -73,11 +58,15 @@ export async function GET(req: NextRequest) {
             title: true,
           },
         },
+        _count: {
+          select: {
+            progress: true,
+          },
+        },
       },
-      orderBy: [
-        { courseId: 'asc' },
-        { order: 'asc' },
-      ],
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
     
     return NextResponse.json({ materials });

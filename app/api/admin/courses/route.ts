@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth/options';
+import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { importCourseContent } from '@/lib/course-importer';
+import { logActivity } from '@/lib/activity-logger';
 
 // Helper function to check if user is an admin
 async function isAdmin(req: NextRequest) {
@@ -22,23 +24,26 @@ async function isAdmin(req: NextRequest) {
 // GET - Fetch all courses (with optional filtering)
 export async function GET(req: NextRequest) {
   try {
-    // Check if user is admin
-    if (!await isAdmin(req)) {
-      return NextResponse.json(
-        { error: 'Unauthorized. Admin access required.' },
-        { status: 403 }
-      );
+    const session = await getServerSession(authOptions);
+    if (!session?.user || session.user.role !== 'ADMIN') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get query parameters
     const { searchParams } = new URL(req.url);
-    const status = searchParams.get('status');
+    const query = searchParams.get('query');
     const category = searchParams.get('category');
+    const status = searchParams.get('status');
     
-    // Build filter conditions
-    const where: any = {};
-    if (status) where.status = status;
-    if (category) where.category = category;
+    const where: any = {
+      ...(query && {
+        OR: [
+          { title: { contains: query } },
+          { description: { contains: query } },
+        ],
+      }),
+      ...(category && { category }),
+      ...(status && { status }),
+    };
     
     const courses = await prisma.course.findMany({
       where,
@@ -68,39 +73,69 @@ export async function GET(req: NextRequest) {
 // POST - Create a new course
 export async function POST(req: NextRequest) {
   try {
-    // Check if user is admin
-    if (!await isAdmin(req)) {
-      return NextResponse.json(
-        { error: 'Unauthorized. Admin access required.' },
-        { status: 403 }
-      );
+    const session = await getServerSession(authOptions);
+    if (!session?.user || session.user.role !== 'ADMIN') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    
-    // Get request body
-    const body = await req.json();
-    const { title, description, category, status, coverImage, duration } = body;
-    
-    // Validate required fields
-    if (!title || !description || !category) {
-      return NextResponse.json(
-        { error: 'Title, description, and category are required fields' },
-        { status: 400 }
-      );
-    }
-    
-    // Create course
+
+    const {
+      title,
+      description,
+      sourceType,
+      sourceUrl,
+      category,
+      level,
+      estimatedHours,
+    } = await req.json();
+
     const course = await prisma.course.create({
       data: {
         title,
         description,
+        sourceType,
+        sourceUrl: sourceUrl || '',
         category,
-        status: status || 'draft',
-        coverImage,
-        duration: duration ? parseInt(duration) : null,
+        level,
+        estimatedHours,
+        status: 'DRAFT',
+        creatorId: session.user.id,
       },
     });
-    
-    return NextResponse.json({ course }, { status: 201 });
+
+    // Log course creation
+    await logActivity({
+      userId: session.user.id,
+      action: 'created',
+      entityType: 'course',
+      entityId: course.id,
+      details: `Created course: ${title} (${sourceType})`
+    });
+
+    if (sourceType !== 'CUSTOM' && sourceUrl) {
+      const materials = await importCourseContent(sourceType, sourceUrl);
+      
+      await prisma.material.createMany({
+        data: materials.map((material, index) => ({
+          courseId: course.id,
+          type: material.type,
+          title: material.title,
+          url: material.url,
+          content: material.content,
+          order: index + 1,
+        })),
+      });
+
+      // Log materials import
+      await logActivity({
+        userId: session.user.id,
+        action: 'imported',
+        entityType: 'material',
+        entityId: course.id,
+        details: `Imported ${materials.length} materials for course: ${title}`
+      });
+    }
+
+    return NextResponse.json({ course });
   } catch (error) {
     console.error('Error creating course:', error);
     return NextResponse.json(
@@ -113,19 +148,17 @@ export async function POST(req: NextRequest) {
 // PUT - Update an existing course
 export async function PUT(req: NextRequest) {
   try {
-    // Check if user is admin
-    if (!await isAdmin(req)) {
+    const session = await getServerSession(authOptions);
+    if (!session?.user || session.user.role !== 'ADMIN') {
       return NextResponse.json(
         { error: 'Unauthorized. Admin access required.' },
         { status: 403 }
       );
     }
     
-    // Get request body
     const body = await req.json();
-    const { id, title, description, category, status, coverImage, duration } = body;
+    const { id, title, description, category, status, level, estimatedHours } = body;
     
-    // Validate required fields
     if (!id) {
       return NextResponse.json(
         { error: 'Course ID is required' },
@@ -133,9 +166,17 @@ export async function PUT(req: NextRequest) {
       );
     }
     
-    // Check if course exists
     const existingCourse = await prisma.course.findUnique({
       where: { id },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        category: true,
+        status: true,
+        level: true,
+        estimatedHours: true,
+      },
     });
     
     if (!existingCourse) {
@@ -145,17 +186,38 @@ export async function PUT(req: NextRequest) {
       );
     }
     
-    // Update course
+    const updateData = {
+      title: title || existingCourse.title,
+      description: description || existingCourse.description,
+      category: category || existingCourse.category,
+      status: status || existingCourse.status,
+      level: level || existingCourse.level,
+      estimatedHours: estimatedHours || existingCourse.estimatedHours,
+    };
+    
     const updatedCourse = await prisma.course.update({
       where: { id },
-      data: {
-        title: title || existingCourse.title,
-        description: description || existingCourse.description,
-        category: category || existingCourse.category,
-        status: status || existingCourse.status,
-        coverImage: coverImage !== undefined ? coverImage : existingCourse.coverImage,
-        duration: duration !== undefined ? parseInt(duration) : existingCourse.duration,
-      },
+      data: updateData,
+    });
+
+    // Log course update with changed fields
+    const changes = Object.entries(updateData)
+      .filter(([key, value]) => {
+        const k = key as keyof typeof existingCourse;
+        return value !== undefined && value !== existingCourse[k];
+      })
+      .map(([key, value]) => {
+        const k = key as keyof typeof existingCourse;
+        return `${key}: ${existingCourse[k]} → ${value}`;
+      })
+      .join(', ');
+
+    await logActivity({
+      userId: session.user.id,
+      action: 'updated',
+      entityType: 'course',
+      entityId: id,
+      details: `Updated course: ${existingCourse.title} - Changes: ${changes}`,
     });
     
     return NextResponse.json({ course: updatedCourse });
@@ -171,15 +233,14 @@ export async function PUT(req: NextRequest) {
 // DELETE - Delete a course
 export async function DELETE(req: NextRequest) {
   try {
-    // Check if user is admin
-    if (!await isAdmin(req)) {
+    const session = await getServerSession(authOptions);
+    if (!session?.user || session.user.role !== 'ADMIN') {
       return NextResponse.json(
         { error: 'Unauthorized. Admin access required.' },
         { status: 403 }
       );
     }
     
-    // Get course ID from query params
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
     
@@ -190,9 +251,12 @@ export async function DELETE(req: NextRequest) {
       );
     }
     
-    // Check if course exists
     const existingCourse = await prisma.course.findUnique({
       where: { id },
+      select: {
+        id: true,
+        title: true,
+      },
     });
     
     if (!existingCourse) {
@@ -202,9 +266,17 @@ export async function DELETE(req: NextRequest) {
       );
     }
     
-    // Delete course (will cascade delete materials due to relationship)
     await prisma.course.delete({
       where: { id },
+    });
+
+    // Log course deletion
+    await logActivity({
+      userId: session.user.id,
+      action: 'deleted',
+      entityType: 'course',
+      entityId: id,
+      details: `Deleted course: ${existingCourse.title}`
     });
     
     return NextResponse.json({ success: true });

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 
@@ -185,37 +186,17 @@ export async function POST(request: Request) {
       });
     } else {
       // Create new progress entry
+      const session = await getServerSession();
+      if (!session?.user) {
+        return new NextResponse('Unauthorized', { status: 401 });
+      }
+
       result = await prisma.materialProgress.create({
         data: {
-          userId,
+          userId: session.user.id,
           materialId,
-          progress: progress || 0,
-          notes,
-          bookmarks,
-          lastPosition: lastPosition || 0,
-        },
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-            },
-          },
-          material: {
-            select: {
-              id: true,
-              title: true,
-              courseId: true,
-              course: {
-                select: {
-                  id: true,
-                  title: true,
-                },
-              },
-            },
-          },
-        },
+          status: progress !== undefined && progress >= 100 ? 'COMPLETED' : 'NOT_STARTED'
+        }
       });
     }
 

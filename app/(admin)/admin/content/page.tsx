@@ -1,175 +1,278 @@
-'use client';
+import { getServerSession } from 'next-auth'
+import { redirect } from 'next/navigation'
+import { authOptions } from '@/lib/auth'
+import { prisma } from '@/lib/prisma'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
+import { Plus, Search, Video, FileText, Link as LinkIcon } from 'lucide-react'
+import { Input } from '@/components/ui/input'
 
-import { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { GraduationCap, BookOpen, FileText, FolderPlus, Loader2 } from 'lucide-react';
-import Link from 'next/link';
-import { useToast } from '@/components/ui/use-toast';
+async function getMaterials() {
+  const materials = await prisma.material.findMany({
+    include: {
+      course: {
+        select: {
+          title: true,
+        },
+      },
+      _count: {
+        select: {
+          progress: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  })
 
-interface Course {
-  id: string;
-  materialsCount: number;
+  return materials.map(material => ({
+    id: material.id,
+    title: material.title,
+    type: material.type,
+    description: material.content || '',
+    duration: material.type === 'video' ? material.content : null,
+    course: material.course.title,
+    progress: material._count.progress,
+    createdAt: material.createdAt.toLocaleDateString()
+  }))
 }
 
-export default function ContentPage() {
-  const [stats, setStats] = useState({
-    coursesCount: 0,
-    materialsCount: 0,
-    resourcesCount: 0,
-  });
-  const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
+export default async function ContentLibraryPage() {
+  const session = await getServerSession(authOptions)
+  if (!session || session.user.role !== 'admin') {
+    redirect('/login')
+  }
 
-  useEffect(() => {
-    const fetchContentStats = async () => {
-      try {
-        // In a production app, we would fetch this from an API
-        const coursesResponse = await fetch('/api/admin/courses');
-        if (!coursesResponse.ok) {
-          throw new Error('Failed to fetch courses');
-        }
-        const courses: Course[] = await coursesResponse.json();
-        
-        setStats({
-          coursesCount: courses.length,
-          materialsCount: courses.reduce((total: number, course: Course) => total + course.materialsCount, 0),
-          resourcesCount: 52, // We'll use a static number for now
-        });
-      } catch (error) {
-        console.error('Error fetching content stats:', error);
-        toast({
-          title: 'Error',
-          description: 'Failed to load content statistics',
-          variant: 'destructive',
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchContentStats();
-  }, [toast]);
+  const materials = await getMaterials()
+  const videos = materials.filter(m => m.type === 'video')
+  const articles = materials.filter(m => m.type === 'article')
+  const resources = materials.filter(m => m.type === 'resource')
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold tracking-tight">Content Management</h1>
-        <Button asChild>
-          <Link href="/admin/content/courses">
-            <FolderPlus className="mr-2 h-4 w-4" />
-            Create New Content
-          </Link>
-        </Button>
+        <h2 className="text-3xl font-bold tracking-tight">Content Library</h2>
+        <div className="flex gap-2">
+          <Button asChild variant="outline">
+            <Link href="/admin/content/videos/new">
+              <Video className="mr-2 h-4 w-4" />
+              Add Video
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href="/admin/content/articles/new">
+              <FileText className="mr-2 h-4 w-4" />
+              Add Article
+            </Link>
+          </Button>
+          <Button asChild>
+            <Link href="/admin/content/new">
+              <Plus className="mr-2 h-4 w-4" />
+              Add Content
+            </Link>
+          </Button>
+        </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Link href="/admin/content/courses">
-          <Card className="hover:bg-muted/50 transition-colors cursor-pointer h-full">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-lg font-medium">Courses</CardTitle>
-              <GraduationCap className="h-5 w-5 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Manage courses and learning paths in the platform.
-              </p>
-              <div className="mt-4 font-medium text-sm">
-                {loading ? (
-                  <Loader2 className="h-4 w-4 animate-spin inline mr-2" />
-                ) : (
-                  `${stats.coursesCount} Course${stats.coursesCount !== 1 ? 's' : ''}`
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/admin/content/materials">
-          <Card className="hover:bg-muted/50 transition-colors cursor-pointer h-full">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-lg font-medium">Learning Materials</CardTitle>
-              <FileText className="h-5 w-5 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Manage videos, articles, and other learning materials.
-              </p>
-              <div className="mt-4 font-medium text-sm">
-                {loading ? (
-                  <Loader2 className="h-4 w-4 animate-spin inline mr-2" />
-                ) : (
-                  `${stats.materialsCount} Material${stats.materialsCount !== 1 ? 's' : ''}`
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/admin/content/resources">
-          <Card className="hover:bg-muted/50 transition-colors cursor-pointer h-full">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-lg font-medium">Resources</CardTitle>
-              <BookOpen className="h-5 w-5 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Manage downloadable resources and supplementary materials.
-              </p>
-              <div className="mt-4 font-medium text-sm">
-                {loading ? (
-                  <Loader2 className="h-4 w-4 animate-spin inline mr-2" />
-                ) : (
-                  `${stats.resourcesCount} Resource${stats.resourcesCount !== 1 ? 's' : ''}`
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
+      <div className="flex items-center gap-4">
+        <div className="flex-1 relative">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input placeholder="Search content..." className="pl-8" />
+        </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Updates</CardTitle>
-          <CardDescription>Latest content changes and additions.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="grid grid-cols-[1fr_auto] items-center gap-4 border-b pb-4">
-              <div>
-                <p className="font-medium">Introduction to Design Thinking</p>
-                <p className="text-sm text-muted-foreground">
-                  Course updated with new materials
-                </p>
+      <Tabs defaultValue="all" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="all">All Materials</TabsTrigger>
+          <TabsTrigger value="videos">Videos</TabsTrigger>
+          <TabsTrigger value="articles">Articles</TabsTrigger>
+          <TabsTrigger value="resources">Resources</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="all">
+          <Card>
+            <CardHeader>
+              <CardTitle>All Materials</CardTitle>
+              <CardDescription>
+                Manage and organize all your learning materials
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="divide-y divide-border rounded-md border">
+                {materials.map((material) => (
+                  <div
+                    key={material.id}
+                    className="flex items-center justify-between p-4"
+                  >
+                    <div className="flex items-center gap-4">
+                      {material.type === 'video' && <Video className="h-4 w-4" />}
+                      {material.type === 'article' && <FileText className="h-4 w-4" />}
+                      {material.type === 'resource' && <LinkIcon className="h-4 w-4" />}
+                      <div>
+                        <div className="font-medium">{material.title}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {material.description}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="text-sm">{material.duration || 'N/A'}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {material.course || 'Uncategorized'}
+                      </div>
+                      <div>{material.progress}</div>
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm" asChild>
+                          <Link href={`/admin/content/${material.id}`}>
+                            Edit
+                          </Link>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="text-sm text-muted-foreground">2 hours ago</div>
-            </div>
-            <div className="grid grid-cols-[1fr_auto] items-center gap-4 border-b pb-4">
-              <div>
-                <p className="font-medium">Problem Solving Techniques</p>
-                <p className="text-sm text-muted-foreground">
-                  New video added to module 3
-                </p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="videos">
+          <Card>
+            <CardHeader>
+              <CardTitle>Video Content</CardTitle>
+              <CardDescription>
+                Manage your video lessons and tutorials
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="divide-y divide-border rounded-md border">
+                {videos.map((video) => (
+                  <div
+                    key={video.id}
+                    className="flex items-center justify-between p-4"
+                  >
+                    <div className="flex items-center gap-4">
+                      <Video className="h-4 w-4" />
+                      <div>
+                        <div className="font-medium">{video.title}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {video.description}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="text-sm">{video.duration || 'N/A'}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {video.course || 'Uncategorized'}
+                      </div>
+                      <div>{video.progress}</div>
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm" asChild>
+                          <Link href={`/admin/content/${video.id}`}>
+                            Edit
+                          </Link>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="text-sm text-muted-foreground">Yesterday</div>
-            </div>
-            <div className="grid grid-cols-[1fr_auto] items-center gap-4 border-b pb-4">
-              <div>
-                <p className="font-medium">Innovation Principles</p>
-                <p className="text-sm text-muted-foreground">
-                  Course created with 5 modules
-                </p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="articles">
+          <Card>
+            <CardHeader>
+              <CardTitle>Articles</CardTitle>
+              <CardDescription>
+                Manage your written content and documentation
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="divide-y divide-border rounded-md border">
+                {articles.map((article) => (
+                  <div
+                    key={article.id}
+                    className="flex items-center justify-between p-4"
+                  >
+                    <div className="flex items-center gap-4">
+                      <FileText className="h-4 w-4" />
+                      <div>
+                        <div className="font-medium">{article.title}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {article.description}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="text-sm">Admin</div>
+                      <div className="text-sm text-muted-foreground">
+                        {article.course || 'Uncategorized'}
+                      </div>
+                      <div>{article.progress}</div>
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm" asChild>
+                          <Link href={`/admin/content/${article.id}`}>
+                            Edit
+                          </Link>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="text-sm text-muted-foreground">3 days ago</div>
-            </div>
-            <div className="flex justify-center">
-              <Button variant="outline" size="sm">
-                View All
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="resources">
+          <Card>
+            <CardHeader>
+              <CardTitle>Additional Resources</CardTitle>
+              <CardDescription>
+                Manage supplementary materials and external resources
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="divide-y divide-border rounded-md border">
+                {resources.map((resource) => (
+                  <div
+                    key={resource.id}
+                    className="flex items-center justify-between p-4"
+                  >
+                    <div className="flex items-center gap-4">
+                      <LinkIcon className="h-4 w-4" />
+                      <div>
+                        <div className="font-medium">{resource.title}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {resource.description}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="text-sm text-muted-foreground">
+                        {resource.course || 'Uncategorized'}
+                      </div>
+                      <div>{resource.progress}</div>
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm" asChild>
+                          <Link href={`/admin/content/${resource.id}`}>
+                            Edit
+                          </Link>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
-  );
+  )
 }
