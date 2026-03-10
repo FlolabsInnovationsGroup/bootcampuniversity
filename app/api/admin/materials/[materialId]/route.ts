@@ -4,13 +4,14 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     materialId: string;
-  };
+  }>;
 }
 
 // GET /api/admin/materials/[materialId]
-export async function GET(request: Request, { params }: RouteParams) {
+export async function GET(request: Request, props: RouteParams) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== 'admin') {
     return new NextResponse('Unauthorized', { status: 401 });
@@ -48,7 +49,8 @@ export async function GET(request: Request, { params }: RouteParams) {
 }
 
 // PUT /api/admin/materials/[materialId]
-export async function PUT(request: Request, { params }: RouteParams) {
+export async function PUT(request: Request, props: RouteParams) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== 'admin') {
     return new NextResponse('Unauthorized', { status: 401 });
@@ -81,7 +83,8 @@ export async function PUT(request: Request, { params }: RouteParams) {
 }
 
 // DELETE /api/admin/materials/[materialId]
-export async function DELETE(request: Request, { params }: RouteParams) {
+export async function DELETE(request: Request, props: RouteParams) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== 'admin') {
     return new NextResponse('Unauthorized', { status: 401 });

@@ -11,8 +11,9 @@ const submissionSchema = z.object({
 
 export async function POST(
   request: Request,
-  { params }: { params: { courseId: string; assignmentId: string } }
+  props: { params: Promise<{ courseId: string; assignmentId: string }> }
 ) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
     
@@ -73,8 +74,9 @@ export async function POST(
 
 export async function GET(
   request: Request,
-  { params }: { params: { courseId: string; assignmentId: string } }
+  props: { params: Promise<{ courseId: string; assignmentId: string }> }
 ) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
     

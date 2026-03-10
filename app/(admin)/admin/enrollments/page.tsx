@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { useSession } from 'next-auth/react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -692,7 +692,7 @@ interface EnrollmentTableProps {
   loading: boolean;
   error: string | null;
   onRefresh: () => void;
-  getStatusBadge: (status: string) => JSX.Element | null;
+  getStatusBadge: (status: string) => ReactNode;
   toggleSort: (column: string) => void;
   sortColumn: string;
   sortDirection: 'asc' | 'desc';

@@ -21,10 +21,8 @@ const bookmarkSchema = z.object({
 });
 
 // GET /api/materials/[materialId]
-export async function GET(
-  request: Request,
-  { params }: { params: { materialId: string } }
-) {
+export async function GET(request: Request, props: { params: Promise<{ materialId: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -87,10 +85,8 @@ export async function GET(
 }
 
 // PATCH /api/materials/[materialId]
-export async function PATCH(
-  request: Request,
-  { params }: { params: { materialId: string } }
-) {
+export async function PATCH(request: Request, props: { params: Promise<{ materialId: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -185,10 +181,8 @@ export async function PATCH(
 }
 
 // DELETE /api/materials/[materialId]
-export async function DELETE(
-  request: Request,
-  { params }: { params: { materialId: string } }
-) {
+export async function DELETE(request: Request, props: { params: Promise<{ materialId: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {

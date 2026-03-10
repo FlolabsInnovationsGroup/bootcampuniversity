@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, use } from 'react';
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -34,7 +34,8 @@ interface Material {
   order: number
 }
 
-export default function CourseMaterialsPage({ params }: { params: { courseId: string } }) {
+export default function CourseMaterialsPage(props: { params: Promise<{ courseId: string }> }) {
+  const params = use(props.params);
   const router = useRouter()
   const [materials, setMaterials] = useState<Material[]>([])
   const [isLoading, setIsLoading] = useState(true)

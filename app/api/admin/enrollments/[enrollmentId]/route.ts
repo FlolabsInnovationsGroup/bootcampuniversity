@@ -16,10 +16,8 @@ async function isAdmin() {
 }
 
 // GET /api/admin/enrollments/[enrollmentId]
-export async function GET(
-  request: Request,
-  { params }: { params: { enrollmentId: string } }
-) {
+export async function GET(request: Request, props: { params: Promise<{ enrollmentId: string }> }) {
+  const params = await props.params;
   // Check if user is admin
   if (!(await isAdmin())) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -63,10 +61,8 @@ export async function GET(
 }
 
 // PATCH /api/admin/enrollments/[enrollmentId]
-export async function PATCH(
-  request: Request,
-  { params }: { params: { enrollmentId: string } }
-) {
+export async function PATCH(request: Request, props: { params: Promise<{ enrollmentId: string }> }) {
+  const params = await props.params;
   // Check if user is admin
   if (!(await isAdmin())) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -127,10 +123,8 @@ export async function PATCH(
 }
 
 // DELETE /api/admin/enrollments/[enrollmentId]
-export async function DELETE(
-  request: Request,
-  { params }: { params: { enrollmentId: string } }
-) {
+export async function DELETE(request: Request, props: { params: Promise<{ enrollmentId: string }> }) {
+  const params = await props.params;
   // Check if user is admin
   if (!(await isAdmin())) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

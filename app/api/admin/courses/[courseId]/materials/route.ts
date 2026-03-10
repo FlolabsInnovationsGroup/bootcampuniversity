@@ -4,10 +4,8 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { logActivity } from '@/lib/activity-logger'
 
-export async function GET(
-  req: Request,
-  { params }: { params: { courseId: string } }
-) {
+export async function GET(req: Request, props: { params: Promise<{ courseId: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
 
@@ -40,10 +38,8 @@ export async function GET(
   }
 }
 
-export async function POST(
-  req: Request,
-  { params }: { params: { courseId: string } }
-) {
+export async function POST(req: Request, props: { params: Promise<{ courseId: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
 
@@ -93,115 +89,3 @@ export async function POST(
     return new NextResponse('Internal Error', { status: 500 })
   }
 }
-
-export async function PATCH(
-  req: Request,
-  { params }: { params: { courseId: string; materialId: string } }
-) {
-  try {
-    const session = await getServerSession(authOptions)
-
-    if (!session?.user) {
-      return new NextResponse('Unauthorized', { status: 401 })
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email! },
-      select: { role: true },
-    })
-
-    if (user?.role !== 'ADMIN') {
-      return new NextResponse('Forbidden', { status: 403 })
-    }
-
-    const body = await req.json()
-    const { title, type, url, content, order } = body
-
-    const material = await prisma.material.update({
-      where: {
-        id: params.materialId,
-        courseId: params.courseId,
-      },
-      data: {
-        title,
-        type,
-        url,
-        content,
-        order,
-      },
-    })
-
-    // Log material update
-    await logActivity({
-      userId: session.user.id,
-      action: 'updated',
-      entityType: 'material',
-      entityId: material.id,
-      details: `Updated material: ${title} in course ${params.courseId}`
-    })
-
-    return NextResponse.json(material)
-  } catch (error) {
-    console.error('[MATERIALS_PATCH]', error)
-    return new NextResponse('Internal Error', { status: 500 })
-  }
-}
-
-export async function DELETE(
-  req: Request,
-  { params }: { params: { courseId: string; materialId: string } }
-) {
-  try {
-    const session = await getServerSession(authOptions)
-
-    if (!session?.user) {
-      return new NextResponse('Unauthorized', { status: 401 })
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email! },
-      select: { role: true },
-    })
-
-    if (user?.role !== 'ADMIN') {
-      return new NextResponse('Forbidden', { status: 403 })
-    }
-
-    // Get material details before deletion for logging
-    const material = await prisma.material.findUnique({
-      where: {
-        id: params.materialId,
-        courseId: params.courseId,
-      },
-      select: {
-        id: true,
-        title: true,
-      }
-    })
-
-    if (!material) {
-      return new NextResponse('Material not found', { status: 404 })
-    }
-
-    await prisma.material.delete({
-      where: {
-        id: params.materialId,
-        courseId: params.courseId,
-      },
-    })
-
-    // Log material deletion
-    await logActivity({
-      userId: session.user.id,
-      action: 'deleted',
-      entityType: 'material',
-      entityId: material.id,
-      details: `Deleted material: ${material.title} from course ${params.courseId}`
-    })
-
-    return new NextResponse(null, { status: 204 })
-  } catch (error) {
-    console.error('[MATERIALS_DELETE]', error)
-    return new NextResponse('Internal Error', { status: 500 })
-  }
-} 

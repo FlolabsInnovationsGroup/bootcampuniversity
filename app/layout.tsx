@@ -1,31 +1,32 @@
-import type { Metadata, Viewport } from 'next';
-import { Inter, JetBrains_Mono, Urbanist } from 'next/font/google';
-import './globals.css';
-import { cn } from '@/lib/utils';
-import { ProgressBar, SkipLink } from '@/components/shared';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import { Providers } from './providers';
+import type { Metadata } from "next";
+import { Inter, JetBrains_Mono, Urbanist } from "next/font/google";
+import "./globals.css";
+import { cn } from "@/lib/utils";
+import { ProgressBar, SkipLink } from "@/components/shared";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import { Providers } from "./providers";
+import Script from "next/script";
 
 // Font setup
 const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
   preload: true,
 });
 
 const urbanist = Urbanist({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-urbanist',
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-urbanist",
   preload: true,
 });
 
 const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-jetbrains-mono',
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-jetbrains-mono",
   preload: true,
 });
 
@@ -34,120 +35,145 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}`
-      : 'http://localhost:3000'
+      : "http://localhost:3000",
   ),
   title: {
-    default: 'Innovation Bootcamp University | From Paying to Earning Tech Skills',
-    template: '%s | Innovation Bootcamp University',
+    default:
+      "Innovation Bootcamp University | From Paying to Earning Tech Skills",
+    template: "%s | Innovation Bootcamp University",
   },
-  description: 'Our cooperative education model transitions you from student to paid professional. Start with foundational learning, then progress to earning.',
+  description:
+    "Our cooperative education model transitions you from student to paid professional. Start with foundational learning, then progress to earning.",
   keywords: [
-    'bootcamp',
-    'tech education',
-    'coding',
-    'programming',
-    'cooperative education',
-    'experiential learning',
-    'tiered education',
-    'web development',
-    'AI',
-    'machine learning',
-    'robotics',
+    "bootcamp",
+    "tech education",
+    "coding",
+    "programming",
+    "cooperative education",
+    "experiential learning",
+    "tiered education",
+    "web development",
+    "AI",
+    "machine learning",
+    "robotics",
   ],
-  authors: [{ name: 'Innovation Bootcamp University' }],
+  authors: [{ name: "Innovation Bootcamp University" }],
   robots: {
     index: true,
     follow: true,
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
   openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: '/',
-    title: 'Innovation Bootcamp University | From Paying to Earning Tech Skills',
-    description: 'Our cooperative education model transitions you from student to paid professional. Start with foundational learning, then progress to earning.',
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    title:
+      "Innovation Bootcamp University | From Paying to Earning Tech Skills",
+    description:
+      "Our cooperative education model transitions you from student to paid professional. Start with foundational learning, then progress to earning.",
     images: [
       {
-        url: '/logos/newlogo.png',
+        url: "/logos/newlogo.png",
         width: 192,
         height: 192,
-        alt: 'Innovation Bootcamp University',
+        alt: "Innovation Bootcamp University",
       },
     ],
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'Innovation Bootcamp University | From Paying to Earning Tech Skills',
-    description: 'Our cooperative education model transitions you from student to paid professional. Start with foundational learning, then progress to earning.',
-    images: ['/logos/newlogo.png'],
-    creator: '@InnovationBoot',
+    card: "summary_large_image",
+    title:
+      "Innovation Bootcamp University | From Paying to Earning Tech Skills",
+    description:
+      "Our cooperative education model transitions you from student to paid professional. Start with foundational learning, then progress to earning.",
+    images: ["/logos/newlogo.png"],
+    creator: "@InnovationBoot",
   },
-  manifest: '/site.webmanifest',
+  manifest: "/site.webmanifest",
   icons: {
     icon: [
-      { url: '/logos/favicon.ico', sizes: '32x32' },
-      { url: '/logos/logo.svg', type: 'image/svg+xml' },
-      { url: '/logos/newlogo.png', sizes: '192x192' },
+      { url: "/logos/favicon.ico", sizes: "32x32" },
+      { url: "/logos/logo.svg", type: "image/svg+xml" },
+      { url: "/logos/newlogo.png", sizes: "192x192" },
     ],
-    apple: [{ url: '/logos/newlogo.png' }],
+    apple: [{ url: "/logos/newlogo.png" }],
   },
   other: {
-    'google-site-verification': 'your-verification-code',
+    "google-site-verification": "your-verification-code",
     structured: JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'EducationalOrganization',
-      name: 'Innovation Bootcamp University',
-      description: 'Get paid to learn tech skills with our innovative tiered program',
-      url: 'https://innovationbootcamp.edu',
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      name: "Innovation Bootcamp University",
+      description:
+        "Get paid to learn tech skills with our innovative tiered program",
+      url: "https://innovationbootcamp.edu",
       sameAs: [
-        'https://twitter.com/innovbootcamp',
-        'https://linkedin.com/company/innovationbootcamp',
-        'https://github.com/innovationbootcamp'
-      ]
-    })
-  }
+        "https://twitter.com/innovbootcamp",
+        "https://linkedin.com/company/innovationbootcamp",
+        "https://github.com/innovationbootcamp",
+      ],
+    }),
+  },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html
       lang="en"
       className={cn(
-        'scroll-smooth',
+        "scroll-smooth",
         inter.variable,
         urbanist.variable,
-        jetbrainsMono.variable
+        jetbrainsMono.variable,
       )}
-      suppressHydrationWarning
-    >
+      suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{
-          __html: `
-            // Force light mode
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('theme', 'light');
-          `
-        }} />
+        {/* Force light mode */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              document.documentElement.classList.remove('dark');
+              localStorage.setItem('theme', 'light');
+            `,
+          }}
+        />
+
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-VJ8XL38ZEJ"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-VJ8XL38ZEJ');
+          `}
+        </Script>
       </head>
-      <body className={cn(
-        'min-h-screen font-sans antialiased',
-        'bg-background text-foreground',
-        'selection:bg-primary-500/20 selection:text-foreground'
-      )}>
+      <body
+        className={cn(
+          "min-h-screen font-sans antialiased",
+          "bg-background text-foreground",
+          "selection:bg-primary-500/20 selection:text-foreground",
+        )}>
         <Providers>
           <SkipLink />
           <ProgressBar />
           <div className="relative flex min-h-screen flex-col">
             <Navbar />
-            <main className="relative flex-1">
-              {children}
-            </main>
+            <main className="relative flex-1">{children}</main>
             <Footer />
           </div>
         </Providers>

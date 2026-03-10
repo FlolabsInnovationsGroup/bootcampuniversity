@@ -9,10 +9,8 @@ async function isAdmin() {
 }
 
 // GET /api/admin/materials/by-course/[courseId]
-export async function GET(
-  request: Request,
-  { params }: { params: { courseId: string } }
-) {
+export async function GET(request: Request, props: { params: Promise<{ courseId: string }> }) {
+  const params = await props.params;
   // Check if user is admin
   if (!(await isAdmin())) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

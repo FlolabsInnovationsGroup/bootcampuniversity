@@ -16,10 +16,8 @@ async function isAdmin() {
 }
 
 // PATCH /api/admin/users/[id]/role
-export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     // Check if user is admin
     if (!(await isAdmin())) {

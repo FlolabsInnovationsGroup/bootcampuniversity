@@ -11,8 +11,9 @@ const commentSchema = z.object({
 
 export async function POST(
   request: Request,
-  { params }: { params: { courseId: string; discussionId: string } }
+  props: { params: Promise<{ courseId: string; discussionId: string }> }
 ) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
     
@@ -70,8 +71,9 @@ export async function POST(
 
 export async function GET(
   request: Request,
-  { params }: { params: { courseId: string; discussionId: string } }
+  props: { params: Promise<{ courseId: string; discussionId: string }> }
 ) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
     

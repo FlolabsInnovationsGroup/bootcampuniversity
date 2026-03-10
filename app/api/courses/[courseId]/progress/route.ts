@@ -12,10 +12,8 @@ const progressSchema = z.object({
   status: z.enum(['not_started', 'in_progress', 'completed']),
 });
 
-export async function POST(
-  request: Request,
-  { params }: { params: { courseId: string } }
-) {
+export async function POST(request: Request, props: { params: Promise<{ courseId: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
     
@@ -78,10 +76,8 @@ export async function POST(
   }
 }
 
-export async function GET(
-  request: Request,
-  { params }: { params: { courseId: string } }
-) {
+export async function GET(request: Request, props: { params: Promise<{ courseId: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
     

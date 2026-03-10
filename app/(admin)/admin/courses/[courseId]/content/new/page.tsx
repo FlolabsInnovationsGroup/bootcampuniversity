@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,7 +17,8 @@ interface Section {
   order: number;
 }
 
-export default function NewContentPage({ params }: { params: { courseId: string } }) {
+export default function NewContentPage(props: { params: Promise<{ courseId: string }> }) {
+  const params = use(props.params);
   const router = useRouter();
   const [contentType, setContentType] = useState('article');
   const [loading, setLoading] = useState(false);
