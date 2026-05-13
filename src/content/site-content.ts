@@ -921,13 +921,6 @@ export const aboutPage = {
   }
 };
 
-export const legalLinks = [
-  { href: "/legal/privacy-policy", label: "Privacy Policy" },
-  { href: "/legal/terms-of-service", label: "Terms of Service" },
-  { href: "/legal/cookie-policy", label: "Cookie Policy" },
-  { href: "/legal/accessibility", label: "Accessibility" }
-];
-
 export const companyLinks = [
   { href: "/company", label: "About" },
   { href: "/company/contact", label: "Contact" },

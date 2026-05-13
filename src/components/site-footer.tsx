@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
-import { companyLinks, legalLinks, opportunityPages, resources, stayUpdatedBlock } from "@/content/site-content";
+import { companyLinks, opportunityPages, resources, stayUpdatedBlock } from "@/content/site-content";
 import { isValidEmail } from "@/lib/validation/email";
 
 export function SiteFooter() {
@@ -114,16 +114,6 @@ export function SiteFooter() {
           <h2 className="font-semibold">Company</h2>
           <ul className="mt-2 space-y-1 text-sm text-[var(--text-muted)]">
             {companyLinks.map((item) => (
-              <li key={item.href}>
-                <Link href={item.href} className="focus-ring rounded hover:text-[var(--primary)]">
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <h2 className="mt-4 font-semibold">Legal</h2>
-          <ul className="mt-2 space-y-1 text-sm text-[var(--text-muted)]">
-            {legalLinks.map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className="focus-ring rounded hover:text-[var(--primary)]">
                   {item.label}
