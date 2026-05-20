@@ -166,10 +166,17 @@ export default function HomePage() {
           ) : null}
           <h1
             id="home-title"
-            className='hero-text-reveal hero-text-delay-2 mb-3 max-w-[18ch] text-[clamp(2rem,5vw+0.9rem,5.25rem)] leading-[1.08] font-["Playfair_Display",Georgia,"Times_New_Roman",serif] font-bold tracking-[-0.015em]'
+            className='hero-text-reveal hero-text-delay-2 mb-3 text-[clamp(2rem,5vw+0.9rem,5.25rem)] leading-[1.08] font-["Playfair_Display",Georgia,"Times_New_Roman",serif] font-bold tracking-[-0.015em]'
           >
             <span className='font-["Playfair_Display",Georgia,"Times_New_Roman",serif] font-bold'>
-              {hero.title.includes(heroHighlightPhrase) ? (
+              {hero.titleLines ? (
+                hero.titleLines.map((line, index) => (
+                  <span key={line}>
+                    {index > 0 ? " " : null}
+                    <span className="whitespace-nowrap">{line}</span>
+                  </span>
+                ))
+              ) : hero.title.includes(heroHighlightPhrase) ? (
                 <>
                   {hero.title.split(heroHighlightPhrase)[0]}
                   <br />
