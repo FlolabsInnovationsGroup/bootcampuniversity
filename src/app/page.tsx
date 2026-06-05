@@ -22,6 +22,7 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   const heroHighlightPhrase = "Real Internships";
+  const heroTitleOrphanLine = "Opportunities.";
   const heroBodyHighlightPhrase = "Innovation Bootcamp University";
   const heroLeadBoldPhrase = "all at one place.";
   const heroCarouselBaseItems: Omit<HeroCarouselItem, "imageSrc" | "imageAlt">[] = [
@@ -166,29 +167,29 @@ export default function HomePage() {
           ) : null}
           <h1
             id="home-title"
-            className='hero-text-reveal hero-text-delay-2 mb-3 text-[clamp(2rem,5vw+0.9rem,5.25rem)] leading-[1.08] font-["Playfair_Display",Georgia,"Times_New_Roman",serif] font-bold tracking-[-0.015em]'
+            data-no-orphan-fix="off"
+            className='hero-text-reveal hero-text-delay-2 mb-3 max-w-[18ch] text-[clamp(2rem,5vw+0.9rem,5.25rem)] leading-[1.08] font-["Playfair_Display",Georgia,"Times_New_Roman",serif] font-bold tracking-[-0.015em]'
           >
             <span className='font-["Playfair_Display",Georgia,"Times_New_Roman",serif] font-bold'>
-              {hero.titleLines ? (
-                hero.titleLines.map((line, index) => (
-                  <span key={line}>
-                    {index > 0 ? " " : null}
-                    <span className="whitespace-nowrap">{line}</span>
-                  </span>
-                ))
-              ) : hero.title.includes(heroHighlightPhrase) ? (
+              {hero.title.includes(heroHighlightPhrase) ? (
                 <>
                   {hero.title.split(heroHighlightPhrase)[0]}
                   <br />
                   <span className="hero-highlight-reveal text-[var(--primary)]">{heroHighlightPhrase}</span>
                   {hero.title.split(heroHighlightPhrase)[1]}
                 </>
+              ) : hero.title.endsWith(heroTitleOrphanLine) ? (
+                <>
+                  {hero.title.slice(0, -heroTitleOrphanLine.length).trim()}
+                  <br />
+                  {heroTitleOrphanLine}
+                </>
               ) : (
                 hero.title
               )}
             </span>
           </h1>
-          <p className="hero-lead-chip hero-text-reveal hero-text-delay-3 mt-1 mb-4 w-fit rounded-full border px-4 py-2 text-left text-[clamp(1rem,0.6vw+0.85rem,1.35rem)] leading-[1.35] sm:px-5">
+          <p className="hero-text-reveal hero-text-delay-3 mt-2 mb-3 max-w-[42ch] text-[clamp(1.05rem,0.5vw+0.95rem,1.35rem)] font-medium leading-[1.4] text-[var(--text)]">
             {hero.lead.includes(heroLeadBoldPhrase) ? (
               <>
                 {hero.lead.split(heroLeadBoldPhrase)[0]}

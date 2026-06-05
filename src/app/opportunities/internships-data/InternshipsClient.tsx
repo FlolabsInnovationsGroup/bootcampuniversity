@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { getAllInternships, Internship } from '@/lib/strapi'
 
 const statusPriority: Record<string, number> = {

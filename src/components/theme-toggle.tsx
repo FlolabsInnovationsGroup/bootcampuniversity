@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 
 type Theme = "dark" | "light";
 
@@ -18,38 +18,20 @@ function getPreferredTheme(): Theme {
   return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
 }
 
-function readTheme(): Theme {
-  const attr = document.documentElement.getAttribute("data-theme");
-  if (attr === "light" || attr === "dark") {
-    return attr;
-  }
-  return getPreferredTheme();
-}
-
-function subscribe(onStoreChange: () => void) {
-  const root = document.documentElement;
-  const observer = new MutationObserver(onStoreChange);
-  observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
-  const media = window.matchMedia("(prefers-color-scheme: light)");
-  const onMedia = () => onStoreChange();
-  media.addEventListener("change", onMedia);
-  return () => {
-    observer.disconnect();
-    media.removeEventListener("change", onMedia);
-  };
-}
-
-function getServerSnapshot(): Theme {
-  return "dark";
-}
-
 export function ThemeToggle() {
-  const theme = useSyncExternalStore(subscribe, readTheme, getServerSnapshot);
+  const [theme, setTheme] = useState<Theme>("dark");
 
-  const handleToggle = useCallback(() => {
-    const nextTheme: Theme = theme === "dark" ? "light" : "dark";
+  useEffect(() => {
+    const nextTheme = getPreferredTheme();
+    setTheme(nextTheme);
     applyTheme(nextTheme);
-  }, [theme]);
+  }, []);
+
+  function handleToggle() {
+    const nextTheme: Theme = theme === "dark" ? "light" : "dark";
+    setTheme(nextTheme);
+    applyTheme(nextTheme);
+  }
 
   const label = theme === "dark" ? "Switch to light mode" : "Switch to dark mode";
 
@@ -60,7 +42,6 @@ export function ThemeToggle() {
       className="theme-toggle-btn focus-ring inline-flex h-10 w-10 items-center justify-center rounded-full border text-[var(--text)] transition hover:text-[var(--primary)]"
       aria-label={label}
       title={label}
-      suppressHydrationWarning
     >
       {theme === "dark" ? (
         <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 fill-current">

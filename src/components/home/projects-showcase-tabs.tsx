@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type KeyboardEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 
 export type ProjectShowcaseItem = {
   slug: string;
@@ -27,37 +27,18 @@ function getNextIndex(current: number, total: number, direction: "left" | "right
   return current === total - 1 ? 0 : current + 1;
 }
 
-function subscribePrefersReducedMotion(onStoreChange: () => void) {
-  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-  mq.addEventListener("change", onStoreChange);
-  return () => mq.removeEventListener("change", onStoreChange);
-}
-
-function getPrefersReducedMotionSnapshot() {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-function getPrefersReducedMotionServerSnapshot() {
-  return false;
-}
-
-function usePrefersReducedMotion() {
-  return useSyncExternalStore(
-    subscribePrefersReducedMotion,
-    getPrefersReducedMotionSnapshot,
-    getPrefersReducedMotionServerSnapshot
-  );
-}
-
 export function ProjectsShowcaseTabs({ items }: ProjectsShowcaseTabsProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [intersectionReveal, setIntersectionReveal] = useState(false);
+  const [sectionInView, setSectionInView] = useState(false);
   const [isLightTheme, setIsLightTheme] = useState(false);
-  const prefersReducedMotion = usePrefersReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
 
   const safeItems = useMemo(() => items.slice(0, 12), [items]);
   const activeItem = safeItems[activeIndex];
+
+  if (!safeItems.length || !activeItem) {
+    return null;
+  }
 
   const onTabKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
     if (event.key === "ArrowRight") {
@@ -85,15 +66,19 @@ export function ProjectsShowcaseTabs({ items }: ProjectsShowcaseTabsProps) {
   };
 
   useEffect(() => {
-    if (prefersReducedMotion) return;
-
     const sectionElement = sectionRef.current;
     if (!sectionElement) return;
+
+    const reducedMotionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reducedMotionMedia.matches) {
+      setSectionInView(true);
+      return;
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry?.isIntersecting) return;
-        setIntersectionReveal(true);
+        setSectionInView(true);
         observer.disconnect();
       },
       { root: null, rootMargin: "0px 0px -10% 0px", threshold: 0.12 }
@@ -102,7 +87,7 @@ export function ProjectsShowcaseTabs({ items }: ProjectsShowcaseTabsProps) {
     observer.observe(sectionElement);
 
     return () => observer.disconnect();
-  }, [prefersReducedMotion]);
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -118,12 +103,6 @@ export function ProjectsShowcaseTabs({ items }: ProjectsShowcaseTabsProps) {
 
     return () => observer.disconnect();
   }, []);
-
-  if (!safeItems.length || !activeItem) {
-    return null;
-  }
-
-  const sectionInView = prefersReducedMotion || intersectionReveal;
 
   const activeImageSrc = isLightTheme ? activeItem.imageSrcLight ?? activeItem.imageSrc : activeItem.imageSrc;
 

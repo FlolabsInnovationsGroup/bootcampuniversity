@@ -8,9 +8,17 @@
     "start": "next start",
     "lint": "eslint ."
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gece-c/bootcamp-university.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gece-c/bootcamp-university/issues"
+  },
+  "homepage": "https://github.com/gece-c/bootcamp-university#readme",
   "dependencies": {
     "next": "^16.2.1",
     "react": "^19.2.4",

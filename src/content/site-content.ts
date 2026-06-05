@@ -75,8 +75,7 @@ export const RESOURCE_SLUGS = {
 // --- Home hero ---
 export const hero = {
   badge: "",
-  title: "Learn First. Earn Next.",
-  titleLines: ["Learn First.", "Earn Next."],
+  title: "Learn First. Grow Into Earning Opportunities.",
   lead: "Graduate as a Working Professional.",
   body:
     "Innovation Bootcamp University connects structured education directly to real internships across AI, software, robotics, business, and more. You start as a student. You finish with a resume that proves it.",
@@ -921,6 +920,13 @@ export const aboutPage = {
     label: "Pre-register Now"
   }
 };
+
+export const legalLinks = [
+  { href: "/legal/privacy-policy", label: "Privacy Policy" },
+  { href: "/legal/terms-of-service", label: "Terms of Service" },
+  { href: "/legal/cookie-policy", label: "Cookie Policy" },
+  { href: "/legal/accessibility", label: "Accessibility" }
+];
 
 export const companyLinks = [
   { href: "/company", label: "About" },
