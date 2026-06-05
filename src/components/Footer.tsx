@@ -7,7 +7,6 @@ import {
   careerOpportunitiesSection,
   companyLinks,
   navItems,
-  opportunityPages,
   resources,
   whyChoose
 } from "@/content/site-content";
@@ -25,12 +24,7 @@ const navigationLinks: FooterNavLink[] = [
   { label: careerOpportunitiesSection.title, href: "/#career-opportunities-title" },
   { label: "FAQ", href: "/#faq-title" },
   ...navItems.map((item) => ({ label: item.label, href: item.href })),
-  { label: "Opportunities", href: "/opportunities" },
-  ...opportunityPages.map((page) => ({
-    label: page.title,
-    href: `/opportunities/${page.slug}`
-  })),
-  { label: "Internship Listings", href: "/opportunities/internships-data" },
+  { label: "Internships", href: "/opportunities/internships-data" },
   ...resources.map((resource) => ({
     label: resource.title,
     href: `/resources/${resource.slug}`
