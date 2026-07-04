@@ -1913,3 +1913,109 @@ a {
     gap: 0.95rem;
   }
 }
+
+.site-footer {
+  --footer-accent: #13a7cb;
+  --footer-bg: #0e1525;
+  --footer-text: #ffffff;
+  --footer-muted: #a0a8b8;
+  --footer-brand: #ffffff;
+  --footer-divider: rgb(255 255 255 / 0.12);
+  --footer-logo-filter: brightness(0) saturate(100%) invert(56%) sepia(89%)
+    saturate(749%) hue-rotate(163deg) brightness(93%) contrast(92%);
+  --footer-form-bg: #ffffff;
+  --footer-form-border: rgb(255 255 255 / 0.2);
+  --footer-input-text: #111827;
+  --footer-input-placeholder: #8a8a8a;
+  --footer-submit-bg: #000000;
+  --footer-submit-text: #ffffff;
+
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+}
+
+:root[data-theme="light"] .site-footer {
+  --footer-bg: #dbe8f4;
+  --footer-text: #101828;
+  --footer-muted: #475467;
+  --footer-brand: #101828;
+  --footer-divider: rgb(15 23 42 / 0.12);
+  --footer-form-bg: #ffffff;
+  --footer-form-border: rgb(15 23 42 / 0.16);
+  --footer-input-text: #101828;
+  --footer-input-placeholder: #6b7280;
+  --footer-submit-bg: var(--primary);
+  --footer-submit-text: #ffffff;
+}
+
+.site-footer-heading {
+  color: var(--footer-text);
+}
+
+.site-footer-brand {
+  color: var(--footer-brand);
+}
+
+.site-footer-muted {
+  color: var(--footer-muted);
+}
+
+.site-footer-logo {
+  filter: var(--footer-logo-filter);
+}
+
+.site-footer-divider {
+  border-color: var(--footer-divider);
+}
+
+.site-footer-form {
+  background-color: var(--footer-form-bg);
+  border-color: var(--footer-form-border);
+}
+
+.site-footer-input {
+  color: var(--footer-input-text);
+}
+
+.site-footer-input::placeholder {
+  color: var(--footer-input-placeholder);
+}
+
+.site-footer-submit {
+  background-color: var(--footer-submit-bg);
+  color: var(--footer-submit-text);
+  transition: color 0.2s ease;
+}
+
+.site-footer-link {
+  color: color-mix(in srgb, var(--footer-text) 90%, transparent);
+  transition: color 0.2s ease;
+}
+
+.site-footer-link:hover,
+.site-footer-link:focus-visible {
+  color: var(--footer-accent);
+}
+
+.site-footer-social {
+  color: var(--footer-text);
+  transition: color 0.2s ease;
+}
+
+.site-footer-social:hover,
+.site-footer-social:focus-visible {
+  color: var(--footer-accent);
+}
+
+.site-footer-social svg {
+  fill: currentColor;
+}
+
+.site-footer-submit:hover,
+.site-footer-submit:focus-visible {
+  color: var(--footer-accent);
+}
+
+.site-footer-submit svg {
+  stroke: currentColor;
+}
