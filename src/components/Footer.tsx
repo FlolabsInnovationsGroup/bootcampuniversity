@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, type ReactNode } from "react";
-import { FaInstagram, FaLinkedinIn, FaRedditAlien, FaTiktok, FaYoutube } from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaRedditAlien, FaTiktok, FaYoutube } from "react-icons/fa";
 import { HiOutlinePaperAirplane } from "react-icons/hi2";
 
 type FooterNavLink = { label: string; href: string; external?: boolean };
@@ -29,7 +29,6 @@ const projectLinks: FooterNavLink[] = [
     href: "https://www.athleticperformanceintelligence.com/",
     external: true
   },
-  { label: "Innovation Bootcamp University", href: "https://www.bootcampuniversity.org/", external: true },
   { label: "CAIPO", href: "https://www.caipo.ai/", external: true },
   {
     label: "Connecting the Dots",
@@ -43,6 +42,7 @@ const projectLinks: FooterNavLink[] = [
   { label: "FloLabs International", href: "https://www.flolabs.international/", external: true },
   { label: "FloStudios", href: "https://www.flostudios.ai/", external: true },
   { label: "Hephaestus International", href: "https://hephaestus.international/", external: true },
+  { label: "Innovation Bootcamp University", href: "https://www.bootcampuniversity.org/", external: true },
   { label: "MoodChanger", href: "https://www.moodchanger.ai/", external: true },
   { label: "MoodChanger for Pets", href: "https://www.moodchanger.ai/", external: true },
   {
@@ -69,6 +69,12 @@ const socialLinks = [
     label: "LinkedIn",
     href: "https://www.linkedin.com/company/flolabs-innovation/",
     icon: FaLinkedinIn
+  },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/people/Flo-Labs-RD/61572285432918/",
+    icon: FaFacebookF,
+    className: "site-footer-social--facebook"
   },
   {
     label: "Instagram",
@@ -183,7 +189,7 @@ export function Footer() {
               <div>
                 <FooterHeading>Newsletter</FooterHeading>
                 <p className="site-footer-muted mt-3 text-[13px] leading-relaxed">
-                  Receive the newest Innovation Bootcamp University updates at:
+                  Receive the newest updates at:
                 </p>
               </div>
               <form
@@ -216,16 +222,16 @@ export function Footer() {
             <div className="mt-10">
               <FooterHeading>Social media</FooterHeading>
               <div className="mt-4 flex flex-wrap items-center gap-4">
-                {socialLinks.map(({ label, href, icon: Icon }) => (
+                {socialLinks.map(({ label, href, icon: Icon, className }) => (
                   <a
                     key={label}
                     href={href}
-                    className="site-footer-social focus-ring rounded"
+                    className={`site-footer-social focus-ring rounded${className ? ` ${className}` : ""}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
                   >
-                    <Icon className="h-6 w-6" aria-hidden />
+                    <Icon aria-hidden />
                   </a>
                 ))}
               </div>

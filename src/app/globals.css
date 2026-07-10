@@ -1915,27 +1915,38 @@ a {
 }
 
 .site-footer {
-  --footer-accent: #13a7cb;
-  --footer-bg: #0e1525;
-  --footer-text: #ffffff;
-  --footer-muted: #a0a8b8;
-  --footer-brand: #ffffff;
-  --footer-divider: rgb(255 255 255 / 0.12);
+  --footer-accent: var(--primary);
   --footer-logo-filter: brightness(0) saturate(100%) invert(56%) sepia(89%)
     saturate(749%) hue-rotate(163deg) brightness(93%) contrast(92%);
   --footer-form-bg: #ffffff;
   --footer-form-border: rgb(255 255 255 / 0.2);
   --footer-input-text: #111827;
   --footer-input-placeholder: #8a8a8a;
-  --footer-submit-bg: #000000;
-  --footer-submit-text: #ffffff;
 
-  background-color: var(--footer-bg);
   color: var(--footer-text);
+  border-top: 1px solid var(--footer-divider);
+}
+
+:root:not([data-theme="light"]) .site-footer,
+:root[data-theme="dark"] .site-footer {
+  background:
+    radial-gradient(
+      70% 130% at 50% 0%,
+      color-mix(in srgb, var(--primary) 7%, transparent) 0%,
+      color-mix(in srgb, var(--primary) 3.5%, transparent) 34%,
+      transparent 68%
+    ),
+    #1e1e1e;
+  --footer-text: #f5f5f5;
+  --footer-muted: #d2d2d2;
+  --footer-brand: #f5f5f5;
+  --footer-divider: rgb(255 255 255 / 0.1);
+  --footer-submit-bg: var(--primary);
+  --footer-submit-text: var(--button-primary-text);
 }
 
 :root[data-theme="light"] .site-footer {
-  --footer-bg: #dbe8f4;
+  background: #dbe8f4;
   --footer-text: #101828;
   --footer-muted: #475467;
   --footer-brand: #101828;
@@ -1998,6 +2009,11 @@ a {
 }
 
 .site-footer-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
   color: var(--footer-text);
   transition: color 0.2s ease;
 }
@@ -2008,7 +2024,13 @@ a {
 }
 
 .site-footer-social svg {
+  width: 1.5rem;
+  height: 1.5rem;
   fill: currentColor;
+}
+
+.site-footer-social--facebook svg {
+  transform: scale(0.9);
 }
 
 .site-footer-submit:hover,
