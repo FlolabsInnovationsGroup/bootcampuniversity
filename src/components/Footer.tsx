@@ -13,12 +13,12 @@ const navigationLinks: FooterNavLink[] = [
   { label: "About us", href: "/company" },
   { label: "Projects", href: "/projects" },
   { label: "Resources", href: "/resources" },
-  { label: "Internships", href: "/opportunities/internships" },
+  { label: "Internships", href: "/internships" },
   { label: "Contact", href: "/company/contact" }
 ];
 
 const footerCompanyLinks: FooterNavLink[] = [
-  { label: "Careers", href: "/opportunities/internships" },
+  { label: "Careers", href: "/internships" },
   { label: "Contact Us", href: "/company/contact" },
   { label: "Merch", href: "https://flolabsrd.notion.site/merch-background", external: true }
 ];

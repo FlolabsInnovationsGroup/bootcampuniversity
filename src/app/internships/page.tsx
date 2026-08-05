@@ -112,7 +112,7 @@ export default async function InternshipsPage() {
           {sorted.map((internship) => (
             <article key={internship.id} className="h-full min-h-0">
               <Link
-                href={`/opportunities/internships/${internship.slug}`}
+                href={`/internships/${internship.slug}`}
                 className="internships-card-surface focus-ring group flex h-full min-h-[12rem] flex-col rounded-xl p-5 transition-[border-color,box-shadow] hover:border-[var(--primary)]/40 hover:shadow-[0_0_0_1px_color-mix(in_srgb,var(--primary)_28%,transparent),0_12px_40px_-16px_rgba(0,0,0,0.55)]"
                 aria-labelledby={`internship-card-${internship.id}`}
               >

@@ -116,7 +116,7 @@ export default async function InternshipPage(props: PageProps) {
     <div className="space-y-10">
       <p className="mb-8">
         <Link
-          href="/opportunities/internships"
+          href="/internships"
           className="focus-ring inline-flex items-center gap-2 rounded-full border border-[#4a4a4a]/80 bg-[var(--surface-muted)]/30 px-3 py-1.5 text-xs font-medium text-[var(--text-muted)] opacity-90 transition-[color,border-color,background-color,opacity] hover:border-[var(--primary)]/45 hover:bg-[var(--surface)] hover:text-[var(--primary)] hover:opacity-100"
         >
           <span aria-hidden className="text-[var(--primary)]/90">
