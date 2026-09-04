@@ -2041,3 +2041,83 @@ a {
 .site-footer-submit svg {
   stroke: currentColor;
 }
+
+/* Preferred source: sit above iOS Safari chrome on phones, quieter on desktop */
+.preferred-source-chip {
+  bottom: max(1.25rem, calc(5.25rem + env(safe-area-inset-bottom, 0px)));
+  border: 1px solid rgb(255 255 255 / 0.2);
+  background: rgb(255 255 255 / 0.12);
+  box-shadow: 0 16px 34px rgb(0 0 0 / 0.22);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+:root[data-theme="light"] .preferred-source-chip {
+  border-color: rgb(255 255 255 / 0.55);
+  background: rgb(255 255 255 / 0.4);
+  box-shadow: 0 16px 34px rgb(15 23 42 / 0.1);
+}
+
+@media (min-width: 768px) {
+  .preferred-source-chip {
+    bottom: max(1.25rem, calc(1.25rem + env(safe-area-inset-bottom, 0px)));
+  }
+}
+
+@keyframes preferred-source-chip-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.preferred-source-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  border: 1px solid rgb(255 255 255 / 0.25);
+  background: rgb(255 255 255 / 0.2);
+  color: var(--text);
+  box-shadow: 0 8px 20px rgb(0 8 13 / 0.16);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.preferred-source-action:hover {
+  border-color: rgb(255 255 255 / 0.4);
+  background: rgb(255 255 255 / 0.3);
+}
+
+:root[data-theme="light"] .preferred-source-action {
+  border-color: rgb(255 255 255 / 0.7);
+  background: rgb(255 255 255 / 0.55);
+  box-shadow: 0 8px 20px rgb(0 8 13 / 0.08);
+}
+
+:root[data-theme="light"] .preferred-source-action:hover {
+  border-color: rgb(255 255 255 / 1);
+  background: rgb(255 255 255 / 0.75);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preferred-source-chip {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .preferred-source-chip,
+  .preferred-source-action {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--surface);
+    border-color: color-mix(in srgb, var(--text-muted) 28%, transparent);
+  }
+}
