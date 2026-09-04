@@ -4,8 +4,10 @@ import "./globals.css";
 import { SiteNavbar } from "@/components/site-navbar";
 import { Footer } from "@/components/Footer";
 import { NoOrphanWords } from "@/components/ui/no-orphan-words";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Innovation Bootcamp University",
     template: "%s | Innovation Bootcamp University",
