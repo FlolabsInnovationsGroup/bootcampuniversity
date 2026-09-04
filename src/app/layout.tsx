@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "./globals.css";
 import { SiteNavbar } from "@/components/site-navbar";
 import { Footer } from "@/components/Footer";
+import { PreferredSourceChip } from "@/components/preferred-source-chip";
 import { NoOrphanWords } from "@/components/ui/no-orphan-words";
 import { SITE_URL } from "@/lib/site";
 
@@ -21,6 +22,12 @@ export const metadata: Metadata = {
   verification: {
     google: "F5DDKTkbYV5m5cCrVvYlq5e-SO-caM64Ttg_Dy-UQns",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -103,6 +110,7 @@ export default function RootLayout({
         </main>
 
         <Footer />
+        <PreferredSourceChip />
         <NoOrphanWords />
       </body>
     </html>
