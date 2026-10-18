@@ -3,7 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import { SiteNavbar } from "@/components/site-navbar";
 import { Footer } from "@/components/Footer";
-import { PreferredSourceChip } from "@/components/preferred-source-chip";
+import { GooglePreferredSourcePrompt } from "@/components/google-preferred-source";
 import { NoOrphanWords } from "@/components/ui/no-orphan-words";
 import { SITE_URL } from "@/lib/site";
 
@@ -110,7 +110,7 @@ export default function RootLayout({
         </main>
 
         <Footer />
-        <PreferredSourceChip />
+        <GooglePreferredSourcePrompt />
         <NoOrphanWords />
       </body>
     </html>

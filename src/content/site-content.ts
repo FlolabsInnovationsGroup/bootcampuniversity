@@ -122,6 +122,22 @@ export const whyChoose: WhyChooseSectionContent = {
   ]
 };
 
+export const sharedPurpose = {
+  eyebrow: "Our shared purpose",
+  titleLines: ["Talent is everywhere.", "Opportunity should be too."],
+  missionLabel: "Mission",
+  missionStatement: ["Aspire to inspire", "Help as many people as possible.", "Live long and prosper."],
+  missionBody:
+    "At FloStudios, we bring this purpose to life through design, storytelling, and creative projects that help people learn, build, and turn ideas into useful experiences.",
+  visionLabel: "Vision",
+  visionBody:
+    "A world where talent everywhere has access to experiential learning, frontier technologies, and meaningful opportunities to solve humanity's greatest challenges and build a healthier, longer, and more prosperous future.",
+  closing:
+    "Our teams build together across disciplines, developing their craft through work with a purpose.",
+  ctaLabel: "Explore learning opportunities",
+  ctaHref: "/internships"
+};
+
 export const tracks: Track[] = [
   {
     slug: "web-development",
