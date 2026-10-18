@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ButtonLink } from "@/components/ui/button-link";
 import { ProjectsShowcaseTabs, type ProjectShowcaseItem } from "@/components/home/projects-showcase-tabs";
 import { HeroTextCarousel, type HeroCarouselItem } from "@/components/home/hero-text-carousel";
+import { SharedPurposeSection } from "@/components/home/shared-purpose-section";
 import { WhyChooseSection } from "@/components/home/why-choose-section";
 import { CareerOpportunitiesRail } from "@/components/home/career-opportunities-rail";
 import { TestimonialVideoPlayer } from "@/components/home/testimonial-video-player";
@@ -243,6 +244,8 @@ export default function HomePage() {
       <ProjectsShowcaseTabs items={projectShowcaseItems} />
 
       <WhyChooseSection data={whyChoose} />
+
+      <SharedPurposeSection />
 
       <CareerOpportunitiesRail
         title={careerOpportunitiesSection.title}
