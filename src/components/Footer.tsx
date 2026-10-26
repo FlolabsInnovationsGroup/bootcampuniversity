@@ -5,6 +5,7 @@ import Link from "next/link";
 import { FormEvent, type ReactNode } from "react";
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaRedditAlien, FaTiktok, FaYoutube } from "react-icons/fa";
 import { HiOutlinePaperAirplane } from "react-icons/hi2";
+import { GooglePreferredSourceButton } from "@/components/google-preferred-source";
 
 type FooterNavLink = { label: string; href: string; external?: boolean };
 
@@ -235,6 +236,7 @@ export function Footer() {
                   </a>
                 ))}
               </div>
+              <GooglePreferredSourceButton />
             </div>
           </div>
 
