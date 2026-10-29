@@ -27,7 +27,6 @@ interface InternshipRaw {
   internship_status?: string;
   location?: string;
   description?: string;
-  hubspotFormId?: string
 }
 
 // ==============================
@@ -53,7 +52,6 @@ export interface Internship {
   status: "Open" | "Closed" | "Filled";
   location: string;
   description: string;
-  hubspotFormId?: string
 }
 
 // ==============================
@@ -71,8 +69,7 @@ function normalizeInternship(item: StrapiInternship): Internship {
     slug: attr.slug ?? "",
     status: status as Internship["status"],
     location: attr.location ?? "",
-    description: attr.description ?? "",
-    hubspotFormId: attr.hubspotFormId ?? ""
+    description: attr.description ?? ""
   };
 }
 

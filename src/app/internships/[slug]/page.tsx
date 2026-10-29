@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { HubSpotForm } from "@/components/hubspot-form";
+import { ApplicationForm } from "@/components/application-form";
 import { SectionCard } from "@/components/ui/section-card";
 import { getInternship } from "@/lib/strapi";
 
@@ -242,14 +242,8 @@ export default async function InternshipPage(props: PageProps) {
             Ready to join the team? Complete the application form below.
           </p>
 
-          <div className="mt-8 rounded-2xl p-5 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.12)] backdrop-blur-[1px] sm:p-7">
-            {internship.hubspotFormId ? (
-              <HubSpotForm formId={internship.hubspotFormId} />
-            ) : (
-              <div className="mx-auto max-w-2xl rounded-xl border border-[#e2e5e9] bg-[#f8f9fb] p-8">
-                <p className="text-[#5c6370]">The application form is not available yet.</p>
-              </div>
-            )}
+          <div className="mt-8 overflow-hidden rounded-2xl bg-white text-left shadow-[0_8px_30px_-12px_rgba(0,0,0,0.12)]">
+            <ApplicationForm />
           </div>
         </div>
       </section>
