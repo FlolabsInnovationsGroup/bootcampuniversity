@@ -10,7 +10,7 @@ export function SiteNavbar() {
       <div className="container-shell py-3 sm:py-4">
         <div className="flex items-center justify-between gap-3">
           <Link href="/" className="focus-ring flex min-w-0 items-center gap-2.5 rounded-md text-base font-bold sm:gap-3 sm:text-lg">
-            <Image src="/flolabs-logo.svg" alt="FloLabs logo" width={36} height={36} priority />
+            <Image src="/flolabs-logo.svg" alt="" width={36} height={36} priority />
             <span className="truncate">Innovation Bootcamp University</span>
           </Link>
           <div className="hidden items-center gap-4 md:flex">
