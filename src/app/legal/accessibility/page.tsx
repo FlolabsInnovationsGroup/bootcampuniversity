@@ -1,3 +1,13 @@
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Accessibility Statement",
+  description:
+    "Innovation Bootcamp University is committed to digital accessibility for people with disabilities and aims to meet WCAG 2.2 Level AA standards.",
+  path: "/legal/accessibility"
+});
+
 export default function AccessibilityPage() {
   return (
     <div className="space-y-8">

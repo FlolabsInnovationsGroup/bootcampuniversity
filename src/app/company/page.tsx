@@ -4,10 +4,14 @@ import type { IconType } from "react-icons";
 import { FaChartLine, FaGlobe, FaHandshake, FaRocket } from "react-icons/fa";
 import { ButtonLink } from "@/components/ui/button-link";
 import { aboutPage } from "@/content/site-content";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "About"
-};
+export const metadata: Metadata = pageMetadata({
+  title: "About",
+  description:
+    "Our mission is to replace traditional study with active contribution, so every ambitious individual can build a career through real-world execution.",
+  path: "/company"
+});
 
 export default function CompanyPage() {
   const heroHighlights = [

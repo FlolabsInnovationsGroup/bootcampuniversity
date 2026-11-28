@@ -1,3 +1,13 @@
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Cookie Policy",
+  description:
+    "How Innovation Bootcamp University uses cookies and similar technologies to remember your preferences, analyze site usage and help you navigate our website.",
+  path: "/legal/cookie-policy"
+});
+
 export default function CookiePolicyPage() {
   return (
     <div className="space-y-8">

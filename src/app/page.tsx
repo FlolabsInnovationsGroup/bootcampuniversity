@@ -6,6 +6,9 @@ import { HeroTextCarousel, type HeroCarouselItem } from "@/components/home/hero-
 import { WhyChooseSection } from "@/components/home/why-choose-section";
 import { CareerOpportunitiesRail } from "@/components/home/career-opportunities-rail";
 import { TestimonialVideoPlayer } from "@/components/home/testimonial-video-player";
+import { JsonLd } from "@/components/json-ld";
+import { jsonLdGraph, pageMetadata, webPageJsonLd } from "@/lib/seo";
+import { SITE_DESCRIPTION, absoluteUrl } from "@/lib/site";
 import {
   type CareerOpportunityIcon,
   careerOpportunitiesSection,
@@ -16,9 +19,40 @@ import {
   whyChoose
 } from "@/content/site-content";
 
-export const metadata: Metadata = {
-  title: "Innovation Bootcamp University"
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Innovation Bootcamp University | Learn Through Real Internships",
+  absoluteTitle: true,
+  description: SITE_DESCRIPTION,
+  path: "/"
+});
+
+// FAQ answers still marked as placeholders on the page are left out of the markup.
+const homeJsonLd = jsonLdGraph(
+  webPageJsonLd({
+    name: "Innovation Bootcamp University | Learn Through Real Internships",
+    description: SITE_DESCRIPTION,
+    path: "/"
+  }),
+  {
+    "@type": "FAQPage",
+    "@id": absoluteUrl("/#faq"),
+    mainEntity: faqAccordionItems
+      .filter((item) => !item.answer.includes("[Placeholder"))
+      .map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: { "@type": "Answer", text: item.answer }
+      }))
+  }
+);
+
+const heroCarouselImageAlts = [
+  "Smiling student in a university hoodie with a backpack",
+  "Smiling student holding a tablet",
+  "Smiling woman in a denim shirt with arms crossed",
+  "Smiling man in a black T-shirt with arms crossed",
+  "Professional in a navy suit and tie"
+] as const;
 
 export default function HomePage() {
   const heroHighlightPhrase = "Real Internships";
@@ -53,7 +87,7 @@ export default function HomePage() {
       ...sourceItem,
       id: `${sourceItem.id}-slide-${index + 1}`,
       imageSrc,
-      imageAlt: `${hero.title} highlight ${index + 1}`
+      imageAlt: heroCarouselImageAlts[index] ?? `${hero.title} highlight ${index + 1}`
     };
   });
   const projectShowcaseDescriptions: Record<string, string> = {
@@ -142,6 +176,8 @@ export default function HomePage() {
     .filter((item, index, list) => list.findIndex((current) => current.role === item.role) === index);
 
   return (
+    <>
+    <JsonLd data={homeJsonLd} />
     <div className="min-w-0 space-y-14">
       <section
         aria-labelledby="home-title"
@@ -180,7 +216,7 @@ export default function HomePage() {
                 </>
               ) : hero.title.endsWith(heroTitleOrphanLine) ? (
                 <>
-                  {hero.title.slice(0, -heroTitleOrphanLine.length).trim()}
+                  {hero.title.slice(0, -heroTitleOrphanLine.length).trim()}{" "}
                   <br />
                   {heroTitleOrphanLine}
                 </>
@@ -342,5 +378,6 @@ export default function HomePage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

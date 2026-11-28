@@ -1,3 +1,13 @@
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Terms of Service",
+  description:
+    "The terms that govern your use of Innovation Bootcamp University's website and services, including our educational programs. Read them before using the site.",
+  path: "/legal/terms-of-service"
+});
+
 export default function TermsOfServicePage() {
   return (
     <div className="space-y-8">

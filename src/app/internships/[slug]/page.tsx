@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ApplicationForm } from "@/components/application-form";
+import { JsonLd } from "@/components/json-ld";
 import { SectionCard } from "@/components/ui/section-card";
-import { getInternship } from "@/lib/strapi";
+import { breadcrumbJsonLd, jsonLdGraph, pageMetadata, truncateDescription, webPageJsonLd } from "@/lib/seo";
+import { getInternship, type Internship } from "@/lib/strapi";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -101,6 +104,30 @@ function internshipStatusBadgeClass(status: string) {
   return "bg-amber-500/15 text-amber-300";
 }
 
+function internshipDescription(internship: Internship) {
+  const overview = parseInternshipContent(internship.description).overview.join(" ");
+  if (overview) {
+    return truncateDescription(overview);
+  }
+  const location = internship.location ? ` (${internship.location})` : "";
+  return `${internship.title} internship${location} at Innovation Bootcamp University. Status: ${internship.status}. Read the role details and apply online.`;
+}
+
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const { slug } = await props.params;
+  const internship = await getInternship(slug);
+
+  if (!internship) {
+    return {};
+  }
+
+  return pageMetadata({
+    title: internship.location ? `${internship.title} (${internship.location})` : internship.title,
+    description: internshipDescription(internship),
+    path: `/internships/${slug}`
+  });
+}
+
 export default async function InternshipPage(props: PageProps) {
   const { slug } = await props.params;
 
@@ -111,8 +138,19 @@ export default async function InternshipPage(props: PageProps) {
   }
 
   const parsed = parseInternshipContent(internship.description);
+  const path = `/internships/${slug}`;
+  const internshipJsonLd = jsonLdGraph(
+    webPageJsonLd({ name: internship.title, description: internshipDescription(internship), path }),
+    breadcrumbJsonLd([
+      { name: "Home", path: "/" },
+      { name: "Internships", path: "/internships" },
+      { name: internship.title, path }
+    ])
+  );
 
   return (
+    <>
+    <JsonLd data={internshipJsonLd} />
     <div className="space-y-10">
       <p className="mb-8">
         <Link
@@ -170,7 +208,7 @@ export default async function InternshipPage(props: PageProps) {
       </section>
 
       {parsed.overview.length > 0 ? (
-        <SectionCard title="Overview">
+        <SectionCard as="h2" title="Overview">
           <div className="space-y-4 text-[var(--text-muted)]">
             {parsed.overview.map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
@@ -180,7 +218,7 @@ export default async function InternshipPage(props: PageProps) {
       ) : null}
 
       {parsed.responsibilities.length > 0 ? (
-        <SectionCard title="Key Responsibilities">
+        <SectionCard as="h2" title="Key Responsibilities">
           <ul className="list-inside list-disc space-y-2 text-[var(--text-muted)]">
             {parsed.responsibilities.map((item, index) => (
               <li key={index}>{item}</li>
@@ -190,7 +228,7 @@ export default async function InternshipPage(props: PageProps) {
       ) : null}
 
       {parsed.qualifications.length > 0 ? (
-        <SectionCard title="Qualifications and Skills">
+        <SectionCard as="h2" title="Qualifications and Skills">
           <ul className="list-inside list-disc space-y-2 text-[var(--text-muted)]">
             {parsed.qualifications.map((item, index) => (
               <li key={index}>{item}</li>
@@ -200,7 +238,7 @@ export default async function InternshipPage(props: PageProps) {
       ) : null}
 
       {parsed.whyJoinUs.length > 0 ? (
-        <SectionCard title="Why Join Us?">
+        <SectionCard as="h2" title="Why Join Us?">
           <div className="space-y-6 text-[var(--text-muted)]">
             {parsed.whyJoinUs.map((item, index) => {
               const entry = splitWhyJoinItem(item);
@@ -248,5 +286,6 @@ export default async function InternshipPage(props: PageProps) {
         </div>
       </section>
     </div>
+    </>
   );
 }

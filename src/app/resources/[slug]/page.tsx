@@ -8,6 +8,8 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { DailyWorkflowTimeline } from "@/components/resources/daily-workflow-timeline";
 import { PlaybookSplitSection } from "@/components/resources/playbook-split-section";
 import { ScrollReveal } from "@/components/editorial/scroll-reveal";
+import { JsonLd } from "@/components/json-ld";
+import { breadcrumbJsonLd, jsonLdGraph, pageMetadata, webPageJsonLd } from "@/lib/seo";
 import {
   RESOURCE_SLUGS,
   communityPlaybookPage,
@@ -17,16 +19,24 @@ import {
 
 type Props = { params: Promise<{ slug: string }> };
 
+const resourceDescriptions: Record<string, string> = {
+  [RESOURCE_SLUGS.howItWorks]:
+    "A practical roadmap from collaborative learning to professional earning: the real flow from enrollment through internship-based learning and the three tiers.",
+  [RESOURCE_SLUGS.communityPlaybook]:
+    "The professional standards, operational workflows and ethical code required to contribute effectively within Innovation Bootcamp University's project teams."
+};
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  if (slug === RESOURCE_SLUGS.howItWorks) {
-    return { title: "How It Works" };
-  }
-  if (slug === RESOURCE_SLUGS.communityPlaybook) {
-    return { title: "Community Playbook" };
-  }
   const resource = resources.find((item) => item.slug === slug);
-  return { title: resource?.title ?? "Resources" };
+  if (!resource) {
+    return { title: "Resources" };
+  }
+  return pageMetadata({
+    title: resource.title,
+    description: resourceDescriptions[slug] ?? resource.summary,
+    path: `/resources/${slug}`
+  });
 }
 
 export default async function ResourceDetailPage({ params }: Props) {
@@ -36,6 +46,26 @@ export default async function ResourceDetailPage({ params }: Props) {
   if (!resource) {
     notFound();
   }
+
+  const path = `/resources/${slug}`;
+  const resourceJsonLd = jsonLdGraph(
+    webPageJsonLd({ name: resource.title, description: resourceDescriptions[slug] ?? resource.summary, path }),
+    breadcrumbJsonLd([
+      { name: "Home", path: "/" },
+      { name: "Resources", path: "/resources" },
+      { name: resource.title, path }
+    ])
+  );
+
+  return (
+    <>
+      <JsonLd data={resourceJsonLd} />
+      <ResourceDetailContent slug={slug} resource={resource} />
+    </>
+  );
+}
+
+function ResourceDetailContent({ slug, resource }: { slug: string; resource: (typeof resources)[number] }) {
 
   if (slug === RESOURCE_SLUGS.howItWorks) {
     const journeyIcons: IconType[] = [FaBriefcase, FaCoins, FaUsersCog, FaFlagCheckered];
@@ -183,7 +213,7 @@ export default async function ResourceDetailPage({ params }: Props) {
               <div className="mb-4 border-b border-[color:color-mix(in_srgb,var(--primary)_34%,transparent)] pb-4">
                 <div className="flex items-center gap-2">
                   <span className="relative inline-flex h-5 w-5 items-center justify-center overflow-hidden rounded-sm">
-                    <Image src="/flolabs-logo.svg" alt="Website logo" fill className="object-contain" sizes="20px" />
+                    <Image src="/flolabs-logo.svg" alt="" fill className="object-contain" sizes="20px" />
                   </span>
                   <h3 className="text-2xl font-bold text-[var(--text)]">{howItWorksPage.comparison.cooperativeTitle}</h3>
                 </div>

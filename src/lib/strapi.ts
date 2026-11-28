@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 const CONTENT_STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
 const CONTENT_STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN;
 
@@ -27,6 +29,8 @@ interface InternshipRaw {
   internship_status?: string;
   location?: string;
   description?: string;
+  publishedAt?: string;
+  updatedAt?: string;
 }
 
 // ==============================
@@ -52,6 +56,8 @@ export interface Internship {
   status: "Open" | "Closed" | "Filled";
   location: string;
   description: string;
+  /** ISO date of the last CMS update, when Strapi returns one. */
+  updatedAt?: string;
 }
 
 // ==============================
@@ -69,7 +75,8 @@ function normalizeInternship(item: StrapiInternship): Internship {
     slug: attr.slug ?? "",
     status: status as Internship["status"],
     location: attr.location ?? "",
-    description: attr.description ?? ""
+    description: attr.description ?? "",
+    updatedAt: attr.updatedAt ?? attr.publishedAt ?? undefined
   };
 }
 
@@ -141,10 +148,15 @@ async function fetchAllInternshipsRaw(pageSize = 100): Promise<StrapiInternship[
 // ==============================
 // GET ALL INTERNSHIPS
 // ==============================
+/** Like getAllInternships, but throws when Strapi cannot be reached instead of returning []. */
+export async function getAllInternshipsOrThrow(): Promise<Internship[]> {
+  const data = await fetchAllInternshipsRaw();
+  return data.map(normalizeInternship);
+}
+
 export async function getAllInternships(): Promise<Internship[]> {
   try {
-    const data = await fetchAllInternshipsRaw();
-    return data.map(normalizeInternship);
+    return await getAllInternshipsOrThrow();
   } catch (error) {
     console.error("Failed to fetch internships:", error);
     return [];
@@ -154,7 +166,8 @@ export async function getAllInternships(): Promise<Internship[]> {
 // ==============================
 // GET ONE INTERNSHIP
 // ==============================
-export async function getInternship(slug: string): Promise<Internship | null> {
+// cache() lets generateMetadata and the page share one lookup per request.
+export const getInternship = cache(async function getInternship(slug: string): Promise<Internship | null> {
   try {
     const response = await fetchContentAPI<
       StrapiResponse<StrapiInternship[]>
@@ -167,4 +180,4 @@ export async function getInternship(slug: string): Promise<Internship | null> {
     console.error("Failed to fetch internship:", error);
     return null;
   }
-}
+});

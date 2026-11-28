@@ -1,5 +1,14 @@
+import type { Metadata } from "next";
 import { ProjectsShowcaseGrid } from "@/components/projects/projects-showcase-grid";
 import { projects, projectsPage } from "@/content/site-content";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Our Projects",
+  description:
+    "Explore MoodChanger, CAIPO, FloStudios, TARRL and other AI, robotics, education and media initiatives being built across the Hephaestus and FloLabs ecosystem.",
+  path: "/projects"
+});
 
 export default function ProjectsPage() {
   const projectImageBySlug: Record<string, string> = {

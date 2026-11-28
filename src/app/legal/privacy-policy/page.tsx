@@ -1,3 +1,13 @@
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Privacy Policy",
+  description:
+    "How Innovation Bootcamp University collects, uses, discloses and safeguards your information when you visit our website, use our platform or join our programs.",
+  path: "/legal/privacy-policy"
+});
+
 export default function PrivacyPolicyPage() {
   return (
     <div className="space-y-8">

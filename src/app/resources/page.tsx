@@ -1,6 +1,15 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { resources } from "@/content/site-content";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Learning Resources",
+  description:
+    "Practical guides for your journey at Innovation Bootcamp University, from understanding the co-op pathway to student expectations and support channels.",
+  path: "/resources"
+});
 
 export default function ResourcesPage() {
   const resourceImageBySlug: Record<string, string> = {

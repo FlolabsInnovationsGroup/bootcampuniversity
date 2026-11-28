@@ -4,15 +4,40 @@ import "./globals.css";
 import { SiteNavbar } from "@/components/site-navbar";
 import { Footer } from "@/components/Footer";
 import { NoOrphanWords } from "@/components/ui/no-orphan-words";
-import { SITE_URL } from "@/lib/site";
+import { JsonLd } from "@/components/json-ld";
+import { OG_IMAGE, jsonLdGraph } from "@/lib/seo";
+import {
+  ORGANIZATION_ID,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+  SOCIAL_PROFILES,
+  WEBSITE_ID,
+  absoluteUrl
+} from "@/lib/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Innovation Bootcamp University",
-    template: "%s | Innovation Bootcamp University",
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
   },
-  description: "Internship-based tech learning with a three-tier model.",
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "en_US",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: [OG_IMAGE.url],
+  },
   icons: {
     icon: "/flolabs-logo.svg",
   },
@@ -22,6 +47,32 @@ export const metadata: Metadata = {
     google: "F5DDKTkbYV5m5cCrVvYlq5e-SO-caM64Ttg_Dy-UQns",
   },
 };
+
+const siteJsonLd = jsonLdGraph(
+  {
+    "@type": "EducationalOrganization",
+    "@id": ORGANIZATION_ID,
+    name: SITE_NAME,
+    alternateName: "Bootcamp University",
+    url: SITE_URL,
+    logo: {
+      "@type": "ImageObject",
+      url: absoluteUrl("/flolabs-logo.svg"),
+    },
+    description:
+      "Innovation Bootcamp University connects structured education directly to real internships across AI, software, robotics, business, and more.",
+    sameAs: SOCIAL_PROFILES,
+  },
+  {
+    "@type": "WebSite",
+    "@id": WEBSITE_ID,
+    url: SITE_URL,
+    name: SITE_NAME,
+    alternateName: "Bootcamp University",
+    inLanguage: "en",
+    publisher: { "@id": ORGANIZATION_ID },
+  }
+);
 
 export default function RootLayout({
   children,
@@ -104,56 +155,8 @@ export default function RootLayout({
 
         <Footer />
         <NoOrphanWords />
+        <JsonLd data={siteJsonLd} />
       </body>
     </html>
   );
 }
-
-
-// import type { Metadata } from "next";
-// import Script from "next/script";
-// import "./globals.css";
-// import { SiteNavbar } from "@/components/site-navbar";
-// import { Footer } from "@/components/Footer";
-// import { NoOrphanWords } from "@/components/ui/no-orphan-words";
-
-// export const metadata: Metadata = {
-//   title: { default: "Innovation Bootcamp University", template: "%s | Innovation Bootcamp University" },
-//   description: "Internship-based tech learning with a three-tier model.",
-//   icons: {
-//     icon: "/flolabs-logo.svg"
-//   }
-// };
-
-// export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-//   return (
-//     <html lang="en" suppressHydrationWarning>
-//       <head>
-//         <Script id="theme-init" strategy="beforeInteractive">{`(() => {
-//   try {
-//     const stored = localStorage.getItem("theme");
-//     const theme =
-//       stored === "light" || stored === "dark"
-//         ? stored
-//         : window.matchMedia("(prefers-color-scheme: light)").matches
-//           ? "light"
-//           : "dark";
-//     document.documentElement.setAttribute("data-theme", theme);
-//   } catch (_) {}
-// })();`}</Script>
-//       </head>
-//       {/* Extensions may inject attrs on <body> before hydrate (e.g. cz-shortcut-listen). */}
-//       <body className="min-w-0 overflow-x-hidden" suppressHydrationWarning>
-//         <a href="#main-content" className="skip-link focus-ring">
-//           Skip to main content
-//         </a>
-//         <SiteNavbar />
-//         <main id="main-content" className="container-shell min-w-0 py-10">
-//           {children}
-//         </main>
-//         <Footer />
-//         <NoOrphanWords />
-//       </body>
-//     </html>
-//   );
-// }

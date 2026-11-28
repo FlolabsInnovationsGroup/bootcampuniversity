@@ -1,3 +1,15 @@
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+
+// Kept out of the index (and the sitemap) until the coverage and statistics on this page have sources.
+export const metadata: Metadata = pageMetadata({
+  title: "Press & Media",
+  description:
+    "Get the latest news and updates about Innovation Bootcamp University, including program announcements, media coverage and resources for press inquiries.",
+  path: "/company/press",
+  robots: { index: false, follow: true }
+});
+
 const latestNews = [
   {
     date: "March 15, 2024",
