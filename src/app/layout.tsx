@@ -11,7 +11,6 @@ import {
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_URL,
-  SOCIAL_PROFILES,
   WEBSITE_ID,
   absoluteUrl
 } from "@/lib/site";
@@ -61,7 +60,8 @@ const siteJsonLd = jsonLdGraph(
     },
     description:
       "Innovation Bootcamp University connects structured education directly to real internships across AI, software, robotics, business, and more.",
-    sameAs: SOCIAL_PROFILES,
+    // No sameAs: the footer's social accounts belong to the FloLabs group, which
+    // the footer lists as a separate entity, so they do not identify this one.
   },
   {
     "@type": "WebSite",
