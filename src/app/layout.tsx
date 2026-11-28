@@ -10,6 +10,7 @@ import {
   ORGANIZATION_ID,
   SITE_DESCRIPTION,
   SITE_NAME,
+  SITE_SHORT_NAME,
   SITE_URL,
   WEBSITE_ID,
   absoluteUrl
@@ -52,7 +53,7 @@ const siteJsonLd = jsonLdGraph(
     "@type": "EducationalOrganization",
     "@id": ORGANIZATION_ID,
     name: SITE_NAME,
-    alternateName: "Bootcamp University",
+    alternateName: SITE_SHORT_NAME,
     url: SITE_URL,
     logo: {
       "@type": "ImageObject",
@@ -68,7 +69,7 @@ const siteJsonLd = jsonLdGraph(
     "@id": WEBSITE_ID,
     url: SITE_URL,
     name: SITE_NAME,
-    alternateName: "Bootcamp University",
+    alternateName: SITE_SHORT_NAME,
     inLanguage: "en",
     publisher: { "@id": ORGANIZATION_ID },
   }

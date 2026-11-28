@@ -50,6 +50,14 @@ export function pageMetadata({ title, description, path, absoluteTitle, robots }
   };
 }
 
+/** Search results cut titles at roughly 60 characters. */
+export const TITLE_MAX_LENGTH = 60;
+
+/** Returns the first candidate title that fits, or the last one when none does. */
+export function fitTitle(candidates: string[], max = TITLE_MAX_LENGTH) {
+  return candidates.find((candidate) => candidate.length <= max) ?? candidates[candidates.length - 1];
+}
+
 /** Shortens text to at most `max` characters on a word boundary. */
 export function truncateDescription(text: string, max = 155) {
   const normalized = text

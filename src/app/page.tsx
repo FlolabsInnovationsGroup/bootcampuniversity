@@ -19,8 +19,10 @@ import {
   whyChoose
 } from "@/content/site-content";
 
+const HOME_TITLE = "Innovation Bootcamp University | Real Remote Internships";
+
 export const metadata: Metadata = pageMetadata({
-  title: "Innovation Bootcamp University | Learn Through Real Internships",
+  title: HOME_TITLE,
   absoluteTitle: true,
   description: SITE_DESCRIPTION,
   path: "/"
@@ -29,7 +31,7 @@ export const metadata: Metadata = pageMetadata({
 // FAQ answers still marked as placeholders on the page are left out of the markup.
 const homeJsonLd = jsonLdGraph(
   webPageJsonLd({
-    name: "Innovation Bootcamp University | Learn Through Real Internships",
+    name: HOME_TITLE,
     description: SITE_DESCRIPTION,
     path: "/"
   }),

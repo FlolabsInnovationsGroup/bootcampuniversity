@@ -4,6 +4,9 @@ export const SITE_URL = (
 
 export const SITE_NAME = "Innovation Bootcamp University";
 
+/** Short name the site also uses on the page ("Why Choose Bootcamp University"). */
+export const SITE_SHORT_NAME = "Bootcamp University";
+
 export const SITE_DESCRIPTION =
   "Innovation Bootcamp University connects structured education to real internships across AI, software, robotics and business. Remote-first, no experience needed.";
 

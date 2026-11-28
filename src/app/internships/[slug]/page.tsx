@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import { ApplicationForm } from "@/components/application-form";
 import { JsonLd } from "@/components/json-ld";
 import { SectionCard } from "@/components/ui/section-card";
-import { breadcrumbJsonLd, jsonLdGraph, pageMetadata, truncateDescription, webPageJsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, fitTitle, jsonLdGraph, pageMetadata, truncateDescription, webPageJsonLd } from "@/lib/seo";
+import { SITE_NAME, SITE_SHORT_NAME } from "@/lib/site";
 import { getInternship, type Internship } from "@/lib/strapi";
 
 type PageProps = {
@@ -113,6 +114,20 @@ function internshipDescription(internship: Internship) {
   return `${internship.title} internship${location} at Innovation Bootcamp University. Status: ${internship.status}. Read the role details and apply online.`;
 }
 
+// Keeps the title within search-result length: switches to the short site name,
+// then drops the site name, then the location, so the role name stays whole.
+function internshipTitle(internship: Internship) {
+  const role = internship.title;
+  const withLocation = internship.location ? `${role} (${internship.location})` : role;
+  return fitTitle([
+    `${withLocation} | ${SITE_NAME}`,
+    `${withLocation} | ${SITE_SHORT_NAME}`,
+    withLocation,
+    `${role} | ${SITE_SHORT_NAME}`,
+    role
+  ]);
+}
+
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const { slug } = await props.params;
   const internship = await getInternship(slug);
@@ -122,7 +137,8 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
   }
 
   return pageMetadata({
-    title: internship.location ? `${internship.title} (${internship.location})` : internship.title,
+    title: internshipTitle(internship),
+    absoluteTitle: true,
     description: internshipDescription(internship),
     path: `/internships/${slug}`
   });
